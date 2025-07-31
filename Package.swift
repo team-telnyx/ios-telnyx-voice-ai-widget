@@ -19,7 +19,7 @@ let package = Package(
         .target(
             name: "TelnyxVoiceAIWidget",
             dependencies: [],
-            path: "Sources"
+            path: "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget"
         ),
         .testTarget(
             name: "TelnyxVoiceAIWidgetTests",

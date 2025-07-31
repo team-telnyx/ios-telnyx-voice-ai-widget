@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		9906F8BF2E3BE1E400A02FE7 /* TelnyxVoiceAIWidget in Frameworks */ = {isa = PBXBuildFile; productRef = 9906F8BE2E3BE1E400A02FE7 /* TelnyxVoiceAIWidget */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		9906F8442E3BD0A800A02FE7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9906F8BF2E3BE1E400A02FE7 /* TelnyxVoiceAIWidget in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +117,7 @@
 			);
 			name = SampleApp;
 			packageProductDependencies = (
+				9906F8BE2E3BE1E400A02FE7 /* TelnyxVoiceAIWidget */,
 			);
 			productName = SampleApp;
 			productReference = 9906F8362E3BD0A500A02FE7 /* SampleApp.app */;
@@ -195,6 +201,9 @@
 			);
 			mainGroup = 9906F82D2E3BD0A500A02FE7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9906F8BD2E3BE1E400A02FE7 /* XCLocalSwiftPackageReference "../../ios-telnyx-voice-ai-widget" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9906F8372E3BD0A500A02FE7 /* Products */;
 			projectDirPath = "";
@@ -558,6 +567,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		9906F8BD2E3BE1E400A02FE7 /* XCLocalSwiftPackageReference "../../ios-telnyx-voice-ai-widget" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../ios-telnyx-voice-ai-widget";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9906F8BE2E3BE1E400A02FE7 /* TelnyxVoiceAIWidget */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TelnyxVoiceAIWidget;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9906F82E2E3BD0A500A02FE7 /* Project object */;
 }
