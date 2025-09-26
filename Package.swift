@@ -13,12 +13,14 @@ let package = Package(
         ),
     ],
     dependencies: [
-        // Add your dependencies here
+        .package(url: "https://github.com/team-telnyx/telnyx-webrtc-ios.git", branch: "feat/WEBRTC-2906")
     ],
     targets: [
         .target(
             name: "TelnyxVoiceAIWidget",
-            dependencies: [],
+            dependencies: [
+                .product(name: "telnyx-webrtc-ios", package: "telnyx-webrtc-ios")
+            ],
             path: "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget"
         ),
         .testTarget(

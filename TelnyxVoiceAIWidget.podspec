@@ -24,4 +24,5 @@ Pod::Spec.new do |spec|
   spec.requires_arc = true
   
   spec.dependency "Starscream", "~> 4.0"
+  spec.dependency "TelnyxRTC", "~> 2.0"
 end

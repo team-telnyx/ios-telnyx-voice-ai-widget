@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import TelnyxRTC
 
 /// TelnyxVoiceAIWidget SDK
 public class TelnyxVoiceAIWidget: NSObject {
@@ -18,6 +19,14 @@ public class TelnyxVoiceAIWidget: NSObject {
     
     private override init() {
         super.init()
+        
+        let txConfig = TxConfig(
+            token: "asdasdads",
+            logLevel: .all
+        )
+        let txClient = TxClient()
+        try? txClient.connect(txConfig: txConfig)
+        print("TelnyxRTC SDK v\(txClient.isConnected()) initialized within TelnyxVoiceAIWidget")
     }
     
     /// Initialize the TelnyxVoiceAIWidget
