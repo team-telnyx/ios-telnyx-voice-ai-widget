@@ -33,6 +33,7 @@ public class WidgetViewModel: ObservableObject {
     private var telnyxClient: TxClient?
     private var cancellables = Set<AnyCancellable>()
     private var assistantId: String = ""
+    private var previousAudioLevel: Float = 0.0
 
     // MARK: - Initialization
     public init() {}
@@ -84,7 +85,8 @@ public class WidgetViewModel: ObservableObject {
                     callerName: "Anonymous User",
                     callerNumber: "anonymous",
                     destinationNumber: aiAssistantDestination,
-                    callId: UUID()
+                    callId: UUID(),
+                    debug: true  // Enable debug to get quality metrics
                 )
 
                 // Observe call quality metrics for audio visualization
@@ -166,6 +168,8 @@ public class WidgetViewModel: ObservableObject {
         isConnected = false
         isMuted = false
         transcriptItems = []
+        audioLevels = []
+        previousAudioLevel = 0.0
         widgetState = .collapsed(settings: settings)
     }
 
@@ -190,8 +194,53 @@ public class WidgetViewModel: ObservableObject {
     }
 
     private func observeCallQualityMetrics() {
-        // TODO: Implement call quality metrics observation for audio visualization
-        // This would populate the audioLevels array with audio level data
+        currentCall?.onCallQualityChange = { [weak self] metrics in
+            Task { @MainActor in
+                self?.updateAudioLevels(from: metrics)
+            }
+        }
+    }
+
+    private func updateAudioLevels(from metrics: CallQualityMetrics?) {
+        guard let metrics = metrics else {
+            // Clear levels when no metrics
+            audioLevels = []
+            previousAudioLevel = 0.0
+            return
+        }
+
+        // Scale the audio level for better visualization (make it more sensitive)
+        // Remote audio level is typically 0.0 to 1.0, we scale by 4x for visibility
+        let rawLevel = min(1.0, metrics.inboundAudioLevel * 4.0)
+
+        // Apply smoothing to prevent jarring jumps but keep responsiveness
+        let smoothedLevel = smoothAudioLevel(current: rawLevel, previous: previousAudioLevel)
+        previousAudioLevel = smoothedLevel
+
+        // Update audio levels array with 10 values for the visualizer
+        // Create a frequency-band effect by varying the level slightly
+        var levels: [Float] = []
+        for i in 0..<10 {
+            let normalizedIndex = Float(i) / 9.0
+            let frequencyWeight = 1.0 - (normalizedIndex * 0.6) // Lower frequencies show more
+            let randomVariation = Float.random(in: 0.8...1.2)
+            let level = smoothedLevel * frequencyWeight * randomVariation
+            levels.append(level > 0.05 ? min(1.0, level) : 0.0)
+        }
+
+        audioLevels = levels
+    }
+
+    private func smoothAudioLevel(current: Float, previous: Float) -> Float {
+        if current > previous {
+            // Quick response to new audio input
+            let quickResponseFactor: Float = 0.1
+            return previous * quickResponseFactor + current * (1.0 - quickResponseFactor)
+        } else {
+            // Slightly slower decay for natural look
+            let slowDecayFactor: Float = 0.4
+            return previous * slowDecayFactor + current * (1.0 - slowDecayFactor)
+        }
     }
 
     private func updateAgentStatus(_ newStatus: AgentStatus) {
