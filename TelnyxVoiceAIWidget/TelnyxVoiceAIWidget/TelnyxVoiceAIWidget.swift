@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import TelnyxRTC
 
 /// TelnyxVoiceAIWidget SDK
@@ -19,14 +20,7 @@ public class TelnyxVoiceAIWidget: NSObject {
     
     private override init() {
         super.init()
-        
-        let txConfig = TxConfig(
-            token: "asdasdads",
-            logLevel: .all
-        )
-        let txClient = TxClient()
-        try? txClient.connect(txConfig: txConfig)
-        print("TelnyxRTC SDK v\(txClient.isConnected()) initialized within TelnyxVoiceAIWidget")
+        print("TelnyxVoiceAIWidget v\(TelnyxVoiceAIWidget.version) initialized")
     }
     
     /// Initialize the TelnyxVoiceAIWidget
@@ -44,4 +38,19 @@ public class TelnyxVoiceAIWidget: NSObject {
         print("Stopping voice AI session...")
     }
 }
+
+// MARK: - Public Exports
+
+// Export the main widget view
+public typealias AIAssistantWidget = AIAssistantWidget
+
+// Export the state models
+public typealias WidgetState = WidgetState
+public typealias AgentStatus = AgentStatus
+public typealias TranscriptItem = TranscriptItem
+public typealias ErrorType = ErrorType
+public typealias WidgetSettings = WidgetSettings
+
+// Export the view model
+public typealias WidgetViewModel = WidgetViewModel
 
