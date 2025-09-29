@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import TelnyxRTC
+import AVFoundation
 
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor
@@ -233,6 +234,9 @@ public class WidgetViewModel: ObservableObject {
             // Call is connected and active
             isConnected = true
 
+            // Enable audio session when call becomes active
+            enableAudioSession()
+
             guard case .connecting(let settings) = widgetState else { return }
 
             if iconOnly {
@@ -247,6 +251,9 @@ public class WidgetViewModel: ObservableObject {
             // Call ended
             isConnected = false
 
+            // Disable audio session when call ends
+            disableAudioSession()
+
             if case .expanded = widgetState {
                 widgetState = .collapsed(settings: widgetSettings)
             } else if case .transcriptView = widgetState {
@@ -256,6 +263,14 @@ public class WidgetViewModel: ObservableObject {
         default:
             break
         }
+    }
+
+    private func enableAudioSession() {
+        telnyxClient?.enableAudioSession(audioSession: AVAudioSession.sharedInstance())
+    }
+
+    private func disableAudioSession() {
+        telnyxClient?.disableAudioSession(audioSession: AVAudioSession.sharedInstance())
     }
 }
 
