@@ -56,8 +56,9 @@ public class WidgetViewModel: ObservableObject {
 
         telnyxClient = TxClient()
 
-        // Set up AI Assistant delegate
+        // Set up delegates
         telnyxClient?.aiAssistantManager.delegate = self
+        telnyxClient?.delegate = self
 
         // Use anonymous login for AI Assistant connections
         telnyxClient?.anonymousLogin(
@@ -205,34 +206,6 @@ public class WidgetViewModel: ObservableObject {
 
     // MARK: - Socket Response Handlers
 
-    private func handleClientReady() {
-        widgetState = .collapsed(settings: widgetSettings)
-    }
-
-    private func handleAnswer() {
-        isConnected = true
-
-        guard case .connecting(let settings) = widgetState else { return }
-
-        if iconOnly {
-            // In icon-only mode, skip Expanded state and go directly to TranscriptView
-            widgetState = .transcriptView(settings: settings, isConnected: true, isMuted: false, agentStatus: .waiting)
-        } else {
-            // In regular mode, transition to Expanded state
-            widgetState = .expanded(settings: settings, isConnected: true, isMuted: false, agentStatus: .waiting)
-        }
-    }
-
-    private func handleBye() {
-        isConnected = false
-
-        if case .expanded = widgetState {
-            widgetState = .collapsed(settings: widgetSettings)
-        } else if case .transcriptView = widgetState {
-            widgetState = .collapsed(settings: widgetSettings)
-        }
-    }
-
     private func handleAIConversation(type: String?) {
         guard let type = type else { return }
 
@@ -251,6 +224,37 @@ public class WidgetViewModel: ObservableObject {
 
         if let status = newAgentStatus {
             updateAgentStatus(status)
+        }
+    }
+
+    private func handleCallStateChange(_ callState: CallState) {
+        switch callState {
+        case .ACTIVE:
+            // Call is connected and active
+            isConnected = true
+
+            guard case .connecting(let settings) = widgetState else { return }
+
+            if iconOnly {
+                // In icon-only mode, skip Expanded state and go directly to TranscriptView
+                widgetState = .transcriptView(settings: settings, isConnected: true, isMuted: false, agentStatus: .waiting)
+            } else {
+                // In regular mode, transition to Expanded state
+                widgetState = .expanded(settings: settings, isConnected: true, isMuted: false, agentStatus: .waiting)
+            }
+
+        case .DONE:
+            // Call ended
+            isConnected = false
+
+            if case .expanded = widgetState {
+                widgetState = .collapsed(settings: widgetSettings)
+            } else if case .transcriptView = widgetState {
+                widgetState = .collapsed(settings: widgetSettings)
+            }
+
+        default:
+            break
         }
     }
 }
@@ -317,5 +321,54 @@ extension WidgetViewModel: AIAssistantManagerDelegate {
                 widgetState = .collapsed(settings: convertedSettings)
             }
         }
+    }
+}
+
+// MARK: - TxClientDelegate
+extension WidgetViewModel: TxClientDelegate {
+    nonisolated public func onCallStateUpdated(callState: CallState, callId: UUID) {
+        Task { @MainActor in
+            handleCallStateChange(callState)
+        }
+    }
+
+    nonisolated public func onSessionUpdated(sessionId: String) {
+        // Not needed for widget
+    }
+
+    nonisolated public func onIncomingCall(call: Call) {
+        // Widget only makes outbound calls
+    }
+
+    nonisolated public func onPushCall(call: Call) {
+        // Not applicable for widget
+    }
+
+    nonisolated public func onRemoteCallEnded(callId: UUID, reason: CallTerminationReason?) {
+        Task { @MainActor in
+            handleCallStateChange(.DONE(reason: reason))
+        }
+    }
+
+    nonisolated public func onSocketConnected() {
+        // Already handled by AIAssistantManagerDelegate
+    }
+
+    nonisolated public func onSocketDisconnected() {
+        // Already handled by AIAssistantManagerDelegate
+    }
+
+    nonisolated public func onClientError(error: Error) {
+        Task { @MainActor in
+            widgetState = .error(message: error.localizedDescription, type: .connection)
+        }
+    }
+
+    nonisolated public func onClientReady() {
+        // Already handled by AIAssistantManagerDelegate
+    }
+
+    nonisolated public func onPushDisabled(success: Bool, message: String) {
+        // Not applicable for widget
     }
 }
