@@ -31,9 +31,16 @@ public class WidgetViewModel: ObservableObject {
     private var currentCall: Call?
     private var telnyxClient: TxClient?
     private var cancellables = Set<AnyCancellable>()
+    private var assistantId: String = ""
 
     // MARK: - Initialization
     public init() {}
+
+    deinit {
+        // Cleanup synchronously since deinit is not async
+        telnyxClient?.aiAssistantManager.delegate = nil
+        telnyxClient = nil
+    }
 
     // MARK: - Public Methods
 
@@ -42,31 +49,25 @@ public class WidgetViewModel: ObservableObject {
     ///   - assistantId: The Assistant ID from your Telnyx AI configuration
     ///   - iconOnly: When true, displays as a floating action button
     public func initialize(assistantId: String, iconOnly: Bool = false) {
+        self.assistantId = assistantId
         self.iconOnly = iconOnly
 
-        Task {
-            do {
-                widgetState = .loading
+        widgetState = .loading
 
-                telnyxClient = TxClient()
+        telnyxClient = TxClient()
 
-                // Use anonymous login for AI Assistant connections
-                telnyxClient?.anonymousLogin(
-                    targetId: assistantId,
-                    targetType: "ai_assistant",
-                    targetVersionId: nil
-                )
+        // Set up AI Assistant delegate
+        telnyxClient?.aiAssistantManager.delegate = self
 
-                // Start observing socket responses
-                observeSocketResponses()
+        // Use anonymous login for AI Assistant connections
+        telnyxClient?.anonymousLogin(
+            targetId: assistantId,
+            targetType: "ai_assistant",
+            targetVersionId: nil
+        )
 
-                // Start observing transcript updates
-                observeTranscriptUpdates()
-
-            } catch {
-                widgetState = .error(message: "", type: .initialization)
-            }
-        }
+        // Start observing transcript updates
+        observeTranscriptUpdates()
     }
 
     /// Start a call to the AI assistant
@@ -166,14 +167,24 @@ public class WidgetViewModel: ObservableObject {
         widgetState = .collapsed(settings: settings)
     }
 
-    private func observeSocketResponses() {
-        // TODO: Implement socket response observation when TxClient provides Combine publishers
-        // This would observe connection status, errors, and various socket events
-    }
-
     private func observeTranscriptUpdates() {
-        // TODO: Implement transcript observation when TxClient provides transcript updates
-        // This would populate the transcriptItems array
+        guard let aiAssistantManager = telnyxClient?.aiAssistantManager else { return }
+
+        // Subscribe to transcript updates using the publisher
+        let cancellable = aiAssistantManager.subscribeToTranscriptUpdates { [weak self] updatedTranscriptions in
+            Task { @MainActor in
+                // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
+                self?.transcriptItems = updatedTranscriptions.map { item in
+                    TranscriptItem(
+                        id: item.id,
+                        text: item.content,
+                        isUser: item.role.lowercased() == "user",
+                        timestamp: item.timestamp
+                    )
+                }
+            }
+        }
+        // Store cancellable (note: TranscriptCancellable auto-cancels on deinit)
     }
 
     private func observeCallQualityMetrics() {
@@ -240,6 +251,71 @@ public class WidgetViewModel: ObservableObject {
 
         if let status = newAgentStatus {
             updateAgentStatus(status)
+        }
+    }
+}
+
+// MARK: - AIAssistantManagerDelegate
+extension WidgetViewModel: AIAssistantManagerDelegate {
+    nonisolated public func onAIConversationMessage(_ message: [String : Any]) {
+        Task { @MainActor in
+            // Extract type from message for agent status updates
+            if let params = message["params"] as? [String: Any],
+               let type = params["type"] as? String {
+                handleAIConversation(type: type)
+            }
+        }
+    }
+
+    nonisolated public func onRingingAckReceived(callId: String) {
+        // Handle ringing acknowledgment if needed
+    }
+
+    nonisolated public func onAIAssistantConnectionStateChanged(isConnected: Bool, targetId: String?) {
+        Task { @MainActor in
+            self.isConnected = isConnected
+
+            if isConnected {
+                // Connection established, transition to collapsed state
+                widgetState = .collapsed(settings: widgetSettings)
+            } else {
+                // Connection lost
+                if widgetState != .idle && widgetState != .loading {
+                    widgetState = .error(message: "Connection lost", type: .connection)
+                }
+            }
+        }
+    }
+
+    nonisolated public func onTranscriptionUpdated(_ transcriptions: [TelnyxRTC.TranscriptionItem]) {
+        Task { @MainActor in
+            // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
+            self.transcriptItems = transcriptions.map { item in
+                TranscriptItem(
+                    id: item.id,
+                    text: item.content,
+                    isUser: item.role.lowercased() == "user",
+                    timestamp: item.timestamp
+                )
+            }
+        }
+    }
+
+    nonisolated public func onWidgetSettingsUpdated(_ settings: TelnyxRTC.WidgetSettings) {
+        Task { @MainActor in
+            // Convert TelnyxRTC.WidgetSettings to our WidgetSettings
+            let convertedSettings = WidgetSettings(
+                theme: settings.theme,
+                buttonText: settings.startCallText,
+                logoUrl: settings.logoIconUrl,
+                agentName: nil
+            )
+            self.widgetSettings = convertedSettings
+
+            // If we're in loading state, transition to collapsed now that we have settings
+            if case .loading = widgetState {
+                widgetState = .collapsed(settings: convertedSettings)
+            }
         }
     }
 }
