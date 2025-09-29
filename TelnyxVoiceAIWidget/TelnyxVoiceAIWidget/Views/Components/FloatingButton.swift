@@ -18,31 +18,31 @@ struct FloatingButton: View {
         Button(action: onClick) {
             ZStack {
                 Circle()
-                    .fill(isError ? Color.red : Color.accentColor)
-                    .frame(width: 60, height: 60)
-                    .shadow(radius: 4)
+                    .fill(isError ? Color.red : Color.white)
+                    .frame(width: 56, height: 56)
+                    .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
 
                 if isError {
-                    Image(systemName: "exclamationmark.circle.fill")
+                    Image(systemName: "exclamationmark.triangle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
                         .foregroundColor(.white)
                 } else if let logoUrl = settings.logoUrl, let url = URL(string: logoUrl) {
                     RemoteImageView(
                         url: url,
-                        placeholder: Image(systemName: "mic.circle.fill"),
+                        placeholder: Image(systemName: "person.circle.fill"),
                         width: 32,
                         height: 32
                     )
-                    .foregroundColor(.white)
+                    .clipShape(Circle())
                     .if(buttonImageModifier != nil) { view in
                         buttonImageModifier!
                     }
                 } else {
-                    Image(systemName: "mic.circle.fill")
+                    Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundColor(.white)
+                        .foregroundColor(.primaryIndigo)
                         .if(buttonImageModifier != nil) { view in
                             buttonImageModifier!
                         }

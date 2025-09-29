@@ -10,25 +10,20 @@ import SwiftUI
 /// Audio visualizer component that displays real-time audio levels
 struct AudioVisualizer: View {
     let audioLevels: [Float]
-    private let barCount = 20
-    private let minHeight: CGFloat = 4
-    private let maxHeight: CGFloat = 60
+    private let barCount = 10
+    private let spacing: CGFloat = 4
 
     var body: some View {
         GeometryReader { geometry in
-            HStack(spacing: 2) {
+            HStack(spacing: spacing) {
                 ForEach(0..<barCount, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 2)
-                        .fill(LinearGradient(
-                            gradient: Gradient(colors: [.accentColor.opacity(0.6), .accentColor]),
-                            startPoint: .bottom,
-                            endPoint: .top
-                        ))
+                    Capsule()
+                        .fill(Color.primaryIndigo)
                         .frame(
                             width: barWidth(for: geometry.size.width),
-                            height: barHeight(for: index)
+                            height: barHeight(for: index, containerHeight: geometry.size.height)
                         )
-                        .animation(.easeInOut(duration: 0.1), value: audioLevels)
+                        .animation(.easeInOut(duration: 0.15), value: audioLevels)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -36,13 +31,17 @@ struct AudioVisualizer: View {
     }
 
     private func barWidth(for totalWidth: CGFloat) -> CGFloat {
-        let totalSpacing = CGFloat(barCount - 1) * 2
+        let totalSpacing = CGFloat(barCount - 1) * spacing
         return (totalWidth - totalSpacing) / CGFloat(barCount)
     }
 
-    private func barHeight(for index: Int) -> CGFloat {
+    private func barHeight(for index: Int, containerHeight: CGFloat) -> CGFloat {
+        let minHeightRatio: CGFloat = 0.2  // 20% minimum
+        let maxHeightRatio: CGFloat = 0.8  // 80% maximum
+
         guard !audioLevels.isEmpty else {
-            return minHeight
+            // Inactive state: 30% height
+            return containerHeight * 0.3
         }
 
         let levelIndex = index % audioLevels.count
@@ -51,8 +50,10 @@ struct AudioVisualizer: View {
         // Clamp between 0 and 1
         let clampedLevel = max(0, min(1, level))
 
-        // Interpolate between min and max height
-        return minHeight + (maxHeight - minHeight) * clampedLevel
+        // Interpolate between min and max ratio
+        let heightRatio = minHeightRatio + (maxHeightRatio - minHeightRatio) * clampedLevel
+
+        return containerHeight * heightRatio
     }
 }
 

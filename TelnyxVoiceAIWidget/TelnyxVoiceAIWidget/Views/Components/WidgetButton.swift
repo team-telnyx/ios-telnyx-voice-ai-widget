@@ -21,33 +21,36 @@ struct WidgetButton: View {
                 if let logoUrl = settings.logoUrl, let url = URL(string: logoUrl) {
                     RemoteImageView(
                         url: url,
-                        placeholder: Image(systemName: "mic.circle.fill"),
+                        placeholder: Image(systemName: "person.circle.fill"),
                         width: 32,
                         height: 32
                     )
+                    .clipShape(Circle())
                     .if(buttonImageModifier != nil) { view in
                         buttonImageModifier!
                     }
                 } else {
-                    Image(systemName: "mic.circle.fill")
+                    Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
+                        .foregroundColor(.primaryIndigo)
                         .if(buttonImageModifier != nil) { view in
                             buttonImageModifier!
                         }
                 }
 
-                Text(settings.buttonText ?? "Start Call")
-                    .font(.headline)
+                Text(settings.buttonText ?? "Let's chat")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.widgetTextLight)
                     .if(buttonTextModifier != nil) { view in
                         buttonTextModifier!
                     }
             }
-            .padding()
+            .padding(16)
             .frame(maxWidth: .infinity)
-            .background(Color.accentColor)
-            .foregroundColor(.white)
+            .background(Color.white)
             .cornerRadius(24)
+            .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
         }
         .if(widgetButtonModifier != nil) { view in
             widgetButtonModifier!

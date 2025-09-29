@@ -156,27 +156,52 @@ struct TranscriptMessageBubble: View {
     }
 
     var body: some View {
-        HStack {
+        HStack(alignment: .bottom, spacing: 0) {
             if item.isUser {
-                Spacer()
+                Spacer(minLength: 60)
             }
 
             VStack(alignment: item.isUser ? .trailing : .leading, spacing: 4) {
                 Text(item.text)
+                    .font(.system(size: 14))
                     .padding(12)
-                    .background(item.isUser ? Color.accentColor : Color(.systemGray5))
-                    .foregroundColor(item.isUser ? .white : .primary)
-                    .cornerRadius(16)
+                    .background(item.isUser ? Color.primaryIndigo : Color.slate100)
+                    .foregroundColor(item.isUser ? .white : .widgetTextLight)
+                    .cornerRadius(16, corners: item.isUser ?
+                        [.topLeft, .topRight, .bottomLeft] :
+                        [.topLeft, .topRight, .bottomRight])
+                    .fixedSize(horizontal: false, vertical: true)
 
                 Text(timeString)
                     .font(.system(size: 11))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.secondary.opacity(0.6))
             }
 
             if !item.isUser {
-                Spacer()
+                Spacer(minLength: 60)
             }
         }
+    }
+}
+
+// Helper for selective corner radius
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
     }
 }
 

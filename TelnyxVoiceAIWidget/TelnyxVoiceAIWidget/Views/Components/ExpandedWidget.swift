@@ -20,84 +20,48 @@ struct ExpandedWidget: View {
     let expandedWidgetModifier: AnyView?
 
     var body: some View {
-        VStack(spacing: 16) {
-            // Header
-            HStack {
-                if let logoUrl = settings.logoUrl, let url = URL(string: logoUrl) {
-                    RemoteImageView(
-                        url: url,
-                        placeholder: Image(systemName: "mic.circle.fill"),
-                        width: 40,
-                        height: 40
-                    )
-                    .foregroundColor(.accentColor)
-                } else {
-                    Image(systemName: "mic.circle.fill")
-                        .resizable()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.accentColor)
-                }
+        Button(action: onTap) {
+            VStack(spacing: 16) {
+                // Audio Visualizer
+                AudioVisualizer(audioLevels: audioLevels)
+                    .frame(height: 60)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(settings.agentName ?? "AI Assistant")
-                        .font(.headline)
+                // Status Text
+                Text(agentStatusText)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(.widgetSecondaryTextLight)
+                    .multilineTextAlignment(.center)
 
-                    Text(agentStatusText)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
+                // Control Buttons
+                HStack(spacing: 16) {
+                    // Mute button
+                    Button(action: onToggleMute) {
+                        Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(isMuted ? .red : .primaryIndigo)
+                            .frame(width: 48, height: 48)
+                            .background(Color.slate100)
+                            .clipShape(Circle())
+                    }
 
-                Spacer()
-
-                // Connection indicator
-                if isConnected {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 10, height: 10)
-                }
-            }
-
-            // Audio Visualizer
-            AudioVisualizer(audioLevels: audioLevels)
-                .frame(height: 60)
-
-            // Controls
-            HStack(spacing: 24) {
-                // Mute button
-                Button(action: onToggleMute) {
-                    Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
-                        .font(.system(size: 22))
-                        .foregroundColor(isMuted ? .red : .primary)
-                        .frame(width: 50, height: 50)
-                        .background(Color(.systemGray5))
-                        .clipShape(Circle())
-                }
-
-                // End call button
-                Button(action: onEndCall) {
-                    Image(systemName: "phone.down.fill")
-                        .font(.system(size: 22))
-                        .foregroundColor(.white)
-                        .frame(width: 50, height: 50)
-                        .background(Color.red)
-                        .clipShape(Circle())
-                }
-
-                // Expand button
-                Button(action: onTap) {
-                    Image(systemName: "arrow.up.left.and.arrow.down.right")
-                        .font(.system(size: 22))
-                        .foregroundColor(.primary)
-                        .frame(width: 50, height: 50)
-                        .background(Color(.systemGray5))
-                        .clipShape(Circle())
+                    // End call button
+                    Button(action: onEndCall) {
+                        Image(systemName: "phone.down.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .frame(width: 48, height: 48)
+                            .background(Color.red)
+                            .clipShape(Circle())
+                    }
                 }
             }
+            .padding(20)
+            .frame(maxWidth: .infinity)
+            .background(Color.white)
+            .cornerRadius(24)
+            .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(24)
-        .shadow(radius: 8)
+        .buttonStyle(PlainButtonStyle())
         .if(expandedWidgetModifier != nil) { view in
             expandedWidgetModifier!
         }

@@ -20,12 +20,13 @@ struct ErrorWidget: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .font(.system(size: 48))
+            Image(systemName: "exclamationmark.circle")
+                .font(.system(size: 32))
                 .foregroundColor(.red)
 
-            Text("Error")
-                .font(.system(size: 22, weight: .bold))
+            Text("An error occurred")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(.widgetTextLight)
 
             if type == .initialization {
                 initializationErrorView
@@ -35,23 +36,27 @@ struct ErrorWidget: View {
 
             retryButton
         }
-        .padding(24)
-        .background(Color(.systemBackground))
+        .padding(20)
+        .frame(maxWidth: .infinity)
+        .background(Color.white)
         .cornerRadius(24)
-        .shadow(radius: 8)
-        .padding()
+        .overlay(
+            RoundedRectangle(cornerRadius: 24)
+                .stroke(Color.red, lineWidth: 1)
+        )
+        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
     }
 
     private var initializationErrorView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 8) {
             Text("Failed to initialize the AI Assistant.")
-                .font(.body)
+                .font(.system(size: 14))
                 .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
+                .foregroundColor(.widgetSecondaryTextLight)
 
             HStack(spacing: 0) {
                 Text("Please verify your Assistant ID in the ")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.widgetSecondaryTextLight)
 
                 Button(action: {
                     if let url = portalUrl {
@@ -59,14 +64,14 @@ struct ErrorWidget: View {
                     }
                 }) {
                     Text("Telnyx Portal")
-                        .foregroundColor(.accentColor)
+                        .foregroundColor(.primaryIndigo)
                         .underline()
                 }
 
                 Text(" and ensure it's properly configured.")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.widgetSecondaryTextLight)
             }
-            .font(.body)
+            .font(.system(size: 14))
             .multilineTextAlignment(.center)
         }
     }
@@ -75,20 +80,20 @@ struct ErrorWidget: View {
         Text(type == .connection
             ? "Connection error: \(message)"
             : "An error occurred: \(message)")
-            .font(.body)
+            .font(.system(size: 14))
             .multilineTextAlignment(.center)
-            .foregroundColor(.secondary)
+            .foregroundColor(.widgetSecondaryTextLight)
     }
 
     private var retryButton: some View {
         Button(action: onRetry) {
             Text("Retry")
-                .font(.headline)
+                .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding()
+                .padding(14)
                 .background(Color.red)
-                .cornerRadius(12)
+                .cornerRadius(8)
         }
     }
 }
