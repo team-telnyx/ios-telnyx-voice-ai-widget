@@ -85,14 +85,23 @@ struct ContentView: View {
 
                     // Widget Display Area
                     if shouldInitialize && !assistantId.isEmpty {
-                        AIAssistantWidget(
-                            assistantId: assistantId,
-                            shouldInitialize: true,
-                            iconOnly: iconOnly
-                        )
-                        .frame(maxWidth: iconOnly ? 80 : .infinity)
-                        .frame(height: iconOnly ? 80 : 60)
-                        .padding(.horizontal, iconOnly ? 0 : 20)
+                        if iconOnly {
+                            // Icon-only mode: fixed size floating button
+                            AIAssistantWidget(
+                                assistantId: assistantId,
+                                shouldInitialize: true,
+                                iconOnly: iconOnly
+                            )
+                            .frame(width: 80, height: 80)
+                        } else {
+                            // Regular mode: flexible height for expanded states
+                            AIAssistantWidget(
+                                assistantId: assistantId,
+                                shouldInitialize: true,
+                                iconOnly: iconOnly
+                            )
+                            .padding(.horizontal, 20)
+                        }
                     }
 
                     // Instructions Card

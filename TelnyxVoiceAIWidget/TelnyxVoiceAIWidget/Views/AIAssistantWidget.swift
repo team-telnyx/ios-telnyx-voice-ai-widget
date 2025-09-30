@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 /// Main AI Assistant Widget component
 ///
@@ -44,6 +45,7 @@ public struct AIAssistantWidget: View {
     @ObservedObject private var viewModel: WidgetViewModel
     @Environment(\.colorScheme) private var systemColorScheme
     @State private var floatingButtonErrorState: WidgetState?
+    @State private var showTranscriptView: Bool = false
 
     // MARK: - Initialization
     public init(
@@ -75,6 +77,17 @@ public struct AIAssistantWidget: View {
             if shouldInitialize {
                 viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly)
             }
+        }
+        .onReceive(viewModel.$widgetState) { newState in
+            // Show/hide transcript view based on state (iOS 13+ compatible)
+            if case .transcriptView = newState {
+                showTranscriptView = true
+            } else {
+                showTranscriptView = false
+            }
+        }
+        .sheet(isPresented: $showTranscriptView) {
+            transcriptFullScreenView
         }
         .sheet(item: Binding(
             get: { floatingButtonErrorState.flatMap { state -> ErrorSheetItem? in
@@ -150,7 +163,7 @@ public struct AIAssistantWidget: View {
 
         case .transcriptView(let settings, let isConnected, let isMuted, let agentStatus):
             if !iconOnly {
-                // Keep the expanded widget visible behind the dialog (only in regular mode)
+                // Keep the expanded widget visible behind the fullscreen transcript (only in regular mode)
                 ExpandedWidget(
                     settings: settings,
                     isConnected: isConnected,
@@ -163,22 +176,7 @@ public struct AIAssistantWidget: View {
                     expandedWidgetModifier: expandedWidgetModifier
                 )
             }
-
-            TranscriptView(
-                settings: settings,
-                transcriptItems: viewModel.transcriptItems,
-                userInput: viewModel.userInput,
-                isConnected: isConnected,
-                isMuted: isMuted,
-                agentStatus: agentStatus,
-                audioLevels: viewModel.audioLevels,
-                onUserInputChange: { viewModel.updateUserInput($0) },
-                onSendMessage: { viewModel.sendMessage() },
-                onToggleMute: { viewModel.toggleMute() },
-                onEndCall: { viewModel.endCall() },
-                onCollapse: { viewModel.collapseFromTranscriptView() },
-                iconOnly: iconOnly
-            )
+            // TranscriptView is now shown via fullScreenCover
 
         case .error(let message, let type):
             if iconOnly {
@@ -200,6 +198,27 @@ public struct AIAssistantWidget: View {
                     }
                 )
             }
+        }
+    }
+
+    @ViewBuilder
+    private var transcriptFullScreenView: some View {
+        if case .transcriptView(let settings, let isConnected, let isMuted, let agentStatus) = viewModel.widgetState {
+            TranscriptView(
+                settings: settings,
+                transcriptItems: viewModel.transcriptItems,
+                userInput: viewModel.userInput,
+                isConnected: isConnected,
+                isMuted: isMuted,
+                agentStatus: agentStatus,
+                audioLevels: viewModel.audioLevels,
+                onUserInputChange: { viewModel.updateUserInput($0) },
+                onSendMessage: { viewModel.sendMessage() },
+                onToggleMute: { viewModel.toggleMute() },
+                onEndCall: { viewModel.endCall() },
+                onCollapse: { viewModel.collapseFromTranscriptView() },
+                iconOnly: iconOnly
+            )
         }
     }
 
