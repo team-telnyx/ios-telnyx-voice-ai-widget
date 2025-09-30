@@ -18,7 +18,7 @@ struct WidgetButton: View {
     var body: some View {
         Button(action: onClick) {
             HStack(spacing: 12) {
-                if let logoUrl = settings.logoUrl, let url = URL(string: logoUrl) {
+                if let logoIconUrl = settings.logoIconUrl, let url = URL(string: logoIconUrl) {
                     RemoteImageView(
                         url: url,
                         placeholder: Image(systemName: "person.circle.fill"),
@@ -39,7 +39,7 @@ struct WidgetButton: View {
                         }
                 }
 
-                Text(settings.buttonText ?? "Let's chat")
+                Text(settings.startCallText ?? "Let's chat")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(.widgetTextLight)
                     .if(buttonTextModifier != nil) { view in
@@ -60,12 +60,7 @@ struct WidgetButton: View {
 
 #Preview {
     WidgetButton(
-        settings: WidgetSettings(
-            theme: "light",
-            buttonText: "Talk to AI Assistant",
-            logoUrl: nil,
-            agentName: "Assistant"
-        ),
+        settings: WidgetSettings(),
         onClick: {},
         widgetButtonModifier: nil,
         buttonTextModifier: nil,

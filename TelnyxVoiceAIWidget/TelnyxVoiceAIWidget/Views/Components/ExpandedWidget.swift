@@ -72,21 +72,16 @@ struct ExpandedWidget: View {
         case .idle:
             return "Idle"
         case .thinking:
-            return "Thinking..."
+            return settings.agentThinkingText ?? "Thinking..."
         case .waiting:
-            return "Listening"
+            return settings.speakToInterruptText ?? "Speak to interrupt"
         }
     }
 }
 
 #Preview {
     ExpandedWidget(
-        settings: WidgetSettings(
-            theme: "light",
-            buttonText: "Talk to AI",
-            logoUrl: nil,
-            agentName: "AI Assistant"
-        ),
+        settings: WidgetSettings(),
         isConnected: true,
         isMuted: false,
         agentStatus: .waiting,

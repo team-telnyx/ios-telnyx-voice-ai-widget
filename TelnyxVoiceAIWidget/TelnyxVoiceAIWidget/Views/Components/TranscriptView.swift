@@ -121,9 +121,9 @@ struct TranscriptView: View {
         case .idle:
             return "Idle"
         case .thinking:
-            return "Thinking..."
+            return settings.agentThinkingText ?? "Thinking..."
         case .waiting:
-            return "Listening"
+            return settings.speakToInterruptText ?? "Speak to interrupt"
         }
     }
 }
@@ -211,12 +211,7 @@ struct RoundedCorner: Shape {
 
 #Preview {
     TranscriptView(
-        settings: WidgetSettings(
-            theme: "light",
-            buttonText: "Talk to AI",
-            logoUrl: nil,
-            agentName: "AI Assistant"
-        ),
+        settings: WidgetSettings(),
         transcriptItems: [
             TranscriptItem(id: "1", text: "Hello! How can I help you today?", isUser: false),
             TranscriptItem(id: "2", text: "I need help with my account", isUser: true),

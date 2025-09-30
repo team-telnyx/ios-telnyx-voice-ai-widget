@@ -27,7 +27,7 @@ struct FloatingButton: View {
                         .resizable()
                         .frame(width: 32, height: 32)
                         .foregroundColor(.white)
-                } else if let logoUrl = settings.logoUrl, let url = URL(string: logoUrl) {
+                } else if let logoIconUrl = settings.logoIconUrl, let url = URL(string: logoIconUrl) {
                     RemoteImageView(
                         url: url,
                         placeholder: Image(systemName: "person.circle.fill"),
@@ -55,24 +55,14 @@ struct FloatingButton: View {
 #Preview {
     VStack(spacing: 20) {
         FloatingButton(
-            settings: WidgetSettings(
-                theme: "light",
-                buttonText: "Talk to AI",
-                logoUrl: nil,
-                agentName: "Assistant"
-            ),
+            settings: WidgetSettings(),
             onClick: {},
             isError: false,
             buttonImageModifier: nil
         )
 
         FloatingButton(
-            settings: WidgetSettings(
-                theme: "light",
-                buttonText: "Talk to AI",
-                logoUrl: nil,
-                agentName: "Assistant"
-            ),
+            settings: WidgetSettings(),
             onClick: {},
             isError: true,
             buttonImageModifier: nil

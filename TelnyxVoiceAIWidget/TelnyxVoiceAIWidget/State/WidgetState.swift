@@ -93,16 +93,74 @@ public enum ErrorType: Equatable {
 }
 
 /// Widget settings received from Telnyx AI configuration
-public struct WidgetSettings: Equatable {
+/// Note: Full definition is in Models/WidgetSettings.swift
+/// This struct is kept here for backward compatibility but should import from Models
+public struct WidgetSettings: Codable, Equatable {
+    public let agentThinkingText: String?
+    public let audioVisualizerConfig: AudioVisualizerConfig?
+    public let defaultState: String?
+    public let giveFeedbackUrl: String?
+    public let logoIconUrl: String?
+    public let position: String?
+    public let reportIssueUrl: String?
+    public let speakToInterruptText: String?
+    public let startCallText: String?
     public let theme: String?
-    public let buttonText: String?
-    public let logoUrl: String?
-    public let agentName: String?
+    public let viewHistoryUrl: String?
 
-    public init(theme: String? = nil, buttonText: String? = nil, logoUrl: String? = nil, agentName: String? = nil) {
+    enum CodingKeys: String, CodingKey {
+        case agentThinkingText = "agent_thinking_text"
+        case audioVisualizerConfig = "audio_visualizer_config"
+        case defaultState = "default_state"
+        case giveFeedbackUrl = "give_feedback_url"
+        case logoIconUrl = "logo_icon_url"
+        case position
+        case reportIssueUrl = "report_issue_url"
+        case speakToInterruptText = "speak_to_interrupt_text"
+        case startCallText = "start_call_text"
+        case theme
+        case viewHistoryUrl = "view_history_url"
+    }
+
+    public init(
+        agentThinkingText: String? = nil,
+        audioVisualizerConfig: AudioVisualizerConfig? = nil,
+        defaultState: String? = nil,
+        giveFeedbackUrl: String? = nil,
+        logoIconUrl: String? = nil,
+        position: String? = nil,
+        reportIssueUrl: String? = nil,
+        speakToInterruptText: String? = nil,
+        startCallText: String? = nil,
+        theme: String? = nil,
+        viewHistoryUrl: String? = nil
+    ) {
+        self.agentThinkingText = agentThinkingText
+        self.audioVisualizerConfig = audioVisualizerConfig
+        self.defaultState = defaultState
+        self.giveFeedbackUrl = giveFeedbackUrl
+        self.logoIconUrl = logoIconUrl
+        self.position = position
+        self.reportIssueUrl = reportIssueUrl
+        self.speakToInterruptText = speakToInterruptText
+        self.startCallText = startCallText
         self.theme = theme
-        self.buttonText = buttonText
-        self.logoUrl = logoUrl
-        self.agentName = agentName
+        self.viewHistoryUrl = viewHistoryUrl
+    }
+}
+
+/// Configuration for the audio visualizer
+public struct AudioVisualizerConfig: Codable, Equatable {
+    public let enabled: Bool?
+    public let type: String?
+
+    enum CodingKeys: String, CodingKey {
+        case enabled
+        case type
+    }
+
+    public init(enabled: Bool? = nil, type: String? = nil) {
+        self.enabled = enabled
+        self.type = type
     }
 }

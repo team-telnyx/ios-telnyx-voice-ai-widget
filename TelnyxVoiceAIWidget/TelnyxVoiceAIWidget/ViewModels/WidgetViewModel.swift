@@ -254,6 +254,29 @@ public class WidgetViewModel: ObservableObject {
         }
     }
 
+    private func updateWidgetSettings(_ newSettings: WidgetSettings) {
+        // Update the published widgetSettings property
+        widgetSettings = newSettings
+
+        // Update current state with new settings
+        switch widgetState {
+        case .idle, .loading:
+            // Initial state transitions will use the new settings
+            break
+        case .collapsed:
+            widgetState = .collapsed(settings: newSettings)
+        case .connecting:
+            widgetState = .connecting(settings: newSettings)
+        case .expanded(_, let isConnected, let isMuted, let agentStatus):
+            widgetState = .expanded(settings: newSettings, isConnected: isConnected, isMuted: isMuted, agentStatus: agentStatus)
+        case .transcriptView(_, let isConnected, let isMuted, let agentStatus):
+            widgetState = .transcriptView(settings: newSettings, isConnected: isConnected, isMuted: isMuted, agentStatus: agentStatus)
+        case .error:
+            // Don't update settings during error state
+            break
+        }
+    }
+
     // MARK: - Socket Response Handlers
 
     private func handleAIConversation(type: String?) {
@@ -327,9 +350,22 @@ public class WidgetViewModel: ObservableObject {
 extension WidgetViewModel: AIAssistantManagerDelegate {
     nonisolated public func onAIConversationMessage(_ message: [String : Any]) {
         Task { @MainActor in
+            // Extract params from message
+            guard let params = message["params"] as? [String: Any] else { return }
+
+            // Extract and update widget settings if present
+            if let widgetSettingsDict = params["widget_settings"] as? [String: Any] {
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: widgetSettingsDict)
+                    let settings = try JSONDecoder().decode(WidgetSettings.self, from: jsonData)
+                    updateWidgetSettings(settings)
+                } catch {
+                    print("Failed to parse widget settings: \(error)")
+                }
+            }
+
             // Extract type from message for agent status updates
-            if let params = message["params"] as? [String: Any],
-               let type = params["type"] as? String {
+            if let type = params["type"] as? String {
                 handleAIConversation(type: type)
             }
         }
@@ -372,11 +408,27 @@ extension WidgetViewModel: AIAssistantManagerDelegate {
     nonisolated public func onWidgetSettingsUpdated(_ settings: TelnyxRTC.WidgetSettings) {
         Task { @MainActor in
             // Convert TelnyxRTC.WidgetSettings to our WidgetSettings
+            // Note: TelnyxRTC.AudioVisualizerConfig might be a different type, so we create our own
+            let audioConfig: AudioVisualizerConfig? = {
+                if settings.audioVisualizerConfig != nil {
+                    // For now, just create a default config when present
+                    return AudioVisualizerConfig(enabled: true, type: "waveform")
+                }
+                return nil
+            }()
+
             let convertedSettings = WidgetSettings(
+                agentThinkingText: settings.agentThinkingText,
+                audioVisualizerConfig: audioConfig,
+                defaultState: settings.defaultState,
+                giveFeedbackUrl: settings.giveFeedbackUrl,
+                logoIconUrl: settings.logoIconUrl,
+                position: settings.position,
+                reportIssueUrl: settings.reportIssueUrl,
+                speakToInterruptText: settings.speakToInterruptText,
+                startCallText: settings.startCallText,
                 theme: settings.theme,
-                buttonText: settings.startCallText,
-                logoUrl: settings.logoIconUrl,
-                agentName: nil
+                viewHistoryUrl: settings.viewHistoryUrl
             )
             self.widgetSettings = convertedSettings
 
