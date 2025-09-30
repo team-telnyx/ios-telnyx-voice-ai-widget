@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9906F81F2E3BD08800A02FE7 /* TelnyxVoiceAIWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9906F8132E3BD08700A02FE7 /* TelnyxVoiceAIWidget.framework */; };
+		99TELNYXRTC00000000000001 /* telnyx-webrtc-ios in Frameworks */ = {isa = PBXBuildFile; productRef = 99TELNYXRTC00000000000000 /* telnyx-webrtc-ios */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99TELNYXRTC00000000000001 /* telnyx-webrtc-ios in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,6 +108,7 @@
 			);
 			name = TelnyxVoiceAIWidget;
 			packageProductDependencies = (
+				99TELNYXRTC00000000000000 /* telnyx-webrtc-ios */,
 			);
 			productName = TelnyxVoiceAIWidget;
 			productReference = 9906F8132E3BD08700A02FE7 /* TelnyxVoiceAIWidget.framework */;
@@ -161,6 +164,9 @@
 			);
 			mainGroup = 9906F8092E3BD08700A02FE7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				99TELNYXRTCPKG000000000001 /* XCRemoteSwiftPackageReference "telnyx-webrtc-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9906F8142E3BD08700A02FE7 /* Products */;
 			projectDirPath = "";
@@ -471,6 +477,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		99TELNYXRTCPKG000000000001 /* XCRemoteSwiftPackageReference "telnyx-webrtc-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/team-telnyx/telnyx-webrtc-ios.git";
+			requirement = {
+				branch = "feat/WEBRTC-2906";
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		99TELNYXRTC00000000000000 /* telnyx-webrtc-ios */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 99TELNYXRTCPKG000000000001 /* XCRemoteSwiftPackageReference "telnyx-webrtc-ios" */;
+			productName = "telnyx-webrtc-ios";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9906F80A2E3BD08700A02FE7 /* Project object */;
 }
