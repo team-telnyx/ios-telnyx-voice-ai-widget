@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var showPermissionAlert: Bool = false
     @State private var showEmptyIdAlert: Bool = false
 
+    private let assistantIdKey = "lastAssistantId"
+
     var body: some View {
         NavigationView {
             ScrollView {
@@ -29,16 +31,24 @@ struct ContentView: View {
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(Color(hex: "475569"))
 
-                            TextField("Enter your Assistant ID", text: $assistantId)
-                                .padding(12)
-                                .background(Color.white)
-                                .foregroundColor(Color(hex: "1E293B"))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color(hex: "CBD5E1"), lineWidth: 1)
-                                )
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
+                            ZStack(alignment: .leading) {
+                                if assistantId.isEmpty {
+                                    Text("Enter your Assistant ID")
+                                        .foregroundColor(Color(hex: "94A3B8"))
+                                        .padding(.horizontal, 12)
+                                }
+
+                                TextField("", text: $assistantId)
+                                    .padding(12)
+                                    .foregroundColor(Color(hex: "1E293B"))
+                                    .autocapitalization(.none)
+                                    .disableAutocorrection(true)
+                            }
+                            .background(Color.white)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color(hex: "CBD5E1"), lineWidth: 1)
+                            )
                         }
 
                         // Widget Mode Selection
@@ -72,7 +82,7 @@ struct ContentView: View {
                                 requestMicrophonePermission()
                             }
                         }) {
-                            Text(shouldInitialize ? "Hide Widget" : "Create Widget")
+                            Text(shouldInitialize ? "Disconnect" : "Create Widget")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(.white)
                                 .frame(maxWidth: .infinity)
@@ -142,16 +152,27 @@ struct ContentView: View {
         } message: {
             Text("Please enable microphone access in Settings to use voice features")
         }
+        .onAppear {
+            loadSavedAssistantId()
+        }
     }
 
     // MARK: - Helper Methods
 
     private func requestMicrophonePermission() {
+        // If already initialized, disconnect
+        if shouldInitialize {
+            shouldInitialize = false
+            return
+        }
+
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             DispatchQueue.main.async {
                 microphonePermissionGranted = granted
                 if granted {
                     shouldInitialize = true
+                    // Save assistant ID to UserDefaults
+                    UserDefaults.standard.set(assistantId, forKey: assistantIdKey)
                 } else {
                     showPermissionAlert = true
                 }
@@ -162,6 +183,12 @@ struct ContentView: View {
     private func openSettings() {
         if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(settingsUrl)
+        }
+    }
+
+    private func loadSavedAssistantId() {
+        if let savedId = UserDefaults.standard.string(forKey: assistantIdKey), !savedId.isEmpty {
+            assistantId = savedId
         }
     }
 }
