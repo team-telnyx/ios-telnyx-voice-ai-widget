@@ -32,6 +32,7 @@ struct ContentView: View {
                             TextField("Enter your Assistant ID", text: $assistantId)
                                 .padding(12)
                                 .background(Color.white)
+                                .foregroundColor(Color(hex: "1E293B"))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 8)
                                         .stroke(Color(hex: "CBD5E1"), lineWidth: 1)
