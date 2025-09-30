@@ -33,7 +33,7 @@ struct WidgetButton: View {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundColor(.primaryIndigo)
+                        .foregroundColor(iconColor)
                         .if(buttonImageModifier != nil) { view in
                             buttonImageModifier!
                         }
@@ -41,19 +41,52 @@ struct WidgetButton: View {
 
                 Text(settings.startCallText ?? "Let's chat")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.widgetTextLight)
+                    .foregroundColor(textColor)
                     .if(buttonTextModifier != nil) { view in
                         buttonTextModifier!
                     }
             }
             .padding(16)
             .frame(maxWidth: .infinity)
-            .background(Color.white)
+            .background(backgroundColor)
             .cornerRadius(24)
             .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
         }
         .if(widgetButtonModifier != nil) { view in
             widgetButtonModifier!
+        }
+    }
+
+    private var backgroundColor: Color {
+        switch settings.theme?.lowercased() {
+        case "dark":
+            return Color.black
+        case "light":
+            return Color.white
+        default:
+            return Color.white
+        }
+    }
+
+    private var textColor: Color {
+        switch settings.theme?.lowercased() {
+        case "dark":
+            return Color.white
+        case "light":
+            return Color.black
+        default:
+            return .widgetTextLight
+        }
+    }
+
+    private var iconColor: Color {
+        switch settings.theme?.lowercased() {
+        case "dark":
+            return Color.white
+        case "light":
+            return .primaryIndigo
+        default:
+            return .primaryIndigo
         }
     }
 }

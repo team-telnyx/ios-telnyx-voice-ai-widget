@@ -18,7 +18,7 @@ struct FloatingButton: View {
         Button(action: onClick) {
             ZStack {
                 Circle()
-                    .fill(isError ? Color.red : Color.white)
+                    .fill(isError ? Color.red : backgroundColor)
                     .frame(width: 56, height: 56)
                     .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
 
@@ -42,12 +42,34 @@ struct FloatingButton: View {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundColor(.primaryIndigo)
+                        .foregroundColor(iconColor)
                         .if(buttonImageModifier != nil) { view in
                             buttonImageModifier!
                         }
                 }
             }
+        }
+    }
+
+    private var backgroundColor: Color {
+        switch settings.theme?.lowercased() {
+        case "dark":
+            return Color.black
+        case "light":
+            return Color.white
+        default:
+            return Color.white
+        }
+    }
+
+    private var iconColor: Color {
+        switch settings.theme?.lowercased() {
+        case "dark":
+            return Color.white
+        case "light":
+            return .primaryIndigo
+        default:
+            return .primaryIndigo
         }
     }
 }
