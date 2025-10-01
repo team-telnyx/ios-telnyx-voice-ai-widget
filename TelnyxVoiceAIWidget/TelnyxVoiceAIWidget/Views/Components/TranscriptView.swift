@@ -11,6 +11,7 @@ import Combine
 /// Full-screen transcript view component matching Android implementation
 struct TranscriptView: View {
     let settings: WidgetSettings
+    let customization: WidgetCustomization?
     let transcriptItems: [TranscriptItem]
     let userInput: String
     let isConnected: Bool
@@ -24,6 +25,10 @@ struct TranscriptView: View {
     let onCollapse: () -> Void
     let iconOnly: Bool
 
+    private var colorResolver: ColorResolver {
+        ColorResolver(customization: customization, settings: settings)
+    }
+
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
@@ -35,7 +40,7 @@ struct TranscriptView: View {
                             Button(action: onCollapse) {
                                 Image(systemName: "chevron.down")
                                     .font(.system(size: 20, weight: .medium))
-                                    .foregroundColor(.widgetTextLight)
+                                    .foregroundColor(colorResolver.primaryText())
                                     .frame(width: 40, height: 40)
                             }
                         }
@@ -46,7 +51,7 @@ struct TranscriptView: View {
                         Button(action: onToggleMute) {
                             Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
                                 .font(.system(size: 18))
-                                .foregroundColor(isMuted ? .red : .widgetTextLight)
+                                .foregroundColor(colorResolver.muteButtonIcon(isMuted: isMuted))
                                 .frame(width: 40, height: 40)
                         }
 
@@ -65,22 +70,29 @@ struct TranscriptView: View {
 
                     // Audio visualizer and status
                     VStack(spacing: 8) {
-                        AudioVisualizer(audioLevels: audioLevels)
-                            .frame(height: 60)
+                        AudioVisualizer(
+                            audioLevels: audioLevels,
+                            colorScheme: colorResolver.audioVisualizerColor()
+                        )
+                        .frame(height: 60)
 
                         Text(agentStatusText)
                             .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(.widgetSecondaryTextLight)
+                            .foregroundColor(colorResolver.secondaryText())
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 12)
                 }
-                .background(Color.white)
+                .background(colorResolver.widgetSurface())
                 .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 2)
 
                 // Transcript messages - iOS 13 compatible
-                TranscriptScrollView(transcriptItems: transcriptItems)
-                    .background(Color.slate50)
+                TranscriptScrollView(
+                    transcriptItems: transcriptItems,
+                    settings: settings,
+                    customization: customization
+                )
+                .background(colorResolver.transcriptBackground())
 
                 Divider()
 
@@ -94,9 +106,9 @@ struct TranscriptView: View {
                             onSendMessage()
                         }
                     })
-                    .foregroundColor(.widgetTextLight)
+                    .foregroundColor(colorResolver.primaryText())
                     .padding(12)
-                    .background(Color.slate100)
+                    .background(colorResolver.inputBackground())
                     .cornerRadius(24)
                     .disabled(!isConnected)
 
@@ -108,9 +120,9 @@ struct TranscriptView: View {
                     .disabled(userInput.isEmpty || !isConnected)
                 }
                 .padding(16)
-                .background(Color.white)
+                .background(colorResolver.widgetSurface())
             }
-            .background(Color.white)
+            .background(colorResolver.widgetSurface())
             .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .edgesIgnoringSafeArea(.all)
@@ -131,12 +143,14 @@ struct TranscriptView: View {
 /// iOS 13 compatible scroll view with auto-scroll to bottom
 struct TranscriptScrollView: View {
     let transcriptItems: [TranscriptItem]
+    let settings: WidgetSettings
+    let customization: WidgetCustomization?
 
     var body: some View {
         ScrollView {
             VStack(spacing: 8) {
                 ForEach(transcriptItems) { item in
-                    TranscriptMessageBubble(item: item)
+                    TranscriptMessageBubble(item: item, settings: settings, customization: customization)
                 }
 
                 // Invisible anchor for scrolling to bottom
@@ -152,11 +166,33 @@ struct TranscriptScrollView: View {
 /// Individual message bubble in the transcript
 struct TranscriptMessageBubble: View {
     let item: TranscriptItem
+    let settings: WidgetSettings
+    let customization: WidgetCustomization?
+
+    private var colorResolver: ColorResolver {
+        ColorResolver(customization: customization, settings: settings)
+    }
 
     private var timeString: String {
         let formatter = DateFormatter()
         formatter.timeStyle = .short
         return formatter.string(from: item.timestamp)
+    }
+
+    private var bubbleBackground: Color {
+        if item.isUser {
+            return colorResolver.userBubbleBackground()
+        } else {
+            return colorResolver.agentBubbleBackground()
+        }
+    }
+
+    private var bubbleTextColor: Color {
+        if item.isUser {
+            return colorResolver.userBubbleText()
+        } else {
+            return colorResolver.agentBubbleText()
+        }
     }
 
     var body: some View {
@@ -169,8 +205,8 @@ struct TranscriptMessageBubble: View {
                 Text(item.text)
                     .font(.system(size: 14))
                     .padding(12)
-                    .background(item.isUser ? Color.primaryIndigo : Color.slate100)
-                    .foregroundColor(item.isUser ? .white : .widgetTextLight)
+                    .background(bubbleBackground)
+                    .foregroundColor(bubbleTextColor)
                     .cornerRadius(16, corners: item.isUser ?
                         [.topLeft, .topRight, .bottomLeft] :
                         [.topLeft, .topRight, .bottomRight])
@@ -212,6 +248,7 @@ struct RoundedCorner: Shape {
 #Preview {
     TranscriptView(
         settings: WidgetSettings(),
+        customization: nil,
         transcriptItems: [
             TranscriptItem(id: "1", text: "Hello! How can I help you today?", isUser: false),
             TranscriptItem(id: "2", text: "I need help with my account", isUser: true),

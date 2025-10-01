@@ -25,6 +25,10 @@ public class WidgetViewModel: ObservableObject {
     @Published public var userInput: String = ""
     @Published public var audioLevels: [Float] = []
 
+    // MARK: - Public Properties
+    /// Custom color configuration that takes priority over socket-received theme
+    public var customization: WidgetCustomization?
+
     // MARK: - Private Properties
     private var iconOnly: Bool = false
     private var isConnected: Bool = false
@@ -50,9 +54,11 @@ public class WidgetViewModel: ObservableObject {
     /// - Parameters:
     ///   - assistantId: The Assistant ID from your Telnyx AI configuration
     ///   - iconOnly: When true, displays as a floating action button
-    public func initialize(assistantId: String, iconOnly: Bool = false) {
+    ///   - customization: Optional custom colors that override theme-based colors
+    public func initialize(assistantId: String, iconOnly: Bool = false, customization: WidgetCustomization? = nil) {
         self.assistantId = assistantId
         self.iconOnly = iconOnly
+        self.customization = customization
 
         widgetState = .loading
 

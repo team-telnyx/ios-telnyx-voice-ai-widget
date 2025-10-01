@@ -153,14 +153,20 @@ public struct WidgetSettings: Codable, Equatable {
 public struct AudioVisualizerConfig: Codable, Equatable {
     public let enabled: Bool?
     public let type: String?
+    public let color: String?
+    public let preset: String?
 
     enum CodingKeys: String, CodingKey {
         case enabled
         case type
+        case color
+        case preset
     }
 
-    public init(enabled: Bool? = nil, type: String? = nil) {
+    public init(enabled: Bool? = nil, type: String? = nil, color: String? = nil, preset: String? = nil) {
         self.enabled = enabled
         self.type = type
+        self.color = color
+        self.preset = preset
     }
 }

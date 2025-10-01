@@ -10,6 +10,7 @@ import SwiftUI
 /// Audio visualizer component that displays real-time audio levels
 struct AudioVisualizer: View {
     let audioLevels: [Float]
+    let colorScheme: String?
     private let barCount = 10
     private let spacing: CGFloat = 4
 
@@ -18,7 +19,7 @@ struct AudioVisualizer: View {
             HStack(spacing: spacing) {
                 ForEach(0..<barCount, id: \.self) { index in
                     Capsule()
-                        .fill(Color.primaryIndigo)
+                        .fill(gradientForScheme)
                         .frame(
                             width: barWidth(for: geometry.size.width),
                             height: barHeight(for: index, containerHeight: geometry.size.height)
@@ -27,6 +28,37 @@ struct AudioVisualizer: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+    }
+
+    /// Returns the gradient based on the color scheme
+    private var gradientForScheme: LinearGradient {
+        let colors = colorGradient(for: colorScheme)
+        return LinearGradient(
+            gradient: Gradient(colors: colors),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    /// Returns the color array for a given scheme
+    private func colorGradient(for scheme: String?) -> [Color] {
+        switch scheme?.lowercased() {
+        case "verdant":
+            return [.verdantStart, .verdantMid, .verdantEnd]
+        case "twilight":
+            return [.twilightStart, .twilightMid, .twilightEnd]
+        case "bloom":
+            return [.bloomStart, .bloomMid, .bloomEnd]
+        case "mystic":
+            return [.mysticStart, .mysticMid, .mysticEnd]
+        case "flare":
+            return [.flareStart, .flareMid, .flareEnd]
+        case "glacier":
+            return [.glacierStart, .glacierMid, .glacierEnd]
+        default:
+            // Default to verdant
+            return [.verdantStart, .verdantMid, .verdantEnd]
         }
     }
 
@@ -59,21 +91,21 @@ struct AudioVisualizer: View {
 
 #Preview {
     VStack(spacing: 20) {
-        Text("Active Audio")
+        Text("Active Audio - Verdant")
             .font(.caption)
-        AudioVisualizer(audioLevels: [0.3, 0.5, 0.8, 0.6, 0.9, 0.4, 0.7, 0.5, 0.3, 0.6, 0.8, 0.7, 0.5, 0.4, 0.6, 0.9, 0.7, 0.5, 0.3, 0.4])
+        AudioVisualizer(audioLevels: [0.3, 0.5, 0.8, 0.6, 0.9, 0.4, 0.7, 0.5, 0.3, 0.6, 0.8, 0.7, 0.5, 0.4, 0.6, 0.9, 0.7, 0.5, 0.3, 0.4], colorScheme: "verdant")
             .frame(height: 60)
             .padding()
 
-        Text("Low Audio")
+        Text("Low Audio - Bloom")
             .font(.caption)
-        AudioVisualizer(audioLevels: [0.1, 0.2, 0.15, 0.1, 0.2, 0.1, 0.15, 0.2, 0.1, 0.15])
+        AudioVisualizer(audioLevels: [0.1, 0.2, 0.15, 0.1, 0.2, 0.1, 0.15, 0.2, 0.1, 0.15], colorScheme: "bloom")
             .frame(height: 60)
             .padding()
 
-        Text("No Audio")
+        Text("No Audio - Glacier")
             .font(.caption)
-        AudioVisualizer(audioLevels: [])
+        AudioVisualizer(audioLevels: [], colorScheme: "glacier")
             .frame(height: 60)
             .padding()
     }

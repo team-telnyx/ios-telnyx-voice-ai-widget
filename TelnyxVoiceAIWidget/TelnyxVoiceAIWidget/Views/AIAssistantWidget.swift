@@ -28,12 +28,14 @@ import Combine
 ///   - expandedWidgetModifier: ViewModifier applied to the expanded widget
 ///   - buttonTextModifier: ViewModifier applied to the text visible on the widget button
 ///   - buttonImageModifier: ViewModifier applied to the image/icon visible on the widget button
+///   - customization: Optional custom colors that take priority over socket-received theme colors
 public struct AIAssistantWidget: View {
 
     // MARK: - Properties
     let assistantId: String
     let shouldInitialize: Bool
     let iconOnly: Bool
+    let customization: WidgetCustomization?
 
     // MARK: - ViewModifiers
     let widgetButtonModifier: AnyView?
@@ -52,6 +54,7 @@ public struct AIAssistantWidget: View {
         assistantId: String,
         shouldInitialize: Bool = true,
         iconOnly: Bool = false,
+        customization: WidgetCustomization? = nil,
         widgetButtonModifier: AnyView? = nil,
         expandedWidgetModifier: AnyView? = nil,
         buttonTextModifier: AnyView? = nil,
@@ -60,6 +63,7 @@ public struct AIAssistantWidget: View {
         self.assistantId = assistantId
         self.shouldInitialize = shouldInitialize
         self.iconOnly = iconOnly
+        self.customization = customization
         self.widgetButtonModifier = widgetButtonModifier
         self.expandedWidgetModifier = expandedWidgetModifier
         self.buttonTextModifier = buttonTextModifier
@@ -75,7 +79,7 @@ public struct AIAssistantWidget: View {
         .preferredColorScheme(preferredTheme)
         .onAppear {
             if shouldInitialize {
-                viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly)
+                viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
             }
         }
         .onReceive(viewModel.$widgetState) { newState in
@@ -105,7 +109,7 @@ public struct AIAssistantWidget: View {
                 type: errorItem.type,
                 assistantId: assistantId,
                 onRetry: {
-                    viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly)
+                    viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
                     floatingButtonErrorState = nil
                 }
             )
@@ -150,6 +154,7 @@ public struct AIAssistantWidget: View {
             if !iconOnly {
                 ExpandedWidget(
                     settings: settings,
+                    customization: viewModel.customization,
                     isConnected: isConnected,
                     isMuted: isMuted,
                     agentStatus: agentStatus,
@@ -166,6 +171,7 @@ public struct AIAssistantWidget: View {
                 // Keep the expanded widget visible behind the fullscreen transcript (only in regular mode)
                 ExpandedWidget(
                     settings: settings,
+                    customization: viewModel.customization,
                     isConnected: isConnected,
                     isMuted: isMuted,
                     agentStatus: agentStatus,
@@ -194,7 +200,7 @@ public struct AIAssistantWidget: View {
                     type: type,
                     assistantId: assistantId,
                     onRetry: {
-                        viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly)
+                        viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
                     }
                 )
             }
@@ -206,6 +212,7 @@ public struct AIAssistantWidget: View {
         if case .transcriptView(let settings, let isConnected, let isMuted, let agentStatus) = viewModel.widgetState {
             TranscriptView(
                 settings: settings,
+                customization: viewModel.customization,
                 transcriptItems: viewModel.transcriptItems,
                 userInput: viewModel.userInput,
                 isConnected: isConnected,

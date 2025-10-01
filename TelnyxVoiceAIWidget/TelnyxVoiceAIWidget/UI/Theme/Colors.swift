@@ -72,6 +72,64 @@ extension Color {
     /// Widget secondary text (dark mode)
     static let widgetSecondaryTextDark = slate300
 
+    // MARK: - Audio Visualizer Gradient Colors
+
+    /// Verdant gradient colors (default)
+    static let verdantStart = Color(hex: "D3FFA6")
+    static let verdantMid = Color(hex: "036B5B")
+    static let verdantEnd = Color(hex: "D3FFA6")
+
+    /// Twilight gradient colors
+    static let twilightStart = Color(hex: "81B9FF")
+    static let twilightMid = Color(hex: "371A5E")
+    static let twilightEnd = Color(hex: "81B9FF")
+
+    /// Bloom gradient colors
+    static let bloomStart = Color(hex: "FFD4FE")
+    static let bloomMid = Color(hex: "FD05F9")
+    static let bloomEnd = Color(hex: "FFD4FE")
+
+    /// Mystic gradient colors
+    static let mysticStart = Color(hex: "1F023A")
+    static let mysticMid = Color(hex: "CA76FF")
+    static let mysticEnd = Color(hex: "1F023A")
+
+    /// Flare gradient colors
+    static let flareStart = Color(hex: "FFFFFF")
+    static let flareMid = Color(hex: "FC5F00")
+    static let flareEnd = Color(hex: "FFFFFF")
+
+    /// Glacier gradient colors
+    static let glacierStart = Color(hex: "4CE5F2")
+    static let glacierMid = Color(hex: "005A98")
+    static let glacierEnd = Color(hex: "4CE5F2")
+
+    // MARK: - Transcript Colors
+
+    /// Transcript background (light mode)
+    static let transcriptBackgroundLight = Color(hex: "E6E3D3")
+
+    /// Transcript background (dark mode)
+    static let transcriptBackgroundDark = Color(hex: "38383C")
+
+    /// User message bubble background (light mode)
+    static let userBubbleLight = Color(hex: "FEFDF5")
+
+    /// User message bubble background (dark mode)
+    static let userBubbleDark = Color(hex: "222227")
+
+    /// Mute button background (light mode)
+    static let muteButtonLight = Color(hex: "E6E3D3")
+
+    /// Mute button background (dark mode)
+    static let muteButtonDark = Color(hex: "3C3C3C")
+
+    /// Mute button active background (light mode)
+    static let muteButtonActiveLight = Color(hex: "F36666")
+
+    /// Mute button active background (dark mode)
+    static let muteButtonActiveDark = Color(hex: "750000")
+
     // MARK: - Helper
 
     init(hex: String) {
@@ -97,5 +155,122 @@ extension Color {
             blue:  Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+
+// MARK: - Color Priority Helper
+/// Helper struct to resolve color priority: custom > socket theme > default
+struct ColorResolver {
+    let customization: WidgetCustomization?
+    let settings: WidgetSettings
+
+    private var isDarkTheme: Bool {
+        settings.theme?.lowercased() == "dark"
+    }
+
+    // MARK: - Audio Visualizer
+
+    func audioVisualizerColor() -> String {
+        // Priority: customization > socket config > default
+        if let customColor = customization?.audioVisualizerColor {
+            return customColor
+        }
+        if let socketColor = settings.audioVisualizerConfig?.color {
+            return socketColor
+        }
+        return "verdant" // default
+    }
+
+    // MARK: - Transcript View
+
+    func transcriptBackground() -> Color {
+        if let custom = customization?.transcriptBackgroundColor {
+            return custom
+        }
+        return isDarkTheme ? .transcriptBackgroundDark : .transcriptBackgroundLight
+    }
+
+    func userBubbleBackground() -> Color {
+        if let custom = customization?.userBubbleBackgroundColor {
+            return custom
+        }
+        return isDarkTheme ? .userBubbleDark : .userBubbleLight
+    }
+
+    func agentBubbleBackground() -> Color {
+        if let custom = customization?.agentBubbleBackgroundColor {
+            return custom
+        }
+        return isDarkTheme ? .slate700 : .slate100
+    }
+
+    func userBubbleText() -> Color {
+        if let custom = customization?.userBubbleTextColor {
+            return custom
+        }
+        return isDarkTheme ? .white : .widgetTextLight
+    }
+
+    func agentBubbleText() -> Color {
+        if let custom = customization?.agentBubbleTextColor {
+            return custom
+        }
+        return isDarkTheme ? .white : .widgetTextLight
+    }
+
+    // MARK: - Widget Surface and Text
+
+    func widgetSurface() -> Color {
+        if let custom = customization?.widgetSurfaceColor {
+            return custom
+        }
+        return isDarkTheme ? .widgetSurfaceDark : .white
+    }
+
+    func primaryText() -> Color {
+        if let custom = customization?.primaryTextColor {
+            return custom
+        }
+        return isDarkTheme ? .widgetTextDark : .widgetTextLight
+    }
+
+    func secondaryText() -> Color {
+        if let custom = customization?.secondaryTextColor {
+            return custom
+        }
+        return isDarkTheme ? .widgetSecondaryTextDark : .widgetSecondaryTextLight
+    }
+
+    func inputBackground() -> Color {
+        if let custom = customization?.inputBackgroundColor {
+            return custom
+        }
+        return isDarkTheme ? .slate800 : .slate100
+    }
+
+    // MARK: - Buttons
+
+    func muteButtonBackground(isMuted: Bool) -> Color {
+        if isMuted {
+            if let custom = customization?.muteButtonActiveBackgroundColor {
+                return custom
+            }
+            return isDarkTheme ? .muteButtonActiveDark : .muteButtonActiveLight
+        } else {
+            if let custom = customization?.muteButtonBackgroundColor {
+                return custom
+            }
+            return isDarkTheme ? .muteButtonDark : .muteButtonLight
+        }
+    }
+
+    func muteButtonIcon(isMuted: Bool) -> Color {
+        if let custom = customization?.muteButtonIconColor {
+            return custom
+        }
+        if isMuted {
+            return .red
+        }
+        return isDarkTheme ? .white : .primaryIndigo
     }
 }
