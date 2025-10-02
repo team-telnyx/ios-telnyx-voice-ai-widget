@@ -25,6 +25,8 @@ struct TranscriptView: View {
     let onCollapse: () -> Void
     let iconOnly: Bool
 
+    @State private var keyboardHeight: CGFloat = 0
+
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
     }
@@ -94,6 +96,7 @@ struct TranscriptView: View {
                     settings: settings,
                     customization: customization
                 )
+                .frame(maxHeight: .infinity)
                 .background(colorResolver.transcriptBackground())
 
                 Divider()
@@ -124,10 +127,14 @@ struct TranscriptView: View {
                 .padding(16)
                 .background(colorResolver.widgetSurface())
             }
+            .frame(width: geometry.size.width, height: geometry.size.height - keyboardHeight)
             .background(colorResolver.widgetSurface())
-            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .edgesIgnoringSafeArea(.all)
+        .animation(.easeOut(duration: 0.3), value: keyboardHeight)
+        .onAppear {
+            setupKeyboardObservers()
+        }
     }
 
     private var agentStatusText: String {
@@ -140,6 +147,27 @@ struct TranscriptView: View {
             return settings.speakToInterruptText ?? "Speak to interrupt"
         }
     }
+
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillShowNotification,
+            object: nil,
+            queue: .main
+        ) { notification in
+            guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
+                return
+            }
+            keyboardHeight = keyboardFrame.height
+        }
+
+        NotificationCenter.default.addObserver(
+            forName: UIResponder.keyboardWillHideNotification,
+            object: nil,
+            queue: .main
+        ) { _ in
+            keyboardHeight = 0
+        }
+    }
 }
 
 /// iOS 13 compatible scroll view with auto-scroll to bottom
@@ -148,19 +176,37 @@ struct TranscriptScrollView: View {
     let settings: WidgetSettings
     let customization: WidgetCustomization?
 
-    var body: some View {
-        ScrollView {
-            VStack(spacing: 8) {
-                ForEach(transcriptItems) { item in
-                    TranscriptMessageBubble(item: item, settings: settings, customization: customization)
-                }
+    @State private var scrollProxy: ScrollViewProxy?
 
-                // Invisible anchor for scrolling to bottom
-                Color.clear
-                    .frame(height: 1)
-                    .id("bottom")
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: 8) {
+                    ForEach(transcriptItems) { item in
+                        TranscriptMessageBubble(item: item, settings: settings, customization: customization)
+                    }
+
+                    // Invisible anchor for scrolling to bottom
+                    Color.clear
+                        .frame(height: 1)
+                        .id("bottom")
+                }
+                .padding(16)
             }
-            .padding(16)
+            .onAppear {
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: transcriptItems.count) { _ in
+                scrollToBottom(proxy: proxy)
+            }
+        }
+    }
+
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            withAnimation(.easeOut(duration: 0.3)) {
+                proxy.scrollTo("bottom", anchor: .bottom)
+            }
         }
     }
 }
