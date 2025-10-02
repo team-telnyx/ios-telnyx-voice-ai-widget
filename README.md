@@ -312,6 +312,220 @@ Check out the included example app in the `SampleApp` folder for a complete impl
 open TelnyxVoiceAIWidget.xcworkspace
 ```
 
+## SDK Components
+
+### Core Components
+
+The SDK is organized into the following main components:
+
+#### 1. **AIAssistantWidget**
+The main entry point for integrating the widget into your application.
+
+**Location**: `Views/AIAssistantWidget.swift`
+
+**Purpose**: Provides the complete UI and lifecycle management for AI Assistant interactions.
+
+**Key Parameters**:
+- `assistantId: String` - Your Telnyx AI Assistant ID (required)
+- `shouldInitialize: Bool` - Controls network connection lifecycle
+- `iconOnly: Bool` - Toggle between full widget and floating action button mode
+- `customization: WidgetCustomization?` - Custom color overrides
+
+**Example**:
+```swift
+AIAssistantWidget(
+    assistantId: "your-assistant-id",
+    shouldInitialize: true,
+    iconOnly: false,
+    customization: WidgetCustomization(
+        audioVisualizerColor: "twilight",
+        userBubbleBackgroundColor: .blue
+    )
+)
+```
+
+#### 2. **WidgetViewModel**
+Manages the widget's state, business logic, and WebRTC connections.
+
+**Location**: `ViewModels/WidgetViewModel.swift`
+
+**Purpose**: Handles socket connections, call management, transcript updates, and state transitions.
+
+**Key Methods**:
+- `initialize(assistantId:iconOnly:customization:)` - Initialize the widget with configuration
+- `startCall()` - Initiate a call to the AI assistant
+- `endCall()` - Terminate the active call
+- `toggleMute()` - Toggle microphone mute state
+- `sendTextMessage(_:)` - Send a text message during conversation
+
+**Published Properties**:
+- `widgetState: WidgetState` - Current widget state
+- `widgetSettings: WidgetSettings` - Configuration from Telnyx
+- `transcriptItems: [TranscriptItem]` - Conversation history
+- `audioLevels: [Float]` - Real-time audio visualization data
+
+#### 3. **WidgetState**
+An enum representing all possible widget states.
+
+**Location**: `State/WidgetState.swift`
+
+**States**:
+- `.idle` - Initial state before initialization
+- `.loading` - Loading during connection
+- `.collapsed(settings)` - Collapsed button state
+- `.connecting(settings)` - Initiating call
+- `.expanded(settings, isConnected, isMuted, agentStatus)` - Active call with visualizer
+- `.transcriptView(settings, isConnected, isMuted, agentStatus)` - Full transcript view
+- `.error(message, type)` - Error state with details
+
+#### 4. **WidgetCustomization**
+Configuration struct for custom color theming.
+
+**Location**: `Models/WidgetCustomization.swift`
+
+**Customizable Colors**:
+```swift
+WidgetCustomization(
+    audioVisualizerColor: "twilight",        // Gradient preset name
+    transcriptBackgroundColor: .white,       // Transcript background
+    userBubbleBackgroundColor: .blue,        // User message bubbles
+    agentBubbleBackgroundColor: .gray,       // Agent message bubbles
+    userBubbleTextColor: .white,             // User message text
+    agentBubbleTextColor: .black,            // Agent message text
+    muteButtonBackgroundColor: .blue,        // Mute button default
+    muteButtonActiveBackgroundColor: .red,   // Mute button when active
+    muteButtonIconColor: .white,             // Mute button icon
+    widgetSurfaceColor: .white,              // Widget background
+    primaryTextColor: .black,                // Primary text
+    secondaryTextColor: .gray,               // Secondary text
+    inputBackgroundColor: .lightGray         // Input field background
+)
+```
+
+**Audio Visualizer Presets**:
+- `"verdant"` - Green gradient
+- `"twilight"` - Purple/blue gradient
+- `"bloom"` - Pink/orange gradient
+- `"mystic"` - Teal gradient
+- `"flare"` - Red/orange gradient
+- `"glacier"` - Blue/cyan gradient
+
+#### 5. **UI Components**
+
+**AudioVisualizer** (`Views/Components/AudioVisualizer.swift`)
+- Real-time audio visualization with configurable gradient colors
+- Responds to audio levels from WebRTC stream
+
+**TranscriptView** (`Views/Components/TranscriptView.swift`)
+- Full conversation history display
+- Text input for typing messages
+- Auto-scroll to latest messages
+
+**ExpandedWidget** (`Views/Components/ExpandedWidget.swift`)
+- Active call interface with audio visualizer
+- Mute/unmute controls
+- Agent status indicators
+
+**FloatingButton** (`Views/Components/FloatingButton.swift`)
+- Circular floating action button for icon-only mode
+- Error state visualization
+
+### Data Models
+
+#### **WidgetSettings**
+Configuration received from Telnyx AI Assistant settings:
+
+```swift
+struct WidgetSettings {
+    let agentThinkingText: String?           // Text shown when agent is processing
+    let audioVisualizerConfig: AudioVisualizerConfig?
+    let defaultState: String?                // Initial widget state
+    let logoIconUrl: String?                 // Custom logo URL
+    let startCallText: String?               // Custom button text
+    let speakToInterruptText: String?        // Interrupt instruction text
+    let theme: String?                       // Theme preference ("light"/"dark")
+}
+```
+
+#### **TranscriptItem**
+Represents a single message in the conversation:
+
+```swift
+struct TranscriptItem {
+    let id: String           // Unique identifier
+    let text: String         // Message content
+    let isUser: Bool         // true if from user, false if from agent
+    let timestamp: Date      // When the message was sent
+}
+```
+
+#### **AgentStatus**
+Current state of the AI agent:
+
+```swift
+enum AgentStatus {
+    case idle      // No active conversation
+    case thinking  // Processing user input
+    case waiting   // Ready and can be interrupted
+}
+```
+
+### Integration Patterns
+
+#### Basic Integration
+```swift
+import TelnyxVoiceAIWidget
+
+struct MyView: View {
+    var body: some View {
+        AIAssistantWidget(
+            assistantId: "your-assistant-id",
+            shouldInitialize: true
+        )
+    }
+}
+```
+
+#### Advanced Integration with Custom Colors
+```swift
+struct AdvancedView: View {
+    let customization = WidgetCustomization(
+        audioVisualizerColor: "twilight",
+        userBubbleBackgroundColor: Color(hex: "#007AFF"),
+        agentBubbleBackgroundColor: Color(hex: "#E5E5EA"),
+        widgetSurfaceColor: .white
+    )
+
+    var body: some View {
+        AIAssistantWidget(
+            assistantId: "your-assistant-id",
+            shouldInitialize: true,
+            customization: customization
+        )
+    }
+}
+```
+
+#### Conditional Initialization
+```swift
+struct ConditionalView: View {
+    @State private var hasPermissions = false
+    @State private var isEnabled = false
+
+    var body: some View {
+        AIAssistantWidget(
+            assistantId: "your-assistant-id",
+            shouldInitialize: hasPermissions && isEnabled
+        )
+        .onAppear {
+            checkMicrophonePermission { granted in
+                hasPermissions = granted
+            }
+        }
+    }
+}
+```
+
 ## Architecture
 
 The widget is built using:
@@ -320,6 +534,33 @@ The widget is built using:
 - **Combine** for reactive state management
 - **ObservableObject** and **@Published** for state updates
 - **Telnyx WebRTC SDK** for voice communication
+
+**Architecture Diagram**:
+```
+┌─────────────────────────┐
+│   AIAssistantWidget     │  ← Main SwiftUI View
+└───────────┬─────────────┘
+            │
+            ↓
+┌─────────────────────────┐
+│   WidgetViewModel       │  ← State & Business Logic
+│                         │
+│  • TxClient (WebRTC)    │  ← Telnyx SDK Integration
+│  • Socket Connection    │
+│  • Call Management      │
+│  • Transcript Updates   │
+└───────────┬─────────────┘
+            │
+            ↓
+┌─────────────────────────┐
+│   WidgetState           │  ← State Machine
+│                         │
+│  • idle → loading       │
+│  • collapsed → expanded │
+│  • transcriptView       │
+│  • error                │
+└─────────────────────────┘
+```
 
 ## Requirements
 
@@ -339,6 +580,32 @@ swift build
 
 ```bash
 swift test
+```
+
+### Running the Sample App
+
+To run the example app and test the widget:
+
+1. Open the workspace:
+```bash
+open TelnyxVoiceAIWidget.xcworkspace
+```
+
+2. Select the `SampleApp` scheme
+3. Build and run (⌘R)
+
+### CI/CD
+
+This project includes:
+- **Automated Testing**: Unit tests and build validation on every PR via Fastlane
+- **GitHub Actions**: Continuous integration pipeline
+- **Test Reports**: Generated test coverage and results in the `reports` directory
+
+To run tests locally via Fastlane:
+
+```bash
+bundle install
+bundle exec fastlane test
 ```
 
 ## Contributing
