@@ -130,7 +130,11 @@ public class WidgetViewModel: ObservableObject {
             break
         }
 
-        currentCall?.muteAudio()
+        if isMuted {
+            currentCall?.muteAudio()
+        } else {
+            currentCall?.unmuteAudio()
+        }
     }
 
     /// Expand to transcript view
