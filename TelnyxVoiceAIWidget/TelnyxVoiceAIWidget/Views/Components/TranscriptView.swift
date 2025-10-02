@@ -53,6 +53,8 @@ struct TranscriptView: View {
                                 .font(.system(size: 18))
                                 .foregroundColor(colorResolver.muteButtonIcon(isMuted: isMuted))
                                 .frame(width: 40, height: 40)
+                                .background(colorResolver.muteButtonBackground(isMuted: isMuted))
+                                .clipShape(Circle())
                         }
 
                         // End call button

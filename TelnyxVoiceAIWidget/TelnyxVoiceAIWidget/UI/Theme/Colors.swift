@@ -268,9 +268,6 @@ struct ColorResolver {
         if let custom = customization?.muteButtonIconColor {
             return custom
         }
-        if isMuted {
-            return .red
-        }
-        return isDarkTheme ? .white : .primaryIndigo
+        return isDarkTheme ? .white : .black
     }
 }
