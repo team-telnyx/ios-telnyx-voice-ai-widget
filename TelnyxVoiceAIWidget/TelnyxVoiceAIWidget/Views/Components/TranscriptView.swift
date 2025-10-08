@@ -170,44 +170,50 @@ struct TranscriptView: View {
     }
 }
 
-/// iOS 13 compatible scroll view with auto-scroll to bottom
+/// iOS 13 compatible scroll view with auto-scroll to bottom using GeometryReader
 struct TranscriptScrollView: View {
     let transcriptItems: [TranscriptItem]
     let settings: WidgetSettings
     let customization: WidgetCustomization?
 
-    @State private var scrollProxy: ScrollViewProxy?
+    @State private var scrollOffset: CGFloat = 0
 
     var body: some View {
-        ScrollViewReader { proxy in
+        GeometryReader { geometry in
             ScrollView {
                 VStack(spacing: 8) {
                     ForEach(transcriptItems) { item in
                         TranscriptMessageBubble(item: item, settings: settings, customization: customization)
                     }
-
-                    // Invisible anchor for scrolling to bottom
-                    Color.clear
-                        .frame(height: 1)
-                        .id("bottom")
                 }
                 .padding(16)
+                .background(
+                    GeometryReader { contentGeometry in
+                        Color.clear.preference(
+                            key: ContentHeightPreferenceKey.self,
+                            value: contentGeometry.size.height
+                        )
+                    }
+                )
             }
-            .onAppear {
-                scrollToBottom(proxy: proxy)
-            }
-            .onChange(of: transcriptItems.count) { _ in
-                scrollToBottom(proxy: proxy)
+            .onPreferenceChange(ContentHeightPreferenceKey.self) { contentHeight in
+                // Auto-scroll to bottom when content height changes
+                if contentHeight > geometry.size.height {
+                    DispatchQueue.main.async {
+                        scrollOffset = contentHeight - geometry.size.height
+                    }
+                }
             }
         }
     }
+}
 
-    private func scrollToBottom(proxy: ScrollViewProxy) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.easeOut(duration: 0.3)) {
-                proxy.scrollTo("bottom", anchor: .bottom)
-            }
-        }
+/// Preference key to track content height for auto-scrolling
+struct ContentHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

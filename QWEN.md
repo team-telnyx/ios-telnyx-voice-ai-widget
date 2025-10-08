@@ -47,8 +47,8 @@ The TelnyxVoiceAIWidget SDK enables iOS developers to:
 ## Requirements
 
 ### Minimum Requirements
-- **iOS**: 13.0+
-- **Xcode**: 12.0+
+- **iOS**: 14.0+
+- **Xcode**: 16.0+
 - **Swift**: 5.0+
 
 ### Dependencies
@@ -89,7 +89,7 @@ Or add through Xcode:
 Add the following to your `Podfile`:
 
 ```ruby
-platform :ios, '13.0'
+platform :ios, '14.0'
 
 target 'YourApp' do
   use_frameworks!
@@ -244,7 +244,7 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 ## Version Information
 
 - **Current Version**: 1.0.0
-- **iOS Minimum**: 13.0+
+- **iOS Minimum**: 14.0+
 - **Swift Version**: 5.0+
 
 ---

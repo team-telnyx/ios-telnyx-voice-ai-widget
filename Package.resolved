@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/team-telnyx/telnyx-webrtc-ios.git",
       "state" : {
-        "branch" : "feat/WEBRTC-2906",
-        "revision" : "71c418e937ef309eb2ca653b999ece90f19e0b46"
+        "branch" : "main",
+        "revision" : "6d0fafd96daaad8afe39e63ae48209453f6b6053"
       }
     },
     {
