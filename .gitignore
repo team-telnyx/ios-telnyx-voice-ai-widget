@@ -63,3 +63,5 @@ fastlane/test_output
 
 # Bundler
 Gemfile.lock
+
+.claude/
