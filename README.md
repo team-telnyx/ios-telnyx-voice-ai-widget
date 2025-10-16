@@ -581,7 +581,7 @@ The widget is built using:
 
 - iOS 13.0+
 - Xcode 14.0+
-- Swift 5.9+
+- Swift 5.0+
 
 ## Development
 
