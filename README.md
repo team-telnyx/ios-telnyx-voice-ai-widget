@@ -233,15 +233,17 @@ Available gradient presets for the audio visualizer:
 
 ### View Modifiers (Advanced)
 
-For advanced UI customization, you can pass custom view modifiers:
+For advanced UI customization, you can pass custom views as backgrounds or overlays:
 
 ```swift
+// Note: The modifier parameters accept AnyView to wrap your custom views
 AIAssistantWidget(
     assistantId: "your-assistant-id",
     shouldInitialize: true,
     iconOnly: false,
     customization: customization,
     widgetButtonModifier: AnyView(
+        // Custom background for the widget button
         RoundedRectangle(cornerRadius: 16)
             .fill(Color.blue.opacity(0.1))
             .overlay(
@@ -250,6 +252,7 @@ AIAssistantWidget(
             )
     ),
     buttonTextModifier: AnyView(
+        // Custom text view for the button
         Text("Start Conversation")
             .font(.headline)
             .foregroundColor(.blue)
