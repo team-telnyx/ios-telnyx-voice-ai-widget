@@ -16,12 +16,12 @@ Pod::Spec.new do |spec|
   spec.swift_version = "5.0"
 
   spec.source       = { :git => "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git", :tag => "#{spec.version}" }
-  
-  spec.source_files = "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/**/*.{swift,h,m}"
-  spec.public_header_files = "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/**/*.h"
-  
+
+  spec.source_files = "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/**/*.swift"
+
   spec.frameworks = "Foundation", "UIKit", "AVFoundation"
   spec.requires_arc = true
-  
-  spec.dependency "TelnyxRTC", "~> 2.2.2"
+
+  spec.dependency "TelnyxRTC", "2.2.2"
+  spec.dependency "Starscream", "~> 4.0.8"
 end

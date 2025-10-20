@@ -231,19 +231,18 @@ Available gradient presets for the audio visualizer:
 - `"flare"` - Red/orange gradient
 - `"glacier"` - Blue/cyan gradient
 
-### View Modifiers (Advanced)
+### View Customization (Advanced)
 
-For advanced UI customization, you can pass custom views as backgrounds or overlays:
+For advanced UI customization, you can provide custom views that completely replace the default button components. These parameters accept `AnyView` type, so you need to wrap your custom views with `AnyView()`:
 
 ```swift
-// Note: The modifier parameters accept AnyView to wrap your custom views
 AIAssistantWidget(
     assistantId: "your-assistant-id",
     shouldInitialize: true,
     iconOnly: false,
     customization: customization,
     widgetButtonModifier: AnyView(
-        // Custom background for the widget button
+        // This view completely replaces the button container's styling
         RoundedRectangle(cornerRadius: 16)
             .fill(Color.blue.opacity(0.1))
             .overlay(
@@ -252,28 +251,41 @@ AIAssistantWidget(
             )
     ),
     buttonTextModifier: AnyView(
-        // Custom text view for the button
+        // This view completely replaces the default button text
         Text("Start Conversation")
             .font(.headline)
+            .foregroundColor(.blue)
+    ),
+    buttonImageModifier: AnyView(
+        // This view completely replaces the default icon/image
+        Image(systemName: "mic.fill")
+            .resizable()
+            .frame(width: 32, height: 32)
             .foregroundColor(.blue)
     )
 )
 ```
+
+**Important**: These parameters replace the entire view component, not just modify it. For example:
+- `buttonTextModifier` replaces the entire text view (ignoring `settings.startCallText`)
+- `buttonImageModifier` replaces the entire icon/logo view (ignoring `settings.logoIconUrl`)
+- `widgetButtonModifier` replaces the button's container styling
+- `expandedWidgetModifier` replaces the expanded widget's container styling
 
 ### Parameters
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `assistantId` | String | Your Telnyx Assistant ID (required) |
-| `shouldInitialize` | Bool | Controls network connection lifecycle |
-| `iconOnly` | Bool | Enable floating action button mode |
-| `customization` | WidgetCustomization? | Custom color overrides |
-| `widgetButtonModifier` | AnyView? | Custom styling for collapsed button |
-| `expandedWidgetModifier` | AnyView? | Custom styling for expanded widget |
-| `buttonTextModifier` | AnyView? | Custom styling for button text |
-| `buttonImageModifier` | AnyView? | Custom styling for button icon |
+| `shouldInitialize` | Bool | Controls network connection lifecycle (default: `true`) |
+| `iconOnly` | Bool | Enable floating action button mode (default: `false`) |
+| `customization` | WidgetCustomization? | Custom color overrides (default: `nil`) |
+| `widgetButtonModifier` | AnyView? | Custom view to replace the collapsed button's container styling (default: `nil`) |
+| `expandedWidgetModifier` | AnyView? | Custom view to replace the expanded widget's container styling (default: `nil`) |
+| `buttonTextModifier` | AnyView? | Custom view to completely replace the button's text (default: `nil`) |
+| `buttonImageModifier` | AnyView? | Custom view to completely replace the button's icon/logo (default: `nil`) |
 
-**Note**: All parameters except `assistantId` are optional. View modifiers should be wrapped in `AnyView()`.
+**Note**: All parameters except `assistantId` are optional. The view customization parameters completely replace their respective components and require wrapping your custom views with `AnyView()` - see the View Customization section above for examples.
 
 ## Widget States
 
