@@ -11,6 +11,7 @@ A drop-in iOS widget library for integrating Telnyx AI Assistant functionality i
 - 📱 **Responsive Design**: Optimized for various screen sizes
 - 🔊 **Voice Controls**: Mute/unmute and call management
 - 💬 **Transcript View**: Full conversation history with text input
+- 🎨 **Icon-Only Mode**: Floating action button for minimal space usage
 
 ## Installation
 
@@ -190,80 +191,101 @@ struct DeferredWidget: View {
 }
 ```
 
-## Customization with View Modifiers
+## Customization
 
-The `AIAssistantWidget` supports additional view modifier parameters for fine-tuned UI customization:
+### Color Customization
 
-### Available Modifiers
+The widget supports extensive color customization through the `WidgetCustomization` struct:
+
+```swift
+let customization = WidgetCustomization(
+    audioVisualizerColor: "twilight",        // Gradient preset name
+    transcriptBackgroundColor: .white,       // Transcript background
+    userBubbleBackgroundColor: .blue,        // User message bubbles
+    agentBubbleBackgroundColor: .gray,       // Agent message bubbles
+    userBubbleTextColor: .white,             // User message text
+    agentBubbleTextColor: .black,            // Agent message text
+    muteButtonBackgroundColor: .blue,        // Mute button default
+    muteButtonActiveBackgroundColor: .red,   // Mute button when active
+    muteButtonIconColor: .white,             // Mute button icon
+    widgetSurfaceColor: .white,              // Widget background
+    primaryTextColor: .black,                // Primary text
+    secondaryTextColor: .gray,               // Secondary text
+    inputBackgroundColor: .lightGray         // Input field background
+)
+
+AIAssistantWidget(
+    assistantId: "your-assistant-id",
+    shouldInitialize: true,
+    customization: customization
+)
+```
+
+### Audio Visualizer Presets
+
+Available gradient presets for the audio visualizer:
+- `"verdant"` - Green gradient
+- `"twilight"` - Purple/blue gradient  
+- `"bloom"` - Pink/orange gradient
+- `"mystic"` - Teal gradient
+- `"flare"` - Red/orange gradient
+- `"glacier"` - Blue/cyan gradient
+
+### View Customization (Advanced)
+
+For advanced UI customization, you can provide custom views that completely replace the default button components. These parameters accept `AnyView` type, so you need to wrap your custom views with `AnyView()`:
 
 ```swift
 AIAssistantWidget(
     assistantId: "your-assistant-id",
     shouldInitialize: true,
-    iconOnly: false, // Enable floating action button mode
-
-    // New customization modifiers:
-    widgetButtonModifier: Color.blue.opacity(0.8), // Applied to collapsed button
-    expandedWidgetModifier: RoundedRectangle(cornerRadius: 16), // Applied to expanded widget
-    buttonTextModifier: Text("Custom").font(.title), // Applied to button text
-    buttonImageModifier: Image(systemName: "mic").foregroundColor(.white) // Applied to button icon/logo
+    iconOnly: false,
+    customization: customization,
+    widgetButtonModifier: AnyView(
+        // This view completely replaces the button container's styling
+        RoundedRectangle(cornerRadius: 16)
+            .fill(Color.blue.opacity(0.1))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color.blue, lineWidth: 2)
+            )
+    ),
+    buttonTextModifier: AnyView(
+        // This view completely replaces the default button text
+        Text("Start Conversation")
+            .font(.headline)
+            .foregroundColor(.blue)
+    ),
+    buttonImageModifier: AnyView(
+        // This view completely replaces the default icon/image
+        Image(systemName: "mic.fill")
+            .resizable()
+            .frame(width: 32, height: 32)
+            .foregroundColor(.blue)
+    )
 )
 ```
+
+**Important**: These parameters replace the entire view component, not just modify it. For example:
+- `buttonTextModifier` replaces the entire text view (ignoring `settings.startCallText`)
+- `buttonImageModifier` replaces the entire icon/logo view (ignoring `settings.logoIconUrl`)
+- `widgetButtonModifier` replaces the button's container styling
+- `expandedWidgetModifier` replaces the expanded widget's container styling
 
 ### Parameters
 
-| Parameter | Type | Description | Applied To |
-|-----------|------|-------------|------------|
-| `assistantId` | String | Your Telnyx Assistant ID | Required for initialization |
-| `shouldInitialize` | Bool | Controls when to establish network connection | Widget initialization |
-| `iconOnly` | Bool | Enable floating action button mode | Widget display mode |
-| `widgetButtonModifier` | View | Styling for the collapsed widget button | The entire button in collapsed state |
-| `expandedWidgetModifier` | View | Styling for the expanded widget | The entire expanded widget |
-| `buttonTextModifier` | View | Styling for the button text | The start call text in the collapsed button (ignored in iconOnly mode) |
-| `buttonImageModifier` | View | Styling for the button icon/logo | The image or icon displayed in the collapsed button |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `assistantId` | String | Your Telnyx Assistant ID (required) |
+| `shouldInitialize` | Bool | Controls network connection lifecycle (default: `true`) |
+| `iconOnly` | Bool | Enable floating action button mode (default: `false`) |
+| `customization` | WidgetCustomization? | Custom color overrides (default: `nil`) |
+| `widgetButtonModifier` | AnyView? | Custom view to replace the collapsed button's container styling (default: `nil`) |
+| `expandedWidgetModifier` | AnyView? | Custom view to replace the expanded widget's container styling (default: `nil`) |
+| `buttonTextModifier` | AnyView? | Custom view to completely replace the button's text (default: `nil`) |
+| `buttonImageModifier` | AnyView? | Custom view to completely replace the button's icon/logo (default: `nil`) |
 
-### Usage Examples
-
-```swift
-// Custom button styling with rounded corners and shadow
-AIAssistantWidget(
-    assistantId: "your-assistant-id",
-    widgetButtonModifier:
-        RoundedRectangle(cornerRadius: 32)
-            .shadow(radius: 12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 32)
-                    .stroke(Color.blue, lineWidth: 2)
-            )
-)
-
-// Styled text and circular icon
-AIAssistantWidget(
-    assistantId: "your-assistant-id",
-    buttonTextModifier:
-        Text("Talk Now")
-            .padding(.horizontal, 8)
-            .opacity(0.9),
-    buttonImageModifier:
-        Image(systemName: "mic.circle")
-            .clipShape(Circle())
-            .overlay(Circle().stroke(Color.accentColor, lineWidth: 1))
-)
-
-// Custom expanded widget appearance
-AIAssistantWidget(
-    assistantId: "your-assistant-id",
-    expandedWidgetModifier:
-        LinearGradient(
-            gradient: Gradient(colors: [.blue.opacity(0.1), .clear]),
-            startPoint: .top,
-            endPoint: .bottom
-        )
-        .cornerRadius(24)
-)
-```
-
-**Note**: All modifier parameters are optional and default to nil. Existing implementations will continue to work without modification.
+**Note**: All parameters except `assistantId` are optional. The view customization parameters completely replace their respective components and require wrapping your custom views with `AnyView()` - see the View Customization section above for examples.
 
 ## Widget States
 
@@ -309,8 +331,16 @@ The widget automatically fetches configuration from your Telnyx Assistant settin
 Check out the included example app in the `SampleApp` folder for a complete implementation:
 
 ```bash
-open TelnyxVoiceAIWidget.xcworkspace
+cd SampleApp
+open SampleApp.xcodeproj
 ```
+
+The sample app demonstrates:
+- Basic widget integration
+- Permission handling
+- Icon-only vs regular mode
+- Assistant ID configuration
+- Real-time widget state management
 
 ## SDK Components
 
@@ -617,13 +647,37 @@ bundle exec fastlane test
 5. Ensure all tests pass
 6. Submit a pull request
 
+## Troubleshooting
+
+### Common Issues
+
+**Widget not initializing:**
+- Verify your Assistant ID is correct
+- Check network connectivity
+- Ensure microphone permissions are granted
+
+**Audio not working:**
+- Check microphone permissions in Settings
+- Verify device is not in silent mode
+- Test with different audio routes (speaker/earpiece)
+
+**Build errors:**
+- Ensure iOS 13.0+ deployment target
+- Verify Swift 5.0+ compatibility
+- Check that all dependencies are properly resolved
+
+**Widget not responding:**
+- Verify `shouldInitialize` is set to `true`
+- Check console logs for WebRTC connection errors
+- Ensure Assistant ID is valid and active
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Support
 
-For support and questions:
-- Create an issue on GitHub
-- Contact Telnyx support
-- Check the documentation at [telnyx.com](https://telnyx.com)
+For technical support and questions:
+- 📧 Email: support@telnyx.com
+- 📖 Documentation: [Telnyx Developer Portal](https://developers.telnyx.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/team-telnyx/ios-telnyx-voice-ai-widget/issues)
