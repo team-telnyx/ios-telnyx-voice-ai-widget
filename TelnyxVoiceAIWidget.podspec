@@ -13,7 +13,7 @@ Pod::Spec.new do |spec|
   spec.author       = { "Telnyx" => "support@telnyx.com" }
 
   spec.platform     = :ios, "13.0"
-  spec.swift_version = "5.0"
+  spec.swift_version = "5.9"
 
   spec.source       = { :git => "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git", :tag => "#{spec.version}" }
 
@@ -22,6 +22,5 @@ Pod::Spec.new do |spec|
   spec.frameworks = "Foundation", "UIKit", "AVFoundation"
   spec.requires_arc = true
 
-  spec.dependency "TelnyxRTC", "2.2.2"
-  spec.dependency "Starscream", "~> 4.0.8"
+  spec.dependency "TelnyxRTC", "~> 2.2"
 end
