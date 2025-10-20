@@ -596,7 +596,7 @@ The widget is built using:
 
 - iOS 13.0+
 - Xcode 14.0+
-- Swift 5.0+
+- Swift 5.9+
 
 ## Development
 
@@ -670,17 +670,6 @@ bundle exec fastlane test
 - Verify `shouldInitialize` is set to `true`
 - Check console logs for WebRTC connection errors
 - Ensure Assistant ID is valid and active
-
-### Debug Mode
-
-Enable debug logging by setting the log level in your app:
-
-```swift
-// Add this to your app initialization
-#if DEBUG
-print("TelnyxVoiceAIWidget Debug Mode Enabled")
-#endif
-```
 
 ## License
 
