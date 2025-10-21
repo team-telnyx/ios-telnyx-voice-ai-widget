@@ -11,7 +11,6 @@ import XCTest
 
 @MainActor
 final class WidgetLifecycleIntegrationTests: XCTestCase {
-
     var sut: WidgetViewModel!
     var cancellables: Set<AnyCancellable>!
 

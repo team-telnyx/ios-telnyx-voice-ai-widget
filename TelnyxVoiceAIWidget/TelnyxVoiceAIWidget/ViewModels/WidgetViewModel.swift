@@ -13,7 +13,6 @@ import TelnyxRTC
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor
 public class WidgetViewModel: ObservableObject {
-
     // MARK: - Constants
     private let aiAssistantDestination = "ai-assistant"
     private let maxLevels = 20
@@ -97,7 +96,6 @@ public class WidgetViewModel: ObservableObject {
 
                 // Observe call quality metrics for audio visualization
                 observeCallQualityMetrics()
-
             } catch {
                 widgetState = .error(message: error.localizedDescription, type: .connection)
             }

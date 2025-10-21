@@ -30,7 +30,6 @@ import SwiftUI
 ///   - buttonImageModifier: ViewModifier applied to the image/icon visible on the widget button
 ///   - customization: Optional custom colors that take priority over socket-received theme colors
 public struct AIAssistantWidget: View {
-
     // MARK: - Properties
     let assistantId: String
     let shouldInitialize: Bool

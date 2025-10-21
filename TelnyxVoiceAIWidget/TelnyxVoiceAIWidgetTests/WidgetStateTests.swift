@@ -9,7 +9,6 @@
 import XCTest
 
 final class WidgetStateTests: XCTestCase {
-
     // MARK: - Equality Tests
 
     func testIdleState_equality() {
