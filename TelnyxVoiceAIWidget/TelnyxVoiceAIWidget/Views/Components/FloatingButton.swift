@@ -35,16 +35,16 @@ struct FloatingButton: View {
                         height: 32
                     )
                     .clipShape(Circle())
-                    .ifLet(buttonImageModifier) { view, modifier in
-                        view.modifier(modifier)
+                    .ifLet(buttonImageModifier) { _, modifier in
+                        modifier
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
                         .foregroundColor(iconColor)
-                        .ifLet(buttonImageModifier) { view, modifier in
-                            view.modifier(modifier)
+                        .ifLet(buttonImageModifier) { _, modifier in
+                            modifier
                         }
                 }
             }
