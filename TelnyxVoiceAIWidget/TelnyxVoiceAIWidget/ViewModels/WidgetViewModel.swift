@@ -230,8 +230,8 @@ public class WidgetViewModel: ObservableObject {
         // Update audio levels array with 10 values for the visualizer
         // Create a frequency-band effect by varying the level slightly
         var levels: [Float] = []
-        for i in 0..<10 {
-            let normalizedIndex = Float(i) / 9.0
+        for index in 0..<10 {
+            let normalizedIndex = Float(index) / 9.0
             let frequencyWeight = 1.0 - (normalizedIndex * 0.6) // Lower frequencies show more
             let randomVariation = Float.random(in: 0.8...1.2)
             let level = smoothedLevel * frequencyWeight * randomVariation
