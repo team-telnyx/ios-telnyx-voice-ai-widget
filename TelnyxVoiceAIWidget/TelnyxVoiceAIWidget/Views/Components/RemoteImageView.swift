@@ -34,7 +34,7 @@ struct RemoteImageView: View {
     }
 
     private func loadImage() {
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data = data, let loadedImage = UIImage(data: data) else {
                 return
             }

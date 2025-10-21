@@ -78,8 +78,8 @@ struct ErrorWidget: View {
 
     private var connectionErrorView: some View {
         Text(type == .connection
-            ? "Connection error: \(message)"
-            : "An error occurred: \(message)")
+                ? "Connection error: \(message)"
+                : "An error occurred: \(message)")
             .font(.system(size: 14))
             .multilineTextAlignment(.center)
             .foregroundColor(.widgetSecondaryTextLight)
