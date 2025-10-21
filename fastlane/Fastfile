@@ -2,6 +2,31 @@ default_platform(:ios)
 
 before_all do
   sh 'mkdir ../reports || true'
+  sh 'mkdir ../dist || true'
+end
+
+desc "Does a static analysis of the project. Configure the options in .swiftlint.yml"
+lane :lint do
+  swiftlint(
+      mode: :lint,
+      output_file: 'reports/swiftlint.txt',
+      config_file: 'fastlane/.swiftlint.yml'
+    )
+end
+
+desc "Create a file with the Changelog output between a specific TAG and HEAD"
+lane :changelog do |options|
+changelog_from_git_commits(
+	between: [options[:tag],"HEAD"],
+  	pretty: "* %b [%aN]",# Optional, lets you provide a custom format to apply to each commit when generating the changelog text
+  	date_format: "short",# Optional, lets you provide an additional date format to dates within the pretty-formatted string
+  	match_lightweight_tag: false,  # Optional, lets you ignore lightweight (non-annotated) tags when searching for the last tag
+  	merge_commit_filtering: "only_include_merges" # Optional, lets you filter out merge commits
+)
+#store changelog in a external file
+changelog = lane_context[SharedValues::FL_CHANGELOG]
+File.open("changelog.txt", 'w') { |file| file.write("#{changelog}") }
+
 end
 
 platform :ios do
@@ -66,5 +91,38 @@ platform :ios do
       clean: true,
       build: true
     )
+  end
+
+  desc "Run SwiftLint and all tests"
+  lane :ci do
+    lint
+    tests
+    UI.success("✅ CI pipeline completed successfully!")
+  end
+
+  desc "Build framework for release"
+  lane :build_release do
+    UI.message("🔨 Building TelnyxVoiceAIWidget for release...")
+    
+    xcodebuild(
+      workspace: "TelnyxVoiceAIWidget.xcworkspace",
+      scheme: "TelnyxVoiceAIWidget",
+      configuration: "Release",
+      destination: "generic/platform=iOS",
+      clean: true,
+      build: true,
+      archive: true,
+      archive_path: "dist/TelnyxVoiceAIWidget.xcarchive"
+    )
+    
+    UI.success("✅ Release build completed successfully!")
+  end
+
+  desc "Prepare release - lint, test, and build"
+  lane :prepare_release do
+    lint
+    tests
+    build_release
+    UI.success("✅ Release preparation completed successfully!")
   end
 end

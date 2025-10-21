@@ -32,6 +32,14 @@ jobs:
       run: |
         bundle install
 
+    - name: Install SwiftLint
+      run: |
+        brew install swiftlint
+
+    - name: Run SwiftLint
+      run: |
+        bundle exec fastlane lint
+
     - name: Run SDK tests
       run: |
         bundle exec fastlane test_sdk

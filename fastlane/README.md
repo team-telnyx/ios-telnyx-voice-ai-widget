@@ -1,63 +1,91 @@
-fastlane documentation
-----
+# TelnyxVoiceAIWidget Fastlane Documentation
 
-# Installation
+This directory contains Fastlane configuration for the TelnyxVoiceAIWidget iOS SDK.
+
+## Installation
 
 Make sure you have the latest version of the Xcode command line tools installed:
 
-```sh
+```bash
 xcode-select --install
 ```
 
-For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
+Install dependencies:
 
-# Available Actions
-
-## iOS
-
-### ios test_sdk
-
-```sh
-[bundle exec] fastlane ios test_sdk
+```bash
+bundle install
 ```
 
-Run tests for TelnyxVoiceAIWidget SDK
+For SwiftLint functionality, install SwiftLint:
 
-### ios test_sample_app
-
-```sh
-[bundle exec] fastlane ios test_sample_app
+```bash
+brew install swiftlint
 ```
 
-Run tests for SampleApp
+## Available Actions
 
-### ios tests
+### Development & Testing
 
-```sh
-[bundle exec] fastlane ios tests
-```
+#### `fastlane lint`
+Runs SwiftLint static analysis on the codebase. Configuration is in `.swiftlint.yml`.
 
-Run all tests (SDK + SampleApp)
+#### `fastlane test_sdk`
+Builds and tests the TelnyxVoiceAIWidget framework.
 
-### ios build_sdk
+#### `fastlane test_sample_app`
+Builds and tests the SampleApp.
 
-```sh
-[bundle exec] fastlane ios build_sdk
-```
+#### `fastlane tests`
+Runs all tests (SDK + SampleApp).
 
-Build TelnyxVoiceAIWidget framework only
+#### `fastlane ci`
+Runs the complete CI pipeline: SwiftLint + all tests.
 
-### ios build_sample_app
+### Building
 
-```sh
-[bundle exec] fastlane ios build_sample_app
-```
+#### `fastlane build_sdk`
+Builds the TelnyxVoiceAIWidget framework only (Debug configuration).
 
-Build SampleApp only
+#### `fastlane build_sample_app`
+Builds the SampleApp only (Debug configuration).
+
+#### `fastlane build_release`
+Builds the framework for release (Release configuration, creates archive).
+
+### Release Management
+
+#### `fastlane prepare_release`
+Prepares a release by running: lint → tests → release build.
+
+#### `fastlane changelog tag:TAG_NAME`
+Generates a changelog between the specified tag and HEAD.
+
+## GitHub Actions Integration
+
+The repository includes several GitHub Actions workflows:
+
+- **`ios_fastlane_tests.yml`**: Runs SwiftLint and tests on every PR
+- **`release-01-create-pull-request.yml`**: Creates release PRs with version updates
+- **`release-02-create-gh-release.yml`**: Creates GitHub releases when podspec is updated
+- **`release-03-deploy-cocoapods.yml`**: Deploys to CocoaPods when releases are published
+
+## SwiftLint Configuration
+
+SwiftLint rules are configured in `.swiftlint.yml`. The configuration includes:
+
+- Source paths for the SDK, tests, and sample app
+- Excluded paths (build artifacts, documentation)
+- Custom rule thresholds for line length, file length, etc.
+
+## Release Process
+
+1. Run `fastlane prepare_release` locally to ensure everything builds
+2. Use the "Release 01" GitHub Action to create a release PR
+3. Review and merge the release PR
+4. The "Release 02" action will automatically create a GitHub release
+5. The "Release 03" action will deploy to CocoaPods
 
 ----
-
-This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 
 More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
 
