@@ -11,7 +11,7 @@ import SwiftUI
 struct AudioVisualizer: View {
     let audioLevels: [Float]
     let colorScheme: String?
-    private let barCount = 10
+    private let barCount: Int = 10
     private let spacing: CGFloat = 4
 
     var body: some View {
@@ -33,7 +33,7 @@ struct AudioVisualizer: View {
 
     /// Returns the gradient based on the color scheme
     private var gradientForScheme: LinearGradient {
-        let colors = colorGradient(for: colorScheme)
+        let colors: [Color] = colorGradient(for: colorScheme)
         return LinearGradient(
             gradient: Gradient(colors: colors),
             startPoint: .top,
@@ -63,7 +63,7 @@ struct AudioVisualizer: View {
     }
 
     private func barWidth(for totalWidth: CGFloat) -> CGFloat {
-        let totalSpacing = CGFloat(barCount - 1) * spacing
+        let totalSpacing: CGFloat = CGFloat(barCount - 1) * spacing
         return (totalWidth - totalSpacing) / CGFloat(barCount)
     }
 
@@ -76,14 +76,14 @@ struct AudioVisualizer: View {
             return containerHeight * 0.3
         }
 
-        let levelIndex = index % audioLevels.count
+        let levelIndex: Int = index % audioLevels.count
         let level = CGFloat(audioLevels[levelIndex])
 
         // Clamp between 0 and 1
-        let clampedLevel = max(0, min(1, level))
+        let clampedLevel: CGFloat = max(0, min(1, level))
 
         // Interpolate between min and max ratio
-        let heightRatio = minHeightRatio + (maxHeightRatio - minHeightRatio) * clampedLevel
+        let heightRatio: CGFloat = minHeightRatio + (maxHeightRatio - minHeightRatio) * clampedLevel
 
         return containerHeight * heightRatio
     }

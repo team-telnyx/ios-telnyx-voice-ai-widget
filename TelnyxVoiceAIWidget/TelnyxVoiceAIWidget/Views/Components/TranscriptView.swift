@@ -103,14 +103,18 @@ struct TranscriptView: View {
 
                 // Message input area
                 HStack(spacing: 12) {
-                    TextField("Type a message...", text: Binding(
-                        get: { userInput },
-                        set: { onUserInputChange($0) }
-                    ), onCommit: {
-                        if !userInput.isEmpty && isConnected {
-                            onSendMessage()
+                    TextField(
+                        "Type a message...",
+                        text: Binding(
+                            get: { userInput },
+                            set: { onUserInputChange($0) }
+                        ),
+                        onCommit: {
+                            if !userInput.isEmpty && isConnected {
+                                onSendMessage()
+                            }
                         }
-                    })
+                    )
                     .foregroundColor(colorResolver.primaryText())
                     .padding(12)
                     .background(colorResolver.inputBackground())

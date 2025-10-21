@@ -19,8 +19,8 @@ public class WidgetViewModel: ObservableObject {
 
     // MARK: - Published Properties
     @Published public var widgetState: WidgetState = .idle
-    @Published public var widgetSettings: WidgetSettings = WidgetSettings()
-    @Published public var transcriptItems: [TranscriptItem] = []
+    @Published public var widgetSettings = WidgetSettings()
+    @Published public var transcriptItems = [TranscriptItem]()
     @Published public var userInput: String = ""
     @Published public var audioLevels: [Float] = []
 
@@ -356,7 +356,7 @@ public class WidgetViewModel: ObservableObject {
 
 // MARK: - AIAssistantManagerDelegate
 extension WidgetViewModel: AIAssistantManagerDelegate {
-    nonisolated public func onAIConversationMessage(_ message: [String : Any]) {
+    nonisolated public func onAIConversationMessage(_ message: [String: Any]) {
         Task { @MainActor in
             // Extract params from message
             guard let params = message["params"] as? [String: Any] else { return }

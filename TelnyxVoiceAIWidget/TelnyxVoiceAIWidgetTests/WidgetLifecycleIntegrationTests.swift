@@ -6,8 +6,8 @@
 //
 
 import Combine
-import XCTest
 @testable import TelnyxVoiceAIWidget
+import XCTest
 
 @MainActor
 final class WidgetLifecycleIntegrationTests: XCTestCase {

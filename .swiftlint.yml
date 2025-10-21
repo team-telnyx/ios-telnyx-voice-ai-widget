@@ -5,6 +5,10 @@
 # Rules that are disabled
 disabled_rules:
   - file_header # Disable file headers
+  - explicit_type_interface # Disabled: makes code too verbose and harder to review
+  - implicitly_unwrapped_optional # Disabled: common pattern in XCTest setup methods
+  - type_body_length # Disabled: test files often exceed 300 lines
+  - multiple_closures_with_trailing_closure # Disabled: SwiftUI patterns often use this
 
 opt_in_rules:
   - multiline_parameters # Each parameter on a different line
@@ -12,7 +16,6 @@ opt_in_rules:
   - vertical_parameter_alignment_on_call # Vertical alignment of parameters
   # Code Quality
   - explicit_init # Explicitly calling .init() should be avoided
-  - explicit_type_interface # Properties should have explicit type interface
   - redundant_type_annotation # Variables should not have redundant type annotation
   - closure_spacing # Closure expressions should have a single space inside each brace
   - operator_usage_whitespace # Operators should be surrounded by a single whitespace
@@ -60,10 +63,6 @@ excluded:
 # binary rules can set their severity level
 line_length:
   warning: 250
-  error: 400
-
-type_body_length:
-  warning: 300
   error: 400
 
 file_length:
