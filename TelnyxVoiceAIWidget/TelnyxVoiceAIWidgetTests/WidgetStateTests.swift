@@ -5,8 +5,8 @@
 //  Created by Telnyx on 02-10-25.
 //
 
-import XCTest
 @testable import TelnyxVoiceAIWidget
+import XCTest
 
 final class WidgetStateTests: XCTestCase {
 

@@ -5,8 +5,8 @@
 //  Created by Guillermo Battistel on 31-07-25.
 //
 
-import Testing
 @testable import SampleApp
+import Testing
 
 struct SampleAppTests {
 

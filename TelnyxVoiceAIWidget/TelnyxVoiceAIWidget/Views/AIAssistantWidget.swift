@@ -5,8 +5,8 @@
 //  Created by Telnyx on 29-09-25.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 /// Main AI Assistant Widget component
 ///

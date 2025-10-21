@@ -5,10 +5,10 @@
 //  Created by Telnyx on 29-09-25.
 //
 
-import Foundation
-import Combine
-import TelnyxRTC
 import AVFoundation
+import Combine
+import Foundation
+import TelnyxRTC
 
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor

@@ -5,9 +5,9 @@
 //  Created by Guillermo Battistel on 31-07-25.
 //
 
+import AVFoundation
 import SwiftUI
 import TelnyxVoiceAIWidget
-import AVFoundation
 
 struct ContentView: View {
     @State private var assistantId: String = ""
