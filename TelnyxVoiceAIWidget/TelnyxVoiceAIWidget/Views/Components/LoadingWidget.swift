@@ -19,12 +19,12 @@ struct LoadingWidget: View {
                     .frame(width: 56, height: 56)
                     .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
 
-                ActivityIndicator(color: UIColor(red: 0x63/255.0, green: 0x66/255.0, blue: 0xF1/255.0, alpha: 1.0))
+                ActivityIndicator(color: UIColor(red: 0x63 / 255.0, green: 0x66 / 255.0, blue: 0xF1 / 255.0, alpha: 1.0))
                     .scaleEffect(0.8)
             }
         } else {
             VStack(spacing: 12) {
-                ActivityIndicator(color: UIColor(red: 0x63/255.0, green: 0x66/255.0, blue: 0xF1/255.0, alpha: 1.0))
+                ActivityIndicator(color: UIColor(red: 0x63 / 255.0, green: 0x66 / 255.0, blue: 0xF1 / 255.0, alpha: 1.0))
                     .scaleEffect(1.0)
 
                 Text("Connecting...")

@@ -26,24 +26,24 @@ struct WidgetButton: View {
                         height: 32
                     )
                     .clipShape(Circle())
-                    .if(buttonImageModifier != nil) { view in
-                        buttonImageModifier!
+                    .ifLet(buttonImageModifier) { _, modifier in
+                        modifier
                     }
                 } else {
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .frame(width: 32, height: 32)
                         .foregroundColor(iconColor)
-                        .if(buttonImageModifier != nil) { view in
-                            buttonImageModifier!
+                        .ifLet(buttonImageModifier) { _, modifier in
+                            modifier
                         }
                 }
 
                 Text(settings.startCallText ?? "Let's chat")
                     .font(.system(size: 16, weight: .medium))
                     .foregroundColor(textColor)
-                    .if(buttonTextModifier != nil) { view in
-                        buttonTextModifier!
+                    .ifLet(buttonTextModifier) { _, modifier in
+                        modifier
                     }
             }
             .padding(16)
@@ -52,8 +52,8 @@ struct WidgetButton: View {
             .cornerRadius(24)
             .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
         }
-        .if(widgetButtonModifier != nil) { view in
-            widgetButtonModifier!
+        .ifLet(widgetButtonModifier) { _, modifier in
+            modifier
         }
     }
 

@@ -5,13 +5,12 @@
 //  Created by Telnyx on 02-10-25.
 //
 
-import XCTest
 import Combine
 @testable import TelnyxVoiceAIWidget
+import XCTest
 
 @MainActor
 final class WidgetViewModelTests: XCTestCase {
-
     var sut: WidgetViewModel!
     var cancellables: Set<AnyCancellable>!
 

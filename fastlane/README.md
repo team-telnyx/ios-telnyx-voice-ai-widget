@@ -13,6 +13,25 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
+### lint
+
+```sh
+[bundle exec] fastlane lint
+```
+
+Does a static analysis of the project. Configure the options in .swiftlint.yml
+
+### changelog
+
+```sh
+[bundle exec] fastlane changelog
+```
+
+Create a file with the Changelog output between a specific TAG and HEAD
+
+----
+
+
 ## iOS
 
 ### ios test_sdk
@@ -54,6 +73,30 @@ Build TelnyxVoiceAIWidget framework only
 ```
 
 Build SampleApp only
+
+### ios ci
+
+```sh
+[bundle exec] fastlane ios ci
+```
+
+Run SwiftLint and all tests
+
+### ios build_release
+
+```sh
+[bundle exec] fastlane ios build_release
+```
+
+Build framework for release
+
+### ios prepare_release
+
+```sh
+[bundle exec] fastlane ios prepare_release
+```
+
+Prepare release - lint, test, and build
 
 ----
 

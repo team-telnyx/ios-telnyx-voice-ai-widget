@@ -5,23 +5,22 @@
 //  Created by Telnyx on 29-09-25.
 //
 
-import Foundation
-import Combine
-import TelnyxRTC
 import AVFoundation
+import Combine
+import Foundation
+import TelnyxRTC
 
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor
 public class WidgetViewModel: ObservableObject {
-
     // MARK: - Constants
     private let aiAssistantDestination = "ai-assistant"
     private let maxLevels = 20
 
     // MARK: - Published Properties
     @Published public var widgetState: WidgetState = .idle
-    @Published public var widgetSettings: WidgetSettings = WidgetSettings()
-    @Published public var transcriptItems: [TranscriptItem] = []
+    @Published public var widgetSettings = WidgetSettings()
+    @Published public var transcriptItems = [TranscriptItem]()
     @Published public var userInput: String = ""
     @Published public var audioLevels: [Float] = []
 
@@ -97,7 +96,6 @@ public class WidgetViewModel: ObservableObject {
 
                 // Observe call quality metrics for audio visualization
                 observeCallQualityMetrics()
-
             } catch {
                 widgetState = .error(message: error.localizedDescription, type: .connection)
             }
@@ -230,8 +228,8 @@ public class WidgetViewModel: ObservableObject {
         // Update audio levels array with 10 values for the visualizer
         // Create a frequency-band effect by varying the level slightly
         var levels: [Float] = []
-        for i in 0..<10 {
-            let normalizedIndex = Float(i) / 9.0
+        for index in 0..<10 {
+            let normalizedIndex = Float(index) / 9.0
             let frequencyWeight = 1.0 - (normalizedIndex * 0.6) // Lower frequencies show more
             let randomVariation = Float.random(in: 0.8...1.2)
             let level = smoothedLevel * frequencyWeight * randomVariation
@@ -358,7 +356,7 @@ public class WidgetViewModel: ObservableObject {
 
 // MARK: - AIAssistantManagerDelegate
 extension WidgetViewModel: AIAssistantManagerDelegate {
-    nonisolated public func onAIConversationMessage(_ message: [String : Any]) {
+    nonisolated public func onAIConversationMessage(_ message: [String: Any]) {
         Task { @MainActor in
             // Extract params from message
             guard let params = message["params"] as? [String: Any] else { return }

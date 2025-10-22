@@ -1,0 +1,83 @@
+name: Release 01 - Create Pull Request
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  create-release-pr:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.4
+        bundler-cache: true
+        
+    - name: Setup Fastlane
+      run: |
+        bundle install
+        
+    - name: Install SwiftLint
+      run: |
+        brew install swiftlint
+        
+    - name: Create release branch
+      run: |
+        git checkout -b release/${{ github.event.inputs.version }}
+        
+    - name: Update version in podspec
+      run: |
+        sed -i '' "s/s.version.*=.*/s.version = '${{ github.event.inputs.version }}'/" TelnyxVoiceAIWidget.podspec
+        
+    - name: Generate changelog
+      run: |
+        bundle exec fastlane changelog tag:$(git describe --tags --abbrev=0)
+        
+    - name: Run CI pipeline
+      run: |
+        bundle exec fastlane ci
+        
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit -m "Release ${{ github.event.inputs.version }}"
+        
+    - name: Push release branch
+      run: |
+        git push origin release/${{ github.event.inputs.version }}
+        
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: release/${{ github.event.inputs.version }}
+        title: "Release ${{ github.event.inputs.version }}"
+        body: |
+          ## Release ${{ github.event.inputs.version }}
+          
+          This PR contains the release preparation for version ${{ github.event.inputs.version }}.
+          
+          ### Changes
+          - Updated version in podspec
+          - Generated changelog
+          - Ran CI pipeline (SwiftLint + tests)
+          
+          ### Checklist
+          - [ ] Review changelog
+          - [ ] Verify version number
+          - [ ] Test builds successfully
+          - [ ] Ready for release
+        draft: false

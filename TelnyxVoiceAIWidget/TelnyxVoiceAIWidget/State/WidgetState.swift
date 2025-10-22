@@ -10,7 +10,6 @@ import TelnyxRTC
 
 /// Represents the different states of the AI Assistant Widget
 public enum WidgetState: Equatable {
-
     /// Initial state before initialization
     case idle
 
@@ -45,11 +44,11 @@ public enum WidgetState: Equatable {
         case (.expanded(let lhsSettings, let lhsConnected, let lhsMuted, let lhsStatus),
               .expanded(let rhsSettings, let rhsConnected, let rhsMuted, let rhsStatus)):
             return lhsSettings == rhsSettings && lhsConnected == rhsConnected &&
-                   lhsMuted == rhsMuted && lhsStatus == rhsStatus
+                lhsMuted == rhsMuted && lhsStatus == rhsStatus
         case (.transcriptView(let lhsSettings, let lhsConnected, let lhsMuted, let lhsStatus),
               .transcriptView(let rhsSettings, let rhsConnected, let rhsMuted, let rhsStatus)):
             return lhsSettings == rhsSettings && lhsConnected == rhsConnected &&
-                   lhsMuted == rhsMuted && lhsStatus == rhsStatus
+                lhsMuted == rhsMuted && lhsStatus == rhsStatus
         case (.error(let lhsMessage, let lhsType), .error(let rhsMessage, let rhsType)):
             return lhsMessage == rhsMessage && lhsType == rhsType
         default:

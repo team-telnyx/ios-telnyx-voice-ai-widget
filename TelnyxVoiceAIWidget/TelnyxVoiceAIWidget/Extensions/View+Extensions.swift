@@ -17,4 +17,14 @@ extension View {
             self
         }
     }
+
+    /// Applies an optional modifier to a view if the modifier is not nil
+    @ViewBuilder
+    func ifLet<T, Content: View>(_ optional: T?, transform: (Self, T) -> Content) -> some View {
+        if let unwrapped = optional {
+            transform(self, unwrapped)
+        } else {
+            self
+        }
+    }
 }

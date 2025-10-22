@@ -212,7 +212,8 @@ TelnyxVoiceAIWidget/
 │   └── TelnyxVoiceAIWidget.swift # Main SDK class
 ├── Tests/                        # Unit tests
 ├── SampleApp/                    # Sample application
-└── Documentation/                # Additional documentation
+├── Documentation/                # Additional documentation
+└── .swiftlint.yml                # SwiftLint configuration
 ```
 
 ### Building from Source
@@ -220,6 +221,38 @@ TelnyxVoiceAIWidget/
 2. Open `TelnyxVoiceAIWidget.xcworkspace` in Xcode
 3. Select the appropriate scheme (SDK or SampleApp)
 4. Build and test
+
+### Code Quality and Style Guidelines
+
+This project uses **SwiftLint** to enforce code quality and style consistency. All code contributions must adhere to the SwiftLint rules defined in `.swiftlint.yml`.
+
+#### SwiftLint Rules
+Before writing or modifying code:
+1. **Review** the `.swiftlint.yml` file to understand the project's coding standards
+2. **Follow** the enabled rules when writing new code
+3. **Run** SwiftLint before committing: `swiftlint lint`
+4. **Fix** any violations reported by SwiftLint
+
+Key rules enforced:
+- Sorted imports
+- No force unwrapping
+- Multiline parameters formatting
+- Proper spacing and formatting
+- Code documentation for public APIs
+
+#### Running SwiftLint
+```bash
+# Lint all files
+swiftlint lint
+
+# Auto-fix violations where possible
+swiftlint --fix
+
+# Run via Fastlane
+fastlane lint
+```
+
+**Note**: The CI pipeline automatically checks for SwiftLint violations. PRs with violations will fail the build.
 
 ## Support and Resources
 
