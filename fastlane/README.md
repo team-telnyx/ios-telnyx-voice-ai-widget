@@ -98,6 +98,30 @@ Build framework for release
 
 Prepare release - lint, test, and build
 
+### ios generate_docs
+
+```sh
+[bundle exec] fastlane ios generate_docs
+```
+
+Generate documentation using Jazzy - HTML docs
+
+### ios generate_docs_markdown
+
+```sh
+[bundle exec] fastlane ios generate_docs_markdown
+```
+
+Generate documentation using SourceDocs - Markdown docs
+
+### ios generate_full_docs
+
+```sh
+[bundle exec] fastlane ios generate_full_docs
+```
+
+Generate HTML and Markdown documentation
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
