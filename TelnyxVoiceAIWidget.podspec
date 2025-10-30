@@ -18,6 +18,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git", :tag => "#{spec.version}" }
 
   spec.source_files = "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/**/*.swift"
+  spec.resource_bundles = { "TelnyxVoiceAIWidget" => ["TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/PrivacyInfo.xcprivacy"] }
 
   spec.frameworks = "Foundation", "UIKit", "AVFoundation"
   spec.requires_arc = true
