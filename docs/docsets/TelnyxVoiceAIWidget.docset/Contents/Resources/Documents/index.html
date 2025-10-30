@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TelnyxVoiceAIWidget  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a title="TelnyxVoiceAIWidget  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">TelnyxVoiceAIWidget</a>
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/WidgetViewModel.html">WidgetViewModel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/AgentStatus.html">AgentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/ErrorType.html">ErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/WidgetState.html">WidgetState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/AIAssistantWidget.html">AIAssistantWidget</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/TranscriptItem.html">TranscriptItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/WidgetCustomization.html">WidgetCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/WidgetSettings.html">WidgetSettings</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            
+            <h1 id='ios-telnyx-voice-ai-widget' class='heading'>iOS Telnyx Voice AI Widget</h1>
+
+<p>A drop-in iOS widget library for integrating Telnyx AI Assistant functionality into your applications.</p>
+<h2 id='features' class='heading'>Features</h2>
+
+<ul>
+<li>🎯 <strong>Drop-in Solution</strong>: Easy integration with minimal setup using SwiftUI</li>
+<li>🎨 <strong>Multiple UI States</strong>: Collapsed, loading, expanded, and transcript views</li>
+<li>🎵 <strong>Audio Visualizer</strong>: Real-time audio visualization during conversations</li>
+<li>🌓 <strong>Theme Support</strong>: Light and dark theme compatibility</li>
+<li>📱 <strong>Responsive Design</strong>: Optimized for various screen sizes</li>
+<li>🔊 <strong>Voice Controls</strong>: Mute/unmute and call management</li>
+<li>💬 <strong>Transcript View</strong>: Full conversation history with text input</li>
+<li>🎨 <strong>Icon-Only Mode</strong>: Floating action button for minimal space usage</li>
+</ul>
+<h2 id='installation' class='heading'>Installation</h2>
+<h3 id='swift-package-manager' class='heading'>Swift Package Manager</h3>
+
+<p>Add the following to your <code>Package.swift</code> file:</p>
+<pre class="highlight swift"><code><span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
+    <span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git"</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="s">"1.0.0"</span><span class="p">)</span>
+<span class="p">]</span>
+</code></pre>
+
+<p>Or add it through Xcode:</p>
+
+<ol>
+<li>File → Add Package Dependencies</li>
+<li>Enter repository URL: <code>https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git</code></li>
+<li>Select version and add to your target</li>
+</ol>
+<h3 id='cocoapods' class='heading'>CocoaPods</h3>
+
+<p>Add the following to your <code>Podfile</code>:</p>
+<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'TelnyxVoiceAIWidget'</span><span class="p">,</span> <span class="s1">'~&gt; 1.0.0'</span>
+</code></pre>
+
+<p>Then run:</p>
+<pre class="highlight shell"><code>pod <span class="nb">install</span>
+</code></pre>
+<h2 id='quick-start' class='heading'>Quick Start</h2>
+<h3 id='1-add-required-permissions' class='heading'>1. Add Required Permissions</h3>
+
+<p>Add these permissions to your <code>Info.plist</code>:</p>
+<pre class="highlight xml"><code><span class="nt">&lt;key&gt;</span>NSMicrophoneUsageDescription<span class="nt">&lt;/key&gt;</span>
+<span class="nt">&lt;string&gt;</span>We need access to your microphone to enable voice conversations with the AI assistant<span class="nt">&lt;/string&gt;</span>
+</code></pre>
+<h3 id='2-basic-usage' class='heading'>2. Basic Usage</h3>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">SwiftUI</span>
+<span class="kd">import</span> <span class="kt">TelnyxVoiceAIWidget</span>
+
+<span class="kd">struct</span> <span class="kt">ContentView</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">showWidget</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">VStack</span> <span class="p">{</span>
+            <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+                <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+                <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="n">showWidget</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='3-icon-only-mode-floating-action-button' class='heading'>3. Icon-Only Mode (Floating Action Button)</h3>
+
+<p>The widget supports an icon-only mode that displays as a floating action button:</p>
+<pre class="highlight swift"><code><span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">iconOnly</span><span class="p">:</span> <span class="kc">true</span> <span class="c1">// Enables floating action button mode</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='icon-only-mode-features' class='heading'>Icon-Only Mode Features:</h4>
+
+<ul>
+<li><strong>Compact Design</strong>: Displays only the icon in a circular floating action button</li>
+<li><strong>Direct Access</strong>: Tapping starts the call and opens directly into the full-screen transcript view</li>
+<li><strong>No Expanded State</strong>: Skips the intermediate expanded widget state</li>
+<li><strong>Error Handling</strong>: Shows a red error icon when there are connection issues</li>
+<li><strong>Background Color</strong>: Uses the theme&rsquo;s primary color for the button background</li>
+</ul>
+<h4 id='icon-only-vs-regular-mode' class='heading'>Icon-Only vs Regular Mode:</h4>
+
+<table><thead>
+<tr>
+<th>Feature</th>
+<th>Regular Mode</th>
+<th>Icon-Only Mode</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Collapsed State</strong></td>
+<td>Button with text and icon</td>
+<td>Circular floating button with icon only</td>
+</tr>
+<tr>
+<td><strong>Tap Behavior</strong></td>
+<td>Opens to expanded widget</td>
+<td>Starts call and opens transcript view directly</td>
+</tr>
+<tr>
+<td><strong>Expanded State</strong></td>
+<td>Shows audio visualizer and controls</td>
+<td>Skipped - goes directly to transcript</td>
+</tr>
+<tr>
+<td><strong>Error State</strong></td>
+<td>Shows detailed error card</td>
+<td>Shows red error icon in floating button</td>
+</tr>
+<tr>
+<td><strong>Use Case</strong></td>
+<td>Full-featured integration</td>
+<td>Minimal, space-efficient integration</td>
+</tr>
+</tbody></table>
+<h3 id='4-understanding-code-shouldinitialize-code-parameter' class='heading'>4. Understanding <code>shouldInitialize</code> Parameter</h3>
+
+<p>The <code>shouldInitialize</code> parameter controls when the widget establishes its network connection to Telnyx servers. This is crucial for controlling:</p>
+
+<ul>
+<li><strong>Network Usage</strong>: Prevents unnecessary connections until needed</li>
+<li><strong>User Consent</strong>: Initialize only after user grants permissions</li>
+<li><strong>Performance</strong>: Defer connection for better app startup performance</li>
+<li><strong>Conditional Loading</strong>: Connect based on user subscription, feature flags, etc.</li>
+</ul>
+<h4 id='key-behaviors' class='heading'>Key Behaviors:</h4>
+
+<ul>
+<li><strong><code>false</code></strong>: Widget remains dormant with no network activity or UI display</li>
+<li><strong><code>true</code></strong>: Triggers socket connection and loads assistant configuration</li>
+<li><strong>State Change</strong>: Changing from <code>false</code> to <code>true</code> will initialize the connection</li>
+<li><strong>Active Sessions</strong>: Changing from <code>true</code> to <code>false</code> does NOT disconnect active calls</li>
+</ul>
+<h4 id='network-connection-lifecycle' class='heading'>Network Connection Lifecycle:</h4>
+
+<ol>
+<li><strong>shouldInitialize = false</strong>: No socket connection, widget in idle state</li>
+<li><strong>shouldInitialize = true</strong>: Socket connects to Telnyx, widget settings load</li>
+<li><strong>User initiates call</strong>: WebRTC connection established for audio</li>
+<li><strong>Call ends</strong>: WebRTC disconnects, socket remains for future calls</li>
+<li><strong>shouldInitialize = false</strong>: Does NOT affect active socket (by design)</li>
+</ol>
+<h4 id='common-patterns' class='heading'>Common Patterns:</h4>
+<pre class="highlight swift"><code><span class="c1">// 1. Initialize immediately (default behavior)</span>
+<span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span>  <span class="c1">// Can be omitted as it defaults to true</span>
+<span class="p">)</span>
+
+<span class="c1">// 2. Conditional initialization based on user action</span>
+<span class="kd">struct</span> <span class="kt">ConditionalWidget</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">userWantsAssistant</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">VStack</span> <span class="p">{</span>
+            <span class="kt">Button</span><span class="p">(</span><span class="s">"Enable AI Assistant"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">userWantsAssistant</span> <span class="o">=</span> <span class="kc">true</span>
+            <span class="p">}</span>
+
+            <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+                <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+                <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="n">userWantsAssistant</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 3. Initialize after permissions are granted</span>
+<span class="kd">struct</span> <span class="kt">PermissionAwareWidget</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">hasPermissions</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+            <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+            <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="n">hasPermissions</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">onAppear</span> <span class="p">{</span>
+            <span class="n">checkAudioPermissions</span> <span class="p">{</span> <span class="n">granted</span> <span class="k">in</span>
+                <span class="n">hasPermissions</span> <span class="o">=</span> <span class="n">granted</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 4. Deferred initialization for performance</span>
+<span class="kd">struct</span> <span class="kt">DeferredWidget</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">initializeWidget</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+            <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+            <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="n">initializeWidget</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">onAppear</span> <span class="p">{</span>
+            <span class="c1">// Initialize after a delay</span>
+            <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">asyncAfter</span><span class="p">(</span><span class="nv">deadline</span><span class="p">:</span> <span class="o">.</span><span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">initializeWidget</span> <span class="o">=</span> <span class="kc">true</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='customization' class='heading'>Customization</h2>
+<h3 id='color-customization' class='heading'>Color Customization</h3>
+
+<p>The widget supports extensive color customization through the <code><a href="Structs/WidgetCustomization.html">WidgetCustomization</a></code> struct:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">customization</span> <span class="o">=</span> <span class="kt">WidgetCustomization</span><span class="p">(</span>
+    <span class="nv">audioVisualizerColor</span><span class="p">:</span> <span class="s">"twilight"</span><span class="p">,</span>        <span class="c1">// Gradient preset name</span>
+    <span class="nv">transcriptBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>       <span class="c1">// Transcript background</span>
+    <span class="nv">userBubbleBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">blue</span><span class="p">,</span>        <span class="c1">// User message bubbles</span>
+    <span class="nv">agentBubbleBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">gray</span><span class="p">,</span>       <span class="c1">// Agent message bubbles</span>
+    <span class="nv">userBubbleTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>             <span class="c1">// User message text</span>
+    <span class="nv">agentBubbleTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">black</span><span class="p">,</span>            <span class="c1">// Agent message text</span>
+    <span class="nv">muteButtonBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">blue</span><span class="p">,</span>        <span class="c1">// Mute button default</span>
+    <span class="nv">muteButtonActiveBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">red</span><span class="p">,</span>   <span class="c1">// Mute button when active</span>
+    <span class="nv">muteButtonIconColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>             <span class="c1">// Mute button icon</span>
+    <span class="nv">widgetSurfaceColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>              <span class="c1">// Widget background</span>
+    <span class="nv">primaryTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">black</span><span class="p">,</span>                <span class="c1">// Primary text</span>
+    <span class="nv">secondaryTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">gray</span><span class="p">,</span>               <span class="c1">// Secondary text</span>
+    <span class="nv">inputBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">lightGray</span>         <span class="c1">// Input field background</span>
+<span class="p">)</span>
+
+<span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">customization</span><span class="p">:</span> <span class="n">customization</span>
+<span class="p">)</span>
+</code></pre>
+<h3 id='audio-visualizer-presets' class='heading'>Audio Visualizer Presets</h3>
+
+<p>Available gradient presets for the audio visualizer:</p>
+
+<ul>
+<li><code>&quot;verdant&quot;</code> - Green gradient</li>
+<li><code>&quot;twilight&quot;</code> - Purple/blue gradient<br></li>
+<li><code>&quot;bloom&quot;</code> - Pink/orange gradient</li>
+<li><code>&quot;mystic&quot;</code> - Teal gradient</li>
+<li><code>&quot;flare&quot;</code> - Red/orange gradient</li>
+<li><code>&quot;glacier&quot;</code> - Blue/cyan gradient</li>
+</ul>
+<h3 id='view-customization-advanced' class='heading'>View Customization (Advanced)</h3>
+
+<p>For advanced UI customization, you can provide custom views that completely replace the default button components. These parameters accept <code>AnyView</code> type, so you need to wrap your custom views with <code>AnyView()</code>:</p>
+<pre class="highlight swift"><code><span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">iconOnly</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">customization</span><span class="p">:</span> <span class="n">customization</span><span class="p">,</span>
+    <span class="nv">widgetButtonModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">(</span>
+        <span class="c1">// This view completely replaces the button container's styling</span>
+        <span class="kt">RoundedRectangle</span><span class="p">(</span><span class="nv">cornerRadius</span><span class="p">:</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">fill</span><span class="p">(</span><span class="kt">Color</span><span class="o">.</span><span class="n">blue</span><span class="o">.</span><span class="nf">opacity</span><span class="p">(</span><span class="mf">0.1</span><span class="p">))</span>
+            <span class="o">.</span><span class="nf">overlay</span><span class="p">(</span>
+                <span class="kt">RoundedRectangle</span><span class="p">(</span><span class="nv">cornerRadius</span><span class="p">:</span> <span class="mi">16</span><span class="p">)</span>
+                    <span class="o">.</span><span class="nf">stroke</span><span class="p">(</span><span class="kt">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">,</span> <span class="nv">lineWidth</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">)</span>
+    <span class="p">),</span>
+    <span class="nv">buttonTextModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">(</span>
+        <span class="c1">// This view completely replaces the default button text</span>
+        <span class="kt">Text</span><span class="p">(</span><span class="s">"Start Conversation"</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">font</span><span class="p">(</span><span class="o">.</span><span class="n">headline</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">foregroundColor</span><span class="p">(</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+    <span class="p">),</span>
+    <span class="nv">buttonImageModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">(</span>
+        <span class="c1">// This view completely replaces the default icon/image</span>
+        <span class="kt">Image</span><span class="p">(</span><span class="nv">systemName</span><span class="p">:</span> <span class="s">"mic.fill"</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">resizable</span><span class="p">()</span>
+            <span class="o">.</span><span class="nf">frame</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">32</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">foregroundColor</span><span class="p">(</span><span class="o">.</span><span class="n">blue</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</code></pre>
+
+<p><strong>Important</strong>: These parameters replace the entire view component, not just modify it. For example:</p>
+
+<ul>
+<li><code>buttonTextModifier</code> replaces the entire text view (ignoring <code>settings.startCallText</code>)</li>
+<li><code>buttonImageModifier</code> replaces the entire icon/logo view (ignoring <code>settings.logoIconUrl</code>)</li>
+<li><code>widgetButtonModifier</code> replaces the button&rsquo;s container styling</li>
+<li><code>expandedWidgetModifier</code> replaces the expanded widget&rsquo;s container styling</li>
+</ul>
+<h3 id='parameters' class='heading'>Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code>assistantId</code></td>
+<td>String</td>
+<td>Your Telnyx Assistant ID (required)</td>
+</tr>
+<tr>
+<td><code>shouldInitialize</code></td>
+<td>Bool</td>
+<td>Controls network connection lifecycle (default: <code>true</code>)</td>
+</tr>
+<tr>
+<td><code>iconOnly</code></td>
+<td>Bool</td>
+<td>Enable floating action button mode (default: <code>false</code>)</td>
+</tr>
+<tr>
+<td><code>customization</code></td>
+<td>WidgetCustomization?</td>
+<td>Custom color overrides (default: <code>nil</code>)</td>
+</tr>
+<tr>
+<td><code>widgetButtonModifier</code></td>
+<td>AnyView?</td>
+<td>Custom view to replace the collapsed button&rsquo;s container styling (default: <code>nil</code>)</td>
+</tr>
+<tr>
+<td><code>expandedWidgetModifier</code></td>
+<td>AnyView?</td>
+<td>Custom view to replace the expanded widget&rsquo;s container styling (default: <code>nil</code>)</td>
+</tr>
+<tr>
+<td><code>buttonTextModifier</code></td>
+<td>AnyView?</td>
+<td>Custom view to completely replace the button&rsquo;s text (default: <code>nil</code>)</td>
+</tr>
+<tr>
+<td><code>buttonImageModifier</code></td>
+<td>AnyView?</td>
+<td>Custom view to completely replace the button&rsquo;s icon/logo (default: <code>nil</code>)</td>
+</tr>
+</tbody></table>
+
+<p><strong>Note</strong>: All parameters except <code>assistantId</code> are optional. The view customization parameters completely replace their respective components and require wrapping your custom views with <code>AnyView()</code> - see the View Customization section above for examples.</p>
+<h2 id='widget-states' class='heading'>Widget States</h2>
+
+<p>The widget automatically transitions between different states:</p>
+<h3 id='1-collapsed-state' class='heading'>1. Collapsed State</h3>
+
+<ul>
+<li><strong>Regular Mode</strong>: Shows a compact button with customizable text and logo icon</li>
+<li><strong>Icon-Only Mode</strong>: Shows a circular floating action button with only the icon</li>
+<li>Tap to initiate a call</li>
+</ul>
+<h3 id='2-loading-connecting-state' class='heading'>2. Loading/Connecting State</h3>
+
+<ul>
+<li>Shows loading indicator during initialization and connection</li>
+<li>Same behavior in both regular and icon-only modes</li>
+</ul>
+<h3 id='3-expanded-state' class='heading'>3. Expanded State</h3>
+
+<ul>
+<li><strong>Regular Mode</strong>: Audio visualizer, mute/unmute controls, agent status indicators</li>
+<li><strong>Icon-Only Mode</strong>: This state is skipped - goes directly to transcript view</li>
+<li>Tap to open full transcript view (regular mode only)</li>
+</ul>
+<h3 id='4-transcript-view' class='heading'>4. Transcript View</h3>
+
+<ul>
+<li>Full conversation history</li>
+<li>Text input for typing messages</li>
+<li>Audio controls and visualizer</li>
+<li><strong>Regular Mode</strong>: Collapsible back to expanded view</li>
+<li><strong>Icon-Only Mode</strong>: Primary interface for interaction</li>
+</ul>
+<h3 id='5-error-state' class='heading'>5. Error State</h3>
+
+<ul>
+<li><strong>Regular Mode</strong>: Shows detailed error card with retry button</li>
+<li><strong>Icon-Only Mode</strong>: Shows red error icon in floating button</li>
+</ul>
+<h2 id='customization' class='heading'>Customization</h2>
+
+<p>The widget automatically fetches configuration from your Telnyx Assistant settings, including:</p>
+
+<ul>
+<li>Custom button text</li>
+<li>Logo/icon URLs</li>
+<li>Theme preferences</li>
+<li>Audio visualizer settings</li>
+<li>Status messages</li>
+</ul>
+<h2 id='example-app' class='heading'>Example App</h2>
+
+<p>Check out the included example app in the <code>SampleApp</code> folder for a complete implementation:</p>
+<pre class="highlight shell"><code><span class="nb">cd </span>SampleApp
+open SampleApp.xcodeproj
+</code></pre>
+
+<p>The sample app demonstrates:</p>
+
+<ul>
+<li>Basic widget integration</li>
+<li>Permission handling</li>
+<li>Icon-only vs regular mode</li>
+<li>Assistant ID configuration</li>
+<li>Real-time widget state management</li>
+</ul>
+<h2 id='sdk-components' class='heading'>SDK Components</h2>
+<h3 id='core-components' class='heading'>Core Components</h3>
+
+<p>The SDK is organized into the following main components:</p>
+<h4 id='1-strong-aiassistantwidget-strong' class='heading'>1. <strong>AIAssistantWidget</strong></h4>
+
+<p>The main entry point for integrating the widget into your application.</p>
+
+<p><strong>Location</strong>: <code>Views/AIAssistantWidget.swift</code></p>
+
+<p><strong>Purpose</strong>: Provides the complete UI and lifecycle management for AI Assistant interactions.</p>
+
+<p><strong>Key Parameters</strong>:</p>
+
+<ul>
+<li><code>assistantId: String</code> - Your Telnyx AI Assistant ID (required)</li>
+<li><code>shouldInitialize: Bool</code> - Controls network connection lifecycle</li>
+<li><code>iconOnly: Bool</code> - Toggle between full widget and floating action button mode</li>
+<li><code>customization: WidgetCustomization?</code> - Custom color overrides</li>
+</ul>
+
+<p><strong>Example</strong>:</p>
+<pre class="highlight swift"><code><span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">iconOnly</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">customization</span><span class="p">:</span> <span class="kt">WidgetCustomization</span><span class="p">(</span>
+        <span class="nv">audioVisualizerColor</span><span class="p">:</span> <span class="s">"twilight"</span><span class="p">,</span>
+        <span class="nv">userBubbleBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">blue</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='2-strong-widgetviewmodel-strong' class='heading'>2. <strong>WidgetViewModel</strong></h4>
+
+<p>Manages the widget&rsquo;s state, business logic, and WebRTC connections.</p>
+
+<p><strong>Location</strong>: <code>ViewModels/WidgetViewModel.swift</code></p>
+
+<p><strong>Purpose</strong>: Handles socket connections, call management, transcript updates, and state transitions.</p>
+
+<p><strong>Key Methods</strong>:</p>
+
+<ul>
+<li><code>initialize(assistantId:iconOnly:customization:)</code> - Initialize the widget with configuration</li>
+<li><code>startCall()</code> - Initiate a call to the AI assistant</li>
+<li><code>endCall()</code> - Terminate the active call</li>
+<li><code>toggleMute()</code> - Toggle microphone mute state</li>
+<li><code>sendTextMessage(_:)</code> - Send a text message during conversation</li>
+</ul>
+
+<p><strong>Published Properties</strong>:</p>
+
+<ul>
+<li><code>widgetState: WidgetState</code> - Current widget state</li>
+<li><code>widgetSettings: WidgetSettings</code> - Configuration from Telnyx</li>
+<li><code>transcriptItems: [TranscriptItem]</code> - Conversation history</li>
+<li><code>audioLevels: [Float]</code> - Real-time audio visualization data</li>
+</ul>
+<h4 id='3-strong-widgetstate-strong' class='heading'>3. <strong>WidgetState</strong></h4>
+
+<p>An enum representing all possible widget states.</p>
+
+<p><strong>Location</strong>: <code>State/WidgetState.swift</code></p>
+
+<p><strong>States</strong>:</p>
+
+<ul>
+<li><code>.idle</code> - Initial state before initialization</li>
+<li><code>.loading</code> - Loading during connection</li>
+<li><code>.collapsed(settings)</code> - Collapsed button state</li>
+<li><code>.connecting(settings)</code> - Initiating call</li>
+<li><code>.expanded(settings, isConnected, isMuted, agentStatus)</code> - Active call with visualizer</li>
+<li><code>.transcriptView(settings, isConnected, isMuted, agentStatus)</code> - Full transcript view</li>
+<li><code>.error(message, type)</code> - Error state with details</li>
+</ul>
+<h4 id='4-strong-widgetcustomization-strong' class='heading'>4. <strong>WidgetCustomization</strong></h4>
+
+<p>Configuration struct for custom color theming.</p>
+
+<p><strong>Location</strong>: <code>Models/WidgetCustomization.swift</code></p>
+
+<p><strong>Customizable Colors</strong>:</p>
+<pre class="highlight swift"><code><span class="kt">WidgetCustomization</span><span class="p">(</span>
+    <span class="nv">audioVisualizerColor</span><span class="p">:</span> <span class="s">"twilight"</span><span class="p">,</span>        <span class="c1">// Gradient preset name</span>
+    <span class="nv">transcriptBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>       <span class="c1">// Transcript background</span>
+    <span class="nv">userBubbleBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">blue</span><span class="p">,</span>        <span class="c1">// User message bubbles</span>
+    <span class="nv">agentBubbleBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">gray</span><span class="p">,</span>       <span class="c1">// Agent message bubbles</span>
+    <span class="nv">userBubbleTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>             <span class="c1">// User message text</span>
+    <span class="nv">agentBubbleTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">black</span><span class="p">,</span>            <span class="c1">// Agent message text</span>
+    <span class="nv">muteButtonBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">blue</span><span class="p">,</span>        <span class="c1">// Mute button default</span>
+    <span class="nv">muteButtonActiveBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">red</span><span class="p">,</span>   <span class="c1">// Mute button when active</span>
+    <span class="nv">muteButtonIconColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>             <span class="c1">// Mute button icon</span>
+    <span class="nv">widgetSurfaceColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span><span class="p">,</span>              <span class="c1">// Widget background</span>
+    <span class="nv">primaryTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">black</span><span class="p">,</span>                <span class="c1">// Primary text</span>
+    <span class="nv">secondaryTextColor</span><span class="p">:</span> <span class="o">.</span><span class="n">gray</span><span class="p">,</span>               <span class="c1">// Secondary text</span>
+    <span class="nv">inputBackgroundColor</span><span class="p">:</span> <span class="o">.</span><span class="n">lightGray</span>         <span class="c1">// Input field background</span>
+<span class="p">)</span>
+</code></pre>
+
+<p><strong>Audio Visualizer Presets</strong>:</p>
+
+<ul>
+<li><code>&quot;verdant&quot;</code> - Green gradient</li>
+<li><code>&quot;twilight&quot;</code> - Purple/blue gradient</li>
+<li><code>&quot;bloom&quot;</code> - Pink/orange gradient</li>
+<li><code>&quot;mystic&quot;</code> - Teal gradient</li>
+<li><code>&quot;flare&quot;</code> - Red/orange gradient</li>
+<li><code>&quot;glacier&quot;</code> - Blue/cyan gradient</li>
+</ul>
+<h4 id='5-strong-ui-components-strong' class='heading'>5. <strong>UI Components</strong></h4>
+
+<p><strong>AudioVisualizer</strong> (<code>Views/Components/AudioVisualizer.swift</code>)</p>
+
+<ul>
+<li>Real-time audio visualization with configurable gradient colors</li>
+<li>Responds to audio levels from WebRTC stream</li>
+</ul>
+
+<p><strong>TranscriptView</strong> (<code>Views/Components/TranscriptView.swift</code>)</p>
+
+<ul>
+<li>Full conversation history display</li>
+<li>Text input for typing messages</li>
+<li>Auto-scroll to latest messages</li>
+</ul>
+
+<p><strong>ExpandedWidget</strong> (<code>Views/Components/ExpandedWidget.swift</code>)</p>
+
+<ul>
+<li>Active call interface with audio visualizer</li>
+<li>Mute/unmute controls</li>
+<li>Agent status indicators</li>
+</ul>
+
+<p><strong>FloatingButton</strong> (<code>Views/Components/FloatingButton.swift</code>)</p>
+
+<ul>
+<li>Circular floating action button for icon-only mode</li>
+<li>Error state visualization</li>
+</ul>
+<h3 id='data-models' class='heading'>Data Models</h3>
+<h4 id='strong-widgetsettings-strong' class='heading'><strong>WidgetSettings</strong></h4>
+
+<p>Configuration received from Telnyx AI Assistant settings:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">WidgetSettings</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">agentThinkingText</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>           <span class="c1">// Text shown when agent is processing</span>
+    <span class="k">let</span> <span class="nv">audioVisualizerConfig</span><span class="p">:</span> <span class="kt">AudioVisualizerConfig</span><span class="p">?</span>
+    <span class="k">let</span> <span class="nv">defaultState</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>                <span class="c1">// Initial widget state</span>
+    <span class="k">let</span> <span class="nv">logoIconUrl</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>                 <span class="c1">// Custom logo URL</span>
+    <span class="k">let</span> <span class="nv">startCallText</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>               <span class="c1">// Custom button text</span>
+    <span class="k">let</span> <span class="nv">speakToInterruptText</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>        <span class="c1">// Interrupt instruction text</span>
+    <span class="k">let</span> <span class="nv">theme</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>                       <span class="c1">// Theme preference ("light"/"dark")</span>
+<span class="p">}</span>
+</code></pre>
+<h4 id='strong-transcriptitem-strong' class='heading'><strong>TranscriptItem</strong></h4>
+
+<p>Represents a single message in the conversation:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">TranscriptItem</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span>           <span class="c1">// Unique identifier</span>
+    <span class="k">let</span> <span class="nv">text</span><span class="p">:</span> <span class="kt">String</span>         <span class="c1">// Message content</span>
+    <span class="k">let</span> <span class="nv">isUser</span><span class="p">:</span> <span class="kt">Bool</span>         <span class="c1">// true if from user, false if from agent</span>
+    <span class="k">let</span> <span class="nv">timestamp</span><span class="p">:</span> <span class="kt">Date</span>      <span class="c1">// When the message was sent</span>
+<span class="p">}</span>
+</code></pre>
+<h4 id='strong-agentstatus-strong' class='heading'><strong>AgentStatus</strong></h4>
+
+<p>Current state of the AI agent:</p>
+<pre class="highlight swift"><code><span class="kd">enum</span> <span class="kt">AgentStatus</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">idle</span>      <span class="c1">// No active conversation</span>
+    <span class="k">case</span> <span class="n">thinking</span>  <span class="c1">// Processing user input</span>
+    <span class="k">case</span> <span class="n">waiting</span>   <span class="c1">// Ready and can be interrupted</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='integration-patterns' class='heading'>Integration Patterns</h3>
+<h4 id='basic-integration' class='heading'>Basic Integration</h4>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TelnyxVoiceAIWidget</span>
+
+<span class="kd">struct</span> <span class="kt">MyView</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+            <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+            <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h4 id='advanced-integration-with-custom-colors' class='heading'>Advanced Integration with Custom Colors</h4>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">AdvancedView</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">customization</span> <span class="o">=</span> <span class="kt">WidgetCustomization</span><span class="p">(</span>
+        <span class="nv">audioVisualizerColor</span><span class="p">:</span> <span class="s">"twilight"</span><span class="p">,</span>
+        <span class="nv">userBubbleBackgroundColor</span><span class="p">:</span> <span class="kt">Color</span><span class="p">(</span><span class="nv">hex</span><span class="p">:</span> <span class="s">"#007AFF"</span><span class="p">),</span>
+        <span class="nv">agentBubbleBackgroundColor</span><span class="p">:</span> <span class="kt">Color</span><span class="p">(</span><span class="nv">hex</span><span class="p">:</span> <span class="s">"#E5E5EA"</span><span class="p">),</span>
+        <span class="nv">widgetSurfaceColor</span><span class="p">:</span> <span class="o">.</span><span class="n">white</span>
+    <span class="p">)</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+            <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+            <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="nv">customization</span><span class="p">:</span> <span class="n">customization</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h4 id='conditional-initialization' class='heading'>Conditional Initialization</h4>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">ConditionalView</span><span class="p">:</span> <span class="kt">View</span> <span class="p">{</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">hasPermissions</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="kd">@State</span> <span class="kd">private</span> <span class="k">var</span> <span class="nv">isEnabled</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">AIAssistantWidget</span><span class="p">(</span>
+            <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+            <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="n">hasPermissions</span> <span class="o">&amp;&amp;</span> <span class="n">isEnabled</span>
+        <span class="p">)</span>
+        <span class="o">.</span><span class="n">onAppear</span> <span class="p">{</span>
+            <span class="n">checkMicrophonePermission</span> <span class="p">{</span> <span class="n">granted</span> <span class="k">in</span>
+                <span class="n">hasPermissions</span> <span class="o">=</span> <span class="n">granted</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='architecture' class='heading'>Architecture</h2>
+
+<p>The widget is built using:</p>
+
+<ul>
+<li><strong>SwiftUI</strong> for modern UI</li>
+<li><strong>Combine</strong> for reactive state management</li>
+<li><strong>ObservableObject</strong> and <strong>@Published</strong> for state updates</li>
+<li><strong>Telnyx WebRTC SDK</strong> for voice communication</li>
+</ul>
+
+<p><strong>Architecture Diagram</strong>:</p>
+<pre class="highlight plaintext"><code>┌─────────────────────────┐
+│   AIAssistantWidget     │  ← Main SwiftUI View
+└───────────┬─────────────┘
+            │
+            ↓
+┌─────────────────────────┐
+│   WidgetViewModel       │  ← State &amp; Business Logic
+│                         │
+│  • TxClient (WebRTC)    │  ← Telnyx SDK Integration
+│  • Socket Connection    │
+│  • Call Management      │
+│  • Transcript Updates   │
+└───────────┬─────────────┘
+            │
+            ↓
+┌─────────────────────────┐
+│   WidgetState           │  ← State Machine
+│                         │
+│  • idle → loading       │
+│  • collapsed → expanded │
+│  • transcriptView       │
+│  • error                │
+└─────────────────────────┘
+</code></pre>
+<h2 id='requirements' class='heading'>Requirements</h2>
+
+<ul>
+<li>iOS 13.0+</li>
+<li>Xcode 14.0+</li>
+<li>Swift 5.9+</li>
+</ul>
+<h2 id='development' class='heading'>Development</h2>
+<h3 id='building-the-project' class='heading'>Building the Project</h3>
+<pre class="highlight shell"><code>swift build
+</code></pre>
+<h3 id='running-tests' class='heading'>Running Tests</h3>
+<pre class="highlight shell"><code>swift <span class="nb">test</span>
+</code></pre>
+<h3 id='running-the-sample-app' class='heading'>Running the Sample App</h3>
+
+<p>To run the example app and test the widget:</p>
+
+<ol>
+<li><p>Open the workspace:</p>
+<pre class="highlight shell"><code>open TelnyxVoiceAIWidget.xcworkspace
+</code></pre></li>
+<li><p>Select the <code>SampleApp</code> scheme</p></li>
+<li><p>Build and run (⌘R)</p></li>
+</ol>
+<h3 id='ci-cd' class='heading'>CI/CD</h3>
+
+<p>This project includes:</p>
+
+<ul>
+<li><strong>Automated Testing</strong>: Unit tests and build validation on every PR via Fastlane</li>
+<li><strong>GitHub Actions</strong>: Continuous integration pipeline</li>
+<li><strong>Test Reports</strong>: Generated test coverage and results in the <code>reports</code> directory</li>
+</ul>
+
+<p>To run tests locally via Fastlane:</p>
+<pre class="highlight shell"><code>bundle <span class="nb">install
+</span>bundle <span class="nb">exec </span>fastlane <span class="nb">test</span>
+</code></pre>
+<h2 id='contributing' class='heading'>Contributing</h2>
+
+<ol>
+<li>Fork the repository</li>
+<li>Create a feature branch</li>
+<li>Make your changes</li>
+<li>Add tests for new functionality</li>
+<li>Ensure all tests pass</li>
+<li>Submit a pull request</li>
+</ol>
+<h2 id='troubleshooting' class='heading'>Troubleshooting</h2>
+<h3 id='common-issues' class='heading'>Common Issues</h3>
+
+<p><strong>Widget not initializing:</strong></p>
+
+<ul>
+<li>Verify your Assistant ID is correct</li>
+<li>Check network connectivity</li>
+<li>Ensure microphone permissions are granted</li>
+</ul>
+
+<p><strong>Audio not working:</strong></p>
+
+<ul>
+<li>Check microphone permissions in Settings</li>
+<li>Verify device is not in silent mode</li>
+<li>Test with different audio routes (speaker/earpiece)</li>
+</ul>
+
+<p><strong>Build errors:</strong></p>
+
+<ul>
+<li>Ensure iOS 13.0+ deployment target</li>
+<li>Verify Swift 5.0+ compatibility</li>
+<li>Check that all dependencies are properly resolved</li>
+</ul>
+
+<p><strong>Widget not responding:</strong></p>
+
+<ul>
+<li>Verify <code>shouldInitialize</code> is set to <code>true</code></li>
+<li>Check console logs for WebRTC connection errors</li>
+<li>Ensure Assistant ID is valid and active</li>
+</ul>
+<h2 id='license' class='heading'>License</h2>
+
+<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+<h2 id='support' class='heading'>Support</h2>
+
+<p>For technical support and questions:</p>
+
+<ul>
+<li>📧 Email: <a href="mailto:support@telnyx.com">support@telnyx.com</a></li>
+<li>📖 Documentation: <a href="https://developers.telnyx.com">Telnyx Developer Portal</a></li>
+<li>🐛 Issues: <a href="https://github.com/team-telnyx/ios-telnyx-voice-ai-widget/issues">GitHub Issues</a></li>
+</ul>
+
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

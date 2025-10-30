@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AIAssistantWidget Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Struct/AIAssistantWidget" class="dashAnchor"></a>
+    <a title="AIAssistantWidget Structure Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">TelnyxVoiceAIWidget</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        <a href="../Structs.html">Structures</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        AIAssistantWidget Structure Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/WidgetViewModel.html">WidgetViewModel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AgentStatus.html">AgentStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ErrorType.html">ErrorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/WidgetState.html">WidgetState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AIAssistantWidget.html">AIAssistantWidget</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TranscriptItem.html">TranscriptItem</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WidgetCustomization.html">WidgetCustomization</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/WidgetSettings.html">WidgetSettings</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>AIAssistantWidget</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AIAssistantWidget</span> <span class="p">:</span> <span class="kt">View</span></code></pre>
+
+                </div>
+              </div>
+            <p>Main AI Assistant Widget component</p>
+
+<p>This is the entry point for integrating the AI Assistant Widget into your application.
+The widget handles the complete lifecycle of AI Assistant interactions, including socket
+connection, call management, and UI state transitions.</p>
+
+              <div>
+                <h4>Parameters</h4>
+                <table class="graybox">
+                  <tbody>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>assistantId</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>The Assistant ID from your Telnyx AI configuration used to establish
+         the connection to the AI service. This ID determines which AI assistant
+         configuration and capabilities are loaded.</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>shouldInitialize</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>Controls when the widget establishes its socket connection to Telnyx.
+              When false, the widget remains in Idle state with no network activity.
+              When true, triggers socket connection initialization and loads widget settings.</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>iconOnly</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>When true, displays the widget as a floating action button with only the icon.
+      In this mode, tapping starts the call and opens directly into the full screen
+      text view. When false, displays the regular widget button with text.</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>widgetButtonModifier</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>ViewModifier applied to the widget button in collapsed state</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>expandedWidgetModifier</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>ViewModifier applied to the expanded widget</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>buttonTextModifier</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>ViewModifier applied to the text visible on the widget button</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>buttonImageModifier</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>ViewModifier applied to the image/icon visible on the widget button</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>customization</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>Optional custom colors that take priority over socket-received theme colors</p>
+                          </div>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+              </div>
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Initialization"></a>
+                <a name="//apple_ref/swift/Section/Initialization" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Initialization"></a>
+                  <h3 class="section-name"><span>Initialization</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly13customization20widgetButtonModifier08expandedeO0010buttonTextO00q5ImageO0ACSS_S2bAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Rtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(assistantId:shouldInitialize:iconOnly:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly13customization20widgetButtonModifier08expandedeO0010buttonTextO00q5ImageO0ACSS_S2bAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Rtcfc">init(assistantId:<wbr>shouldInitialize:<wbr>iconOnly:<wbr>customization:<wbr>widgetButtonModifier:<wbr>expandedWidgetModifier:<wbr>buttonTextModifier:<wbr>buttonImageModifier:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">iconOnly</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">customization</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetCustomization.html">WidgetCustomization</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">widgetButtonModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">expandedWidgetModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">buttonTextModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">buttonImageModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Body"></a>
+                <a name="//apple_ref/swift/Section/Body" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Body"></a>
+                  <h3 class="section-name"><span>Body</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:7SwiftUI4ViewP4body4BodyQzvp"></a>
+                    <a name="//apple_ref/swift/Property/body" class="dashAnchor"></a>
+                    <a class="token" href="#/s:7SwiftUI4ViewP4body4BodyQzvp">body</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">body</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
