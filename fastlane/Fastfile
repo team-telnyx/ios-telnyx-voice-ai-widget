@@ -125,4 +125,34 @@ platform :ios do
     build_release
     UI.success("✅ Release preparation completed successfully!")
   end
+
+  desc "Generate documentation using Jazzy - HTML docs"
+  lane :generate_docs do
+    # Use configuration file to avoid command-line escaping issues
+    sh <<-SHELL
+      cd .. && jazzy --config .jazzy.yaml
+    SHELL
+    UI.message("📚 Documentation generated in ./docs")
+  end
+
+  desc "Generate documentation using SourceDocs - Markdown docs"
+  lane :generate_docs_markdown do
+    sh <<-SHELL
+      cd .. && sourcedocs generate --output-folder ./docs-markdown \
+                                -- \
+                                -workspace TelnyxVoiceAIWidget.xcworkspace \
+                                -scheme TelnyxVoiceAIWidget \
+                                -destination 'platform=iOS Simulator,OS=18.5,name=iPhone 16 Pro Max'
+
+
+    SHELL
+    UI.message("📄 Markdown documentation generated in ./docs-markdown")
+  end
+
+  desc "Generate HTML and Markdown documentation"
+  lane :generate_full_docs do
+    generate_docs
+    generate_docs_markdown
+    UI.success("✅ Documentation successfully generated and converted to Markdown")
+  end
 end

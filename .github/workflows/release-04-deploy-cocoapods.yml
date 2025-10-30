@@ -1,0 +1,38 @@
+# This workflow deploys the latest SDK version to CocoaPods using the `.podspec` configuration.
+#
+# 📋 Steps:
+# 1. Checks out the repository with full history to ensure access to tags.
+# 2. Sets up Ruby 2.7.4 and installs dependencies using Bundler.
+# 3. Runs `pod lib lint` to validate the `.podspec` file.
+# 4. Publishes the SDK to the CocoaPods trunk using the `pod trunk push` command with authentication.
+name: release-04-deploy-cocoapods
+on:
+   # Allows you to run this workflow manually from the Actions tab
+   workflow_dispatch:
+
+jobs:
+  build:
+    name: release_deploy_cocoapods
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+
+    - name: "🤖 Setup ruby"
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.7.4
+        bundler-cache: true
+
+    - name: "🤖 Podspec lint"
+      run: |
+        pod lib lint --allow-warnings
+
+    - name: "🚀  Publish to CocoaPods register"
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: |
+        pod trunk push TelnyxVoiceAIWidget.podspec --allow-warnings
