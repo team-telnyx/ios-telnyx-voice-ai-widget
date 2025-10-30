@@ -10,7 +10,7 @@ on:
 
 jobs:
   tests:
-    name: ios_fastlane_tests
+    name: ios-fastlane-tests
     runs-on: macos-latest
 
     steps:
