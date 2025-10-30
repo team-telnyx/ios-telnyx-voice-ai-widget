@@ -5,13 +5,12 @@
 # 2. Sets up the required Xcode version for building the SDK.
 # 3. Installs Ruby 3.3.0 along with Fastlane and Jazzy for documentation.
 # 4. Installs SourceDocs via Homebrew.
-# 5. Installs CocoaPods dependencies required by the SDK.
-# 6. Runs Fastlane to generate full documentation using Jazzy and SourceDocs.
-# 7. Configures Git user identity and push settings for committing changes.
-# 8. Creates a uniquely named branch for the documentation update.
-# 9. Uses `peter-evans/create-pull-request` to open a PR with updated docs,
+# 5. Runs Fastlane to generate full documentation using Jazzy and SourceDocs.
+# 6. Configures Git user identity and push settings for committing changes.
+# 7. Creates a uniquely named branch for the documentation update.
+# 8. Uses `peter-evans/create-pull-request` to open a PR with updated docs,
 #    targeting the base branch and including only changes in `docs/` and `docs-markdown/`.
-# 10. Labels the PR as "documentation" and "auto-generated" and deletes the branch after merge.
+# 9. Labels the PR as "documentation" and "auto-generated" and deletes the branch after merge.
 
 name: release-02-generate-docs
 
@@ -53,10 +52,6 @@ jobs:
     - name: 📦 Install SourceDocs
       run: |
         brew install sourcedocs
-
-    - name: 📦 Install dependencies (CocoaPods)
-      run: |
-        pod install
 
     - name: 📝 Run Fastlane to generate full documentation
       run: |
