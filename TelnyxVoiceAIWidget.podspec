@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
 
   spec.homepage     = "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget"
   spec.license      = { :type => "MIT", :file => "LICENSE" }
-  spec.author       = { "Telnyx" => "support@telnyx.com" }
+  spec.author = { "Telnyx LLC" => "mobile.app.eng.chapter@telnyx.com" }
 
   spec.platform     = :ios, "13.0"
   spec.swift_version = "5.9"
