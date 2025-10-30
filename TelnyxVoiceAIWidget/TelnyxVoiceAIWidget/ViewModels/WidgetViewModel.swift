@@ -185,7 +185,7 @@ public class WidgetViewModel: ObservableObject {
         guard let aiAssistantManager = telnyxClient?.aiAssistantManager else { return }
 
         // Subscribe to transcript updates using the publisher
-        let cancellable = aiAssistantManager.subscribeToTranscriptUpdates { [weak self] updatedTranscriptions in
+        _ = aiAssistantManager.subscribeToTranscriptUpdates { [weak self] updatedTranscriptions in
             Task { @MainActor in
                 // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
                 self?.transcriptItems = updatedTranscriptions.map { item in
@@ -198,7 +198,7 @@ public class WidgetViewModel: ObservableObject {
                 }
             }
         }
-        // Store cancellable (note: TranscriptCancellable auto-cancels on deinit)
+        // Note: TranscriptCancellable auto-cancels on deinit
     }
 
     private func observeCallQualityMetrics() {

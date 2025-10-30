@@ -10,7 +10,7 @@ Pod::Spec.new do |spec|
 
   spec.homepage     = "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget"
   spec.license      = { :type => "MIT", :file => "LICENSE" }
-  spec.author       = { "Telnyx" => "support@telnyx.com" }
+  spec.author = { "Telnyx LLC" => "mobile.app.eng.chapter@telnyx.com" }
 
   spec.platform     = :ios, "13.0"
   spec.swift_version = "5.9"
@@ -18,6 +18,7 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/team-telnyx/ios-telnyx-voice-ai-widget.git", :tag => "#{spec.version}" }
 
   spec.source_files = "TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/**/*.swift"
+  spec.resource_bundles = { "TelnyxVoiceAIWidget" => ["TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/PrivacyInfo.xcprivacy"] }
 
   spec.frameworks = "Foundation", "UIKit", "AVFoundation"
   spec.requires_arc = true
