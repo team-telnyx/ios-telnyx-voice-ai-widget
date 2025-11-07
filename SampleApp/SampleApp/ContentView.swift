@@ -16,6 +16,13 @@ struct ContentView: View {
     @State private var microphonePermissionGranted: Bool = false
     @State private var showPermissionAlert: Bool = false
     @State private var showEmptyIdAlert: Bool = false
+    
+    // Call Parameters
+    @State private var useCustomCallParams: Bool = false
+    @State private var callerName: String = ""
+    @State private var callerNumber: String = ""
+    @State private var destinationNumber: String = ""
+    @State private var clientState: String = ""
 
     private let assistantIdKey = "lastAssistantId"
 
@@ -73,6 +80,30 @@ struct ContentView: View {
                                 )
                             }
                         }
+                        
+                        // Call Parameters Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text("Call Parameters")
+                                    .font(.system(size: 14, weight: .medium))
+                                    .foregroundColor(Color(hex: "475569"))
+                                
+                                Spacer()
+                                
+                                Toggle("", isOn: $useCustomCallParams)
+                                    .labelsHidden()
+                            }
+                            
+                            if useCustomCallParams {
+                                VStack(spacing: 12) {
+                                    CallParamField(title: "Caller Name", text: $callerName, placeholder: "e.g., John Doe")
+                                    CallParamField(title: "Caller Number", text: $callerNumber, placeholder: "e.g., +1234567890")
+                                    CallParamField(title: "Destination Number", text: $destinationNumber, placeholder: "e.g., ai-assistant")
+                                    CallParamField(title: "Client State", text: $clientState, placeholder: "e.g., {\"userId\": \"123\"}")
+                                }
+                                .padding(.top, 8)
+                            }
+                        }
 
                         // Create Widget Button
                         Button(action: {
@@ -96,12 +127,20 @@ struct ContentView: View {
 
                     // Widget Display Area
                     if shouldInitialize && !assistantId.isEmpty {
+                        let callParams = useCustomCallParams ? CallParams(
+                            callerName: callerName.isEmpty ? nil : callerName,
+                            callerNumber: callerNumber.isEmpty ? nil : callerNumber,
+                            destinationNumber: destinationNumber.isEmpty ? nil : destinationNumber,
+                            clientState: clientState.isEmpty ? nil : clientState
+                        ) : nil
+                        
                         if iconOnly {
                             // Icon-only mode: fixed size floating button
                             AIAssistantWidget(
                                 assistantId: assistantId,
                                 shouldInitialize: true,
-                                iconOnly: iconOnly
+                                iconOnly: iconOnly,
+                                callParams: callParams
                             )
                             .frame(width: 80, height: 80)
                         } else {
@@ -109,7 +148,8 @@ struct ContentView: View {
                             AIAssistantWidget(
                                 assistantId: assistantId,
                                 shouldInitialize: true,
-                                iconOnly: iconOnly
+                                iconOnly: iconOnly,
+                                callParams: callParams
                             )
                             .padding(.horizontal, 20)
                         }
@@ -124,8 +164,9 @@ struct ContentView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             InstructionRow(number: "1", text: "Enter your Assistant ID from the Telnyx Portal")
                             InstructionRow(number: "2", text: "Choose your preferred widget mode")
-                            InstructionRow(number: "3", text: "Tap 'Create Widget' to initialize the assistant")
-                            InstructionRow(number: "4", text: "Tap the widget to start a voice conversation")
+                            InstructionRow(number: "3", text: "Optionally configure call parameters to customize caller info")
+                            InstructionRow(number: "4", text: "Tap 'Create Widget' to initialize the assistant")
+                            InstructionRow(number: "5", text: "Tap the widget to start a voice conversation")
                         }
                     }
                     .padding(16)
@@ -256,6 +297,39 @@ struct InstructionRow: View {
                 .font(.system(size: 14))
                 .foregroundColor(Color(hex: "475569"))
                 .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+struct CallParamField: View {
+    let title: String
+    @Binding var text: String
+    let placeholder: String
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(Color(hex: "64748B"))
+            
+            ZStack(alignment: .leading) {
+                if text.isEmpty {
+                    Text(placeholder)
+                        .foregroundColor(Color(hex: "94A3B8"))
+                        .padding(.horizontal, 10)
+                }
+                
+                TextField("", text: $text)
+                    .padding(10)
+                    .foregroundColor(Color(hex: "1E293B"))
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+            }
+            .background(Color.white)
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(Color(hex: "E2E8F0"), lineWidth: 1)
+            )
         }
     }
 }

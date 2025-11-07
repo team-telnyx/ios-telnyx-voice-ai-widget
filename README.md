@@ -104,7 +104,57 @@ AIAssistantWidget(
 | **Error State** | Shows detailed error card | Shows red error icon in floating button |
 | **Use Case** | Full-featured integration | Minimal, space-efficient integration |
 
-### 4. Understanding `shouldInitialize` Parameter
+### 4. Call Parameters Customization
+
+The widget supports customizing call parameters through the `CallParams` struct. This allows you to override default values for caller information and client state:
+
+```swift
+import TelnyxVoiceAIWidget
+
+// Create custom call parameters
+let callParams = CallParams(
+    callerName: "John Doe",
+    callerNumber: "+1234567890",
+    destinationNumber: "custom-destination",
+    clientState: "{\"userId\": \"123\", \"sessionId\": \"abc\"}"
+)
+
+// Use with the widget
+AIAssistantWidget(
+    assistantId: "your-assistant-id",
+    shouldInitialize: true,
+    callParams: callParams
+)
+```
+
+#### CallParams Properties:
+
+All properties are optional and will use default values when not provided:
+
+- **`callerName`**: The name displayed as the caller (default: "Anonymous User")
+- **`callerNumber`**: The phone number used as caller ID (default: "anonymous")
+- **`destinationNumber`**: The destination for the call (default: "ai-assistant")
+- **`clientState`**: Custom JSON string for additional call context (default: nil)
+
+#### Usage Examples:
+
+```swift
+// Minimal customization - only caller name
+let basicParams = CallParams(callerName: "Customer Support")
+
+// Full customization
+let fullParams = CallParams(
+    callerName: "Jane Smith",
+    callerNumber: "+1555123456",
+    destinationNumber: "support-ai",
+    clientState: "{\"department\": \"sales\", \"priority\": \"high\"}"
+)
+
+// Use empty strings to explicitly use defaults
+let defaultParams = CallParams() // All parameters will use defaults
+```
+
+### 5. Understanding `shouldInitialize` Parameter
 
 The `shouldInitialize` parameter controls when the widget establishes its network connection to Telnyx servers. This is crucial for controlling:
 
