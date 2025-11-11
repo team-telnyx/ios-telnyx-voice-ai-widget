@@ -102,6 +102,7 @@ public class WidgetViewModel: ObservableObject {
                     destinationNumber: destinationNumber,
                     callId: UUID(),
                     clientState: callParams?.clientState,
+                    customHeaders: callParams?.customHeaders ?? [:],
                     debug: true  // Enable debug to get quality metrics
                 )
 

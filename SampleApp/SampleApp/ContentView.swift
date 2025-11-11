@@ -19,10 +19,18 @@ struct ContentView: View {
 
     // Call Parameters
     @State private var useCustomCallParams: Bool = false
-    @State private var callerName: String = ""
-    @State private var callerNumber: String = ""
+    @State private var callerName: String = "John Doe"
+    @State private var callerNumber: String = "+1234567890"
     @State private var destinationNumber: String = ""
     @State private var clientState: String = ""
+
+    // Custom Headers (X- prefix headers that map to AI assistant variables)
+    @State private var customHeaderKey1: String = "X-User-ID"
+    @State private var customHeaderValue1: String = "user_12345"
+    @State private var customHeaderKey2: String = "X-Session-ID"
+    @State private var customHeaderValue2: String = "session_abc123"
+    @State private var customHeaderKey3: String = "X-Account-Number"
+    @State private var customHeaderValue3: String = "ACC-98765"
 
     private let assistantIdKey = "lastAssistantId"
 
@@ -110,14 +118,39 @@ struct ContentView: View {
                                     CallParamField(
                                         title: "Destination Number",
                                         text: $destinationNumber,
-                                        placeholder: "e.g., ai-assistant",
-                                        keyboardType: .phonePad
+                                        placeholder: "e.g., xxx"
                                     )
                                     CallParamField(
                                         title: "Client State",
                                         text: $clientState,
                                         placeholder: "e.g., {\"userId\": \"123\"}"
                                     )
+
+                                    // Custom Headers Section
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text("Custom Headers")
+                                            .font(.system(size: 14, weight: .medium))
+                                            .foregroundColor(Color(hex: "475569"))
+                                            .padding(.top, 8)
+
+                                        Text("Headers with X- prefix map to AI assistant variables (e.g., X-Account-Number → {{account_number}})")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(Color(hex: "64748B"))
+                                            .fixedSize(horizontal: false, vertical: true)
+
+                                        CustomHeaderRow(
+                                            key: $customHeaderKey1,
+                                            value: $customHeaderValue1
+                                        )
+                                        CustomHeaderRow(
+                                            key: $customHeaderKey2,
+                                            value: $customHeaderValue2
+                                        )
+                                        CustomHeaderRow(
+                                            key: $customHeaderKey3,
+                                            value: $customHeaderValue3
+                                        )
+                                    }
                                 }
                                 .padding(.top, 8)
                             }
@@ -145,11 +178,27 @@ struct ContentView: View {
 
                     // Widget Display Area
                     if shouldInitialize && !assistantId.isEmpty {
+                        let customHeaders: [String: String]? = {
+                            guard useCustomCallParams else { return nil }
+                            var headers: [String: String] = [:]
+                            if !customHeaderValue1.isEmpty {
+                                headers[customHeaderKey1] = customHeaderValue1
+                            }
+                            if !customHeaderValue2.isEmpty {
+                                headers[customHeaderKey2] = customHeaderValue2
+                            }
+                            if !customHeaderValue3.isEmpty {
+                                headers[customHeaderKey3] = customHeaderValue3
+                            }
+                            return headers.isEmpty ? nil : headers
+                        }()
+
                         let callParams = useCustomCallParams ? CallParams(
                             callerName: callerName.isEmpty ? nil : callerName,
                             callerNumber: callerNumber.isEmpty ? nil : callerNumber,
                             destinationNumber: destinationNumber.isEmpty ? nil : destinationNumber,
-                            clientState: clientState.isEmpty ? nil : clientState
+                            clientState: clientState.isEmpty ? nil : clientState,
+                            customHeaders: customHeaders
                         ) : nil
 
                         if iconOnly {
@@ -350,6 +399,65 @@ struct CallParamField: View {
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(Color(hex: "E2E8F0"), lineWidth: 1)
             )
+        }
+    }
+}
+
+struct CustomHeaderRow: View {
+    @Binding var key: String
+    @Binding var value: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            // Header Key Field
+            VStack(alignment: .leading, spacing: 4) {
+                ZStack(alignment: .leading) {
+                    if key.isEmpty {
+                        Text("X-Header-Name")
+                            .foregroundColor(Color(hex: "94A3B8"))
+                            .padding(.horizontal, 10)
+                    }
+
+                    TextField("", text: $key)
+                        .padding(10)
+                        .foregroundColor(Color(hex: "1E293B"))
+                        .autocapitalization(.allCharacters)
+                        .disableAutocorrection(true)
+                }
+                .background(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color(hex: "E2E8F0"), lineWidth: 1)
+                )
+            }
+            .frame(maxWidth: .infinity)
+
+            Text(":")
+                .foregroundColor(Color(hex: "64748B"))
+                .font(.system(size: 14, weight: .medium))
+
+            // Header Value Field
+            VStack(alignment: .leading, spacing: 4) {
+                ZStack(alignment: .leading) {
+                    if value.isEmpty {
+                        Text("value")
+                            .foregroundColor(Color(hex: "94A3B8"))
+                            .padding(.horizontal, 10)
+                    }
+
+                    TextField("", text: $value)
+                        .padding(10)
+                        .foregroundColor(Color(hex: "1E293B"))
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                }
+                .background(Color.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color(hex: "E2E8F0"), lineWidth: 1)
+                )
+            }
+            .frame(maxWidth: .infinity)
         }
     }
 }
