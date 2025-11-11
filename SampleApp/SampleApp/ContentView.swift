@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var microphonePermissionGranted: Bool = false
     @State private var showPermissionAlert: Bool = false
     @State private var showEmptyIdAlert: Bool = false
-    
+
     // Call Parameters
     @State private var useCustomCallParams: Bool = false
     @State private var callerName: String = ""
@@ -80,26 +80,44 @@ struct ContentView: View {
                                 )
                             }
                         }
-                        
+
                         // Call Parameters Section
                         VStack(alignment: .leading, spacing: 12) {
                             HStack {
                                 Text("Call Parameters")
                                     .font(.system(size: 14, weight: .medium))
                                     .foregroundColor(Color(hex: "475569"))
-                                
+
                                 Spacer()
-                                
+
                                 Toggle("", isOn: $useCustomCallParams)
                                     .labelsHidden()
                             }
-                            
+
                             if useCustomCallParams {
                                 VStack(spacing: 12) {
-                                    CallParamField(title: "Caller Name", text: $callerName, placeholder: "e.g., John Doe")
-                                    CallParamField(title: "Caller Number", text: $callerNumber, placeholder: "e.g., +1234567890")
-                                    CallParamField(title: "Destination Number", text: $destinationNumber, placeholder: "e.g., ai-assistant")
-                                    CallParamField(title: "Client State", text: $clientState, placeholder: "e.g., {\"userId\": \"123\"}")
+                                    CallParamField(
+                                        title: "Caller Name",
+                                        text: $callerName,
+                                        placeholder: "e.g., John Doe"
+                                    )
+                                    CallParamField(
+                                        title: "Caller Number",
+                                        text: $callerNumber,
+                                        placeholder: "e.g., +1234567890",
+                                        keyboardType: .phonePad
+                                    )
+                                    CallParamField(
+                                        title: "Destination Number",
+                                        text: $destinationNumber,
+                                        placeholder: "e.g., ai-assistant",
+                                        keyboardType: .phonePad
+                                    )
+                                    CallParamField(
+                                        title: "Client State",
+                                        text: $clientState,
+                                        placeholder: "e.g., {\"userId\": \"123\"}"
+                                    )
                                 }
                                 .padding(.top, 8)
                             }
@@ -133,7 +151,7 @@ struct ContentView: View {
                             destinationNumber: destinationNumber.isEmpty ? nil : destinationNumber,
                             clientState: clientState.isEmpty ? nil : clientState
                         ) : nil
-                        
+
                         if iconOnly {
                             // Icon-only mode: fixed size floating button
                             AIAssistantWidget(
@@ -305,25 +323,27 @@ struct CallParamField: View {
     let title: String
     @Binding var text: String
     let placeholder: String
-    
+    var keyboardType: UIKeyboardType = .default
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(Color(hex: "64748B"))
-            
+
             ZStack(alignment: .leading) {
                 if text.isEmpty {
                     Text(placeholder)
                         .foregroundColor(Color(hex: "94A3B8"))
                         .padding(.horizontal, 10)
                 }
-                
+
                 TextField("", text: $text)
                     .padding(10)
                     .foregroundColor(Color(hex: "1E293B"))
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
+                    .keyboardType(keyboardType)
             }
             .background(Color.white)
             .overlay(
