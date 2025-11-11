@@ -14,7 +14,7 @@ import TelnyxRTC
 @MainActor
 public class WidgetViewModel: ObservableObject {
     // MARK: - Constants
-    private let aiAssistantDestination = "ai-assistant"
+    private let aiAssistantDestination = "xxx"
     private let maxLevels = 20
 
     // MARK: - Published Properties
@@ -27,7 +27,7 @@ public class WidgetViewModel: ObservableObject {
     // MARK: - Public Properties
     /// Custom color configuration that takes priority over socket-received theme
     public var customization: WidgetCustomization?
-    
+
     /// Call parameters for customizing call initialization
     public var callParams: CallParams?
 
@@ -95,7 +95,7 @@ public class WidgetViewModel: ObservableObject {
                 let callerName = callParams?.callerName ?? "Anonymous User"
                 let callerNumber = callParams?.callerNumber ?? "anonymous"
                 let destinationNumber = callParams?.destinationNumber ?? aiAssistantDestination
-                
+
                 currentCall = try telnyxClient?.newCall(
                     callerName: callerName,
                     callerNumber: callerNumber,
