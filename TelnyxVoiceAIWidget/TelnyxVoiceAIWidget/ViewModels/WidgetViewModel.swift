@@ -14,7 +14,7 @@ import TelnyxRTC
 @MainActor
 public class WidgetViewModel: ObservableObject {
     // MARK: - Constants
-    private let aiAssistantDestination = "ai-assistant"
+    private let aiAssistantDestination = "xxx"
     private let maxLevels = 20
 
     // MARK: - Published Properties
@@ -27,6 +27,9 @@ public class WidgetViewModel: ObservableObject {
     // MARK: - Public Properties
     /// Custom color configuration that takes priority over socket-received theme
     public var customization: WidgetCustomization?
+
+    /// Call parameters for customizing call initialization
+    public var callParams: CallParams?
 
     // MARK: - Private Properties
     private var iconOnly: Bool = false
@@ -53,10 +56,12 @@ public class WidgetViewModel: ObservableObject {
     /// - Parameters:
     ///   - assistantId: The Assistant ID from your Telnyx AI configuration
     ///   - iconOnly: When true, displays as a floating action button
+    ///   - callParams: Optional parameters for customizing call initialization
     ///   - customization: Optional custom colors that override theme-based colors
-    public func initialize(assistantId: String, iconOnly: Bool = false, customization: WidgetCustomization? = nil) {
+    public func initialize(assistantId: String, iconOnly: Bool = false, callParams: CallParams? = nil, customization: WidgetCustomization? = nil) {
         self.assistantId = assistantId
         self.iconOnly = iconOnly
+        self.callParams = callParams
         self.customization = customization
 
         widgetState = .loading
@@ -86,11 +91,18 @@ public class WidgetViewModel: ObservableObject {
 
         Task {
             do {
+                // Use CallParams values if provided, otherwise use defaults
+                let callerName = callParams?.callerName ?? "Anonymous User"
+                let callerNumber = callParams?.callerNumber ?? "anonymous"
+                let destinationNumber = callParams?.destinationNumber ?? aiAssistantDestination
+
                 currentCall = try telnyxClient?.newCall(
-                    callerName: "Anonymous User",
-                    callerNumber: "anonymous",
-                    destinationNumber: aiAssistantDestination,
+                    callerName: callerName,
+                    callerNumber: callerNumber,
+                    destinationNumber: destinationNumber,
                     callId: UUID(),
+                    clientState: callParams?.clientState,
+                    customHeaders: callParams?.customHeaders ?? [:],
                     debug: true  // Enable debug to get quality metrics
                 )
 

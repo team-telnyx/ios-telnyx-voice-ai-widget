@@ -24,6 +24,9 @@ import SwiftUI
 ///   - iconOnly: When true, displays the widget as a floating action button with only the icon.
 ///               In this mode, tapping starts the call and opens directly into the full screen
 ///               text view. When false, displays the regular widget button with text.
+///   - callParams: Optional parameters for customizing call initialization. When provided,
+///                 these values override the default caller name, caller number, destination number,
+///                 and client state used when creating a call.
 ///   - widgetButtonModifier: ViewModifier applied to the widget button in collapsed state
 ///   - expandedWidgetModifier: ViewModifier applied to the expanded widget
 ///   - buttonTextModifier: ViewModifier applied to the text visible on the widget button
@@ -34,6 +37,7 @@ public struct AIAssistantWidget: View {
     let assistantId: String
     let shouldInitialize: Bool
     let iconOnly: Bool
+    let callParams: CallParams?
     let customization: WidgetCustomization?
 
     // MARK: - ViewModifiers
@@ -53,6 +57,7 @@ public struct AIAssistantWidget: View {
         assistantId: String,
         shouldInitialize: Bool = true,
         iconOnly: Bool = false,
+        callParams: CallParams? = nil,
         customization: WidgetCustomization? = nil,
         widgetButtonModifier: AnyView? = nil,
         expandedWidgetModifier: AnyView? = nil,
@@ -62,6 +67,7 @@ public struct AIAssistantWidget: View {
         self.assistantId = assistantId
         self.shouldInitialize = shouldInitialize
         self.iconOnly = iconOnly
+        self.callParams = callParams
         self.customization = customization
         self.widgetButtonModifier = widgetButtonModifier
         self.expandedWidgetModifier = expandedWidgetModifier
@@ -78,7 +84,7 @@ public struct AIAssistantWidget: View {
         .preferredColorScheme(preferredTheme)
         .onAppear {
             if shouldInitialize {
-                viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
+                viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, callParams: callParams, customization: customization)
             }
         }
         .onReceive(viewModel.$widgetState) { newState in
@@ -108,7 +114,7 @@ public struct AIAssistantWidget: View {
                 type: errorItem.type,
                 assistantId: assistantId,
                 onRetry: {
-                    viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
+                    viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, callParams: callParams, customization: customization)
                     floatingButtonErrorState = nil
                 }
             )
@@ -199,7 +205,7 @@ public struct AIAssistantWidget: View {
                     type: type,
                     assistantId: assistantId,
                     onRetry: {
-                        viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, customization: customization)
+                        viewModel.initialize(assistantId: assistantId, iconOnly: iconOnly, callParams: callParams, customization: customization)
                     }
                 )
             }

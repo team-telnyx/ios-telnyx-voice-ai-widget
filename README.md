@@ -104,7 +104,121 @@ AIAssistantWidget(
 | **Error State** | Shows detailed error card | Shows red error icon in floating button |
 | **Use Case** | Full-featured integration | Minimal, space-efficient integration |
 
-### 4. Understanding `shouldInitialize` Parameter
+### 4. Call Parameters Customization
+
+The widget supports customizing call parameters through the `CallParams` struct. This allows you to override default values for caller information and pass dynamic data to your AI assistant through custom headers:
+
+```swift
+import TelnyxVoiceAIWidget
+
+// Create custom call parameters
+let callParams = CallParams(
+    callerName: "John Doe",
+    callerNumber: "+1234567890",
+    destinationNumber: "custom-destination",
+    customHeaders: [
+        "X-User-ID": "12345",
+        "X-Session-ID": "abc-123",
+        "X-Account-Number": "ACC-98765"
+    ]
+)
+
+// Use with the widget
+AIAssistantWidget(
+    assistantId: "your-assistant-id",
+    shouldInitialize: true,
+    callParams: callParams
+)
+```
+
+#### CallParams Properties:
+
+All properties are optional and will use default values when not provided:
+
+- **`callerName`**: The name displayed as the caller (default: "Anonymous User")
+- **`callerNumber`**: The phone number used as caller ID (default: "anonymous")
+- **`destinationNumber`**: The destination for the call (default: "xxx")
+- **`clientState`**: Custom client state data to pass additional context (default: nil)
+- **`customHeaders`**: Dictionary of custom headers to send with the call (default: empty)
+
+#### Custom Headers
+
+Custom headers allow you to pass dynamic data from your application to your AI assistant. These headers must follow specific conventions:
+
+**Header Naming Convention:**
+- Headers **must** start with the `X-` prefix (e.g., `X-User-ID`, `X-Account-Number`)
+- Header names are converted to variable names in your AI assistant:
+  - `X-User-ID` becomes `{{user_id}}`
+  - `X-Account-Number` becomes `{{account_number}}`
+  - `X-Session-ID` becomes `{{session_id}}`
+- Hyphens in header names are automatically converted to underscores in variable names
+
+**Common Use Cases:**
+- **User Identification**: Pass user IDs or session tokens
+- **Account Context**: Send account numbers or customer details
+- **Session Management**: Track conversation sessions
+- **Metadata**: Include any custom data your AI assistant needs
+
+**Example:**
+```swift
+let callParams = CallParams(
+    callerName: "Customer Support",
+    customHeaders: [
+        "X-User-ID": "user_12345",
+        "X-Department": "sales",
+        "X-Priority-Level": "high",
+        "X-Customer-Tier": "premium"
+    ]
+)
+```
+
+In your AI assistant configuration, you can then reference these values:
+- `{{user_id}}` → "user_12345"
+- `{{department}}` → "sales"
+- `{{priority_level}}` → "high"
+- `{{customer_tier}}` → "premium"
+
+#### Usage Examples:
+
+```swift
+// Minimal customization - only caller name
+let basicParams = CallParams(callerName: "Customer Support")
+
+// With client state for additional context
+let stateParams = CallParams(
+    callerName: "Jane Smith",
+    clientState: "custom-state-data"
+)
+
+// With custom headers for user context
+let contextParams = CallParams(
+    callerName: "Jane Smith",
+    customHeaders: [
+        "X-User-ID": "usr_123",
+        "X-Account-Type": "premium"
+    ]
+)
+
+// Full customization with client state and headers
+let fullParams = CallParams(
+    callerName: "Jane Smith",
+    callerNumber: "+1555123456",
+    destinationNumber: "support-ai",
+    clientState: "custom-state-data",
+    customHeaders: [
+        "X-User-ID": "usr_456",
+        "X-Session-ID": "session_789",
+        "X-Department": "sales",
+        "X-Priority": "high",
+        "X-Language": "en-US"
+    ]
+)
+
+// Use empty values to explicitly use defaults
+let defaultParams = CallParams() // All parameters will use defaults
+```
+
+### 5. Understanding `shouldInitialize` Parameter
 
 The `shouldInitialize` parameter controls when the widget establishes its network connection to Telnyx servers. This is crucial for controlling:
 
