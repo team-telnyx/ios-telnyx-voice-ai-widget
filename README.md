@@ -138,6 +138,7 @@ All properties are optional and will use default values when not provided:
 - **`callerName`**: The name displayed as the caller (default: "Anonymous User")
 - **`callerNumber`**: The phone number used as caller ID (default: "anonymous")
 - **`destinationNumber`**: The destination for the call (default: "xxx")
+- **`clientState`**: Custom client state data to pass additional context (default: nil)
 - **`customHeaders`**: Dictionary of custom headers to send with the call (default: empty)
 
 #### Custom Headers
@@ -183,6 +184,12 @@ In your AI assistant configuration, you can then reference these values:
 // Minimal customization - only caller name
 let basicParams = CallParams(callerName: "Customer Support")
 
+// With client state for additional context
+let stateParams = CallParams(
+    callerName: "Jane Smith",
+    clientState: "custom-state-data"
+)
+
 // With custom headers for user context
 let contextParams = CallParams(
     callerName: "Jane Smith",
@@ -192,11 +199,12 @@ let contextParams = CallParams(
     ]
 )
 
-// Full customization
+// Full customization with client state and headers
 let fullParams = CallParams(
     callerName: "Jane Smith",
     callerNumber: "+1555123456",
     destinationNumber: "support-ai",
+    clientState: "custom-state-data",
     customHeaders: [
         "X-User-ID": "usr_456",
         "X-Session-ID": "session_789",

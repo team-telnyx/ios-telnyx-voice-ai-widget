@@ -22,7 +22,6 @@ struct ContentView: View {
     @State private var callerName: String = "John Doe"
     @State private var callerNumber: String = "+1234567890"
     @State private var destinationNumber: String = ""
-    @State private var clientState: String = ""
 
     // Custom Headers (X- prefix headers that map to AI assistant variables)
     @State private var customHeaderKey1: String = "X-User-ID"
@@ -120,11 +119,6 @@ struct ContentView: View {
                                         text: $destinationNumber,
                                         placeholder: "e.g., xxx"
                                     )
-                                    CallParamField(
-                                        title: "Client State",
-                                        text: $clientState,
-                                        placeholder: "e.g., {\"userId\": \"123\"}"
-                                    )
 
                                     // Custom Headers Section
                                     VStack(alignment: .leading, spacing: 8) {
@@ -197,7 +191,7 @@ struct ContentView: View {
                             callerName: callerName.isEmpty ? nil : callerName,
                             callerNumber: callerNumber.isEmpty ? nil : callerNumber,
                             destinationNumber: destinationNumber.isEmpty ? nil : destinationNumber,
-                            clientState: clientState.isEmpty ? nil : clientState,
+                            clientState: "custom-state-data",  // Example: pass custom state to AI assistant
                             customHeaders: customHeaders
                         ) : nil
 
