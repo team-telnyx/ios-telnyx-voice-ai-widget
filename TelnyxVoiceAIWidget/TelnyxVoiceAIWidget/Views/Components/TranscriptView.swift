@@ -31,6 +31,7 @@ struct TranscriptView: View {
     @State private var showImagePicker = false
     @State private var showCamera = false
     @State private var showImageSourceMenu = false
+    @State private var capturedImage: UIImage?
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
@@ -205,7 +206,7 @@ struct TranscriptView: View {
             ImagePickerView(selectedImages: $attachedImages)
         }
         .sheet(isPresented: $showCamera) {
-            CameraCaptureView { image in
+            CameraCaptureView(capturedImage: $capturedImage) { image in
                 attachedImages.append(image)
             }
         }
