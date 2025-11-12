@@ -15,7 +15,7 @@
       "location" : "https://github.com/team-telnyx/telnyx-webrtc-ios.git",
       "state" : {
         "branch" : "feat/WEBRTC-3068",
-        "revision" : "de2557fee798faef0aa3e1623ce5b40b65ef5060"
+        "revision" : "8cfdb2f171d6c4aefb0c32c40e63db07cd368193"
       }
     },
     {
