@@ -83,6 +83,8 @@ struct ExpandedWidget: View {
             return settings.agentThinkingText ?? "Thinking..."
         case .waiting:
             return settings.speakToInterruptText ?? "Speak to interrupt"
+        case .processingImage:
+            return "Processing image..."
         }
     }
 }

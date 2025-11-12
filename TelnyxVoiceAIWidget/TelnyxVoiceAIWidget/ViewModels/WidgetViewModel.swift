@@ -9,6 +9,7 @@ import AVFoundation
 import Combine
 import Foundation
 import TelnyxRTC
+import UIKit
 
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor
@@ -173,6 +174,50 @@ public class WidgetViewModel: ObservableObject {
 
         Task {
             telnyxClient?.sendAIAssistantMessage(message)
+            userInput = ""
+        }
+    }
+
+    /// Send user message with images
+    public func sendMessageWithImages(_ images: [UIImage]) {
+        let messageText = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Use default message if only image is provided (matching demo app behavior)
+        let finalMessage = messageText.isEmpty ? "What do you see in this image?" : messageText
+
+        // Convert images to base64 (without data URI prefix - SDK handles that)
+        let base64Images = images.compactMap { image -> String? in
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else { return nil }
+            return imageData.base64EncodedString()
+        }
+
+        guard !base64Images.isEmpty else { return }
+
+        // Set agent status to processing image
+        updateAgentStatus(.processingImage)
+
+        // Create optimistic transcript item with data URI for display
+        let optimisticItem = TranscriptItem(
+            id: "optimistic-\(Date().timeIntervalSince1970)",
+            text: finalMessage,
+            isUser: true,
+            timestamp: Date(),
+            attachments: base64Images.map { ImageAttachment(base64Data: "data:image/jpeg;base64,\($0)") }
+        )
+
+        // Add optimistic message to transcript
+        transcriptItems.append(optimisticItem)
+
+        Task {
+            // Note: Current WebRTC SDK supports only one image per message
+            // Send first image without data URI prefix (SDK expects raw base64)
+            let firstImage = base64Images.first
+            let success = telnyxClient?.sendAIAssistantMessage(finalMessage, base64Image: firstImage, imageFormat: "jpeg")
+
+            if success == false {
+                print("WidgetViewModel:: Failed to send AI Assistant message with image")
+            }
+
             userInput = ""
         }
     }

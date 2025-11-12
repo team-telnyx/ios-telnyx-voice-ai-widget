@@ -483,8 +483,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/team-telnyx/telnyx-webrtc-ios.git";
 			requirement = {
-				kind = exactVersion;
-				version = 2.2.2;
+				branch = "feat/WEBRTC-3068";
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
