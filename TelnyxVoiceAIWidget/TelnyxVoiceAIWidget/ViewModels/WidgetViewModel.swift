@@ -41,9 +41,6 @@ public class WidgetViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private var assistantId: String = ""
     private var previousAudioLevel: Float = 0.0
-    private var imageAttachmentsByMessageId: [String: [ImageAttachment]] = [:] // messageId -> attachments
-    private var pendingMessageTextToImages: [String: [ImageAttachment]] = [:] // temporary: messageText -> attachments
-    private var allSeenTranscriptIds: Set<String> = [] // Track all transcript IDs we've seen
 
     // MARK: - Initialization
     public init() {}
@@ -199,27 +196,15 @@ public class WidgetViewModel: ObservableObject {
         // Set agent status to processing image
         updateAgentStatus(.processingImage)
 
-        // Store image attachments with data URI for display
-        let imageAttachments = base64Images.map { ImageAttachment(base64Data: "data:image/jpeg;base64,\($0)") }
-
-        // Temporarily store by message text until we get the ID from SDK
-        pendingMessageTextToImages[finalMessage] = imageAttachments
-        print("WidgetViewModel:: Stored pending images for message: '\(finalMessage)' - count: \(imageAttachments.count)")
-
         Task {
-            // Note: Current WebRTC SDK supports only one image per message
-            // Send first image without data URI prefix (SDK expects raw base64)
-            let firstImage = base64Images.first
-            let success = telnyxClient?.sendAIAssistantMessage(finalMessage, base64Image: firstImage, imageFormat: "jpeg")
+            // Send all images using the multi-image API
+            // Note: SDK will automatically include imageUrls in the TranscriptionItem response
+            let success = telnyxClient?.sendAIAssistantMessage(finalMessage, base64Images: base64Images, imageFormat: "jpeg")
 
             if success == false {
-                print("WidgetViewModel:: Failed to send AI Assistant message with image")
-                // Remove pending attachments on failure
-                await MainActor.run {
-                    pendingMessageTextToImages.removeValue(forKey: finalMessage)
-                }
+                print("WidgetViewModel:: Failed to send AI Assistant message with \(base64Images.count) image(s)")
             } else {
-                print("WidgetViewModel:: Successfully sent AI Assistant message with image")
+                print("WidgetViewModel:: Successfully sent AI Assistant message with \(base64Images.count) image(s)")
             }
 
             userInput = ""
@@ -239,9 +224,6 @@ public class WidgetViewModel: ObservableObject {
         transcriptItems = []
         audioLevels = []
         previousAudioLevel = 0.0
-        imageAttachmentsByMessageId.removeAll()
-        pendingMessageTextToImages.removeAll()
-        allSeenTranscriptIds.removeAll()
         widgetState = .collapsed(settings: settings)
     }
 
@@ -253,67 +235,18 @@ public class WidgetViewModel: ObservableObject {
             Task { @MainActor in
                 guard let self = self else { return }
 
-                print("WidgetViewModel:: Received \(updatedTranscriptions.count) transcriptions (previous: \(self.transcriptItems.count))")
-
-                // Keep track of new IDs
-                let newIds = Set(updatedTranscriptions.map { $0.id })
-                let oldIds = Set(self.transcriptItems.map { $0.id })
-                let addedIds = newIds.subtracting(oldIds)
-                let removedIds = oldIds.subtracting(newIds)
-
-                if !removedIds.isEmpty {
-                    print("WidgetViewModel:: ⚠️ Lost transcript IDs: \(removedIds)")
-                }
-
-                if !addedIds.isEmpty {
-                    print("WidgetViewModel:: ✨ New transcript IDs: \(addedIds)")
-                    self.allSeenTranscriptIds.formUnion(addedIds)
-                }
+                print("WidgetViewModel:: Received \(updatedTranscriptions.count) transcriptions")
 
                 // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
-                let newTranscriptItems = updatedTranscriptions.map { item in
-                    // Check if we already have images stored for this message ID
-                    var attachments = self.imageAttachmentsByMessageId[item.id] ?? []
+                // Simple conversion: SDK already provides imageUrls, no need for complex merge logic
+                self.transcriptItems = updatedTranscriptions.map { item in
+                    // Convert imageUrls from SDK to our ImageAttachment model
+                    let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
+                        ImageAttachment(base64Data: imageUrl)
+                    }
 
-                    // If no attachments yet, check if this is a new message with pending images
-                    if attachments.isEmpty, item.role.lowercased() == "user" {
-                        // First priority: Extract image URLs from SDK metadata (most reliable)
-                        if let imageUrls = item.metadata?["image_urls"] as? [String], !imageUrls.isEmpty {
-                            attachments = imageUrls.map { ImageAttachment(base64Data: $0) }
-                            self.imageAttachmentsByMessageId[item.id] = attachments
-                            print("WidgetViewModel:: ✅ Extracted \(attachments.count) images from SDK metadata for message ID: \(item.id)")
-                        }
-                        // Second priority: Try to find pending images by matching text
-                        else if let pendingAttachments = self.pendingMessageTextToImages[item.content] {
-                            attachments = pendingAttachments
-                            self.imageAttachmentsByMessageId[item.id] = attachments
-                            self.pendingMessageTextToImages.removeValue(forKey: item.content)
-                            print("WidgetViewModel:: ✅ Attached \(attachments.count) pending images to message ID: \(item.id), text: '\(item.content)'")
-                        }
-                        // Third priority: Check for metadata flag and try normalized text match
-                        else {
-                            let hasImageInMetadata = (item.metadata?["has_image"] as? Bool) == true
-                            let hasImageInType = item.itemType == "text_message_with_image"
-
-                            if hasImageInMetadata || hasImageInType {
-                                print("WidgetViewModel:: ⚠️ SDK says message has image but no URLs in metadata")
-                                print("WidgetViewModel::    Message ID: \(item.id), text: '\(item.content)'")
-                                print("WidgetViewModel::    itemType: \(item.itemType ?? "nil"), has_image: \(hasImageInMetadata)")
-                                print("WidgetViewModel::    Pending keys: \(Array(self.pendingMessageTextToImages.keys))")
-
-                                // Try to find a match by trimming/normalizing
-                                let normalizedContent = item.content.trimmingCharacters(in: .whitespacesAndNewlines)
-                                for (key, value) in self.pendingMessageTextToImages where key.trimmingCharacters(in: .whitespacesAndNewlines) == normalizedContent {
-                                    print("WidgetViewModel:: 🔧 Found match with normalized text!")
-                                    attachments = value
-                                    self.imageAttachmentsByMessageId[item.id] = attachments
-                                    self.pendingMessageTextToImages.removeValue(forKey: key)
-                                    break
-                                }
-                            }
-                        }
-                    } else if !attachments.isEmpty {
-                        print("WidgetViewModel:: ✓ Found existing \(attachments.count) images for message ID: \(item.id)")
+                    if !attachments.isEmpty {
+                        print("WidgetViewModel:: ✅ Transcription ID=\(item.id) has \(attachments.count) image(s)")
                     }
 
                     return TranscriptItem(
@@ -324,22 +257,7 @@ public class WidgetViewModel: ObservableObject {
                         attachments: attachments
                     )
                 }
-
-                // Merge with existing items to preserve ones that SDK might have dropped
-                var mergedItems: [String: TranscriptItem] = [:]
-
-                // First, keep all our current items
-                for item in self.transcriptItems {
-                    mergedItems[item.id] = item
-                }
-
-                // Then, update with new items from SDK (overwriting if same ID)
-                for item in newTranscriptItems {
-                    mergedItems[item.id] = item
-                }
-
-                // Convert back to array and sort by timestamp
-                self.transcriptItems = Array(mergedItems.values).sorted { $0.timestamp < $1.timestamp }
+                .sorted { $0.timestamp < $1.timestamp }
 
                 print("WidgetViewModel:: Final transcript count: \(self.transcriptItems.count)")
             }
@@ -548,12 +466,19 @@ extension WidgetViewModel: AIAssistantManagerDelegate {
     nonisolated public func onTranscriptionUpdated(_ transcriptions: [TelnyxRTC.TranscriptionItem]) {
         Task { @MainActor in
             // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
+            // Note: SDK already provides imageUrls, no need for local preservation
             self.transcriptItems = transcriptions.map { item in
-                TranscriptItem(
+                // Convert imageUrls from SDK to our ImageAttachment model
+                let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
+                    ImageAttachment(base64Data: imageUrl)
+                }
+
+                return TranscriptItem(
                     id: item.id,
                     text: item.content,
                     isUser: item.role.lowercased() == "user",
-                    timestamp: item.timestamp
+                    timestamp: item.timestamp,
+                    attachments: attachments
                 )
             }
         }
