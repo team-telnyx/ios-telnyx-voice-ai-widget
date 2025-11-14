@@ -28,7 +28,7 @@ jobs:
 
     steps:
     - name: 📥 Checkout repository with full history and tags
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
       with:
         fetch-depth: 0
 
