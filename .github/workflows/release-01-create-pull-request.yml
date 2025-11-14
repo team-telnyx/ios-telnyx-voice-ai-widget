@@ -96,7 +96,7 @@ jobs:
         rm -f commits.txt pr_data.tsv
 
     - name: 🚀 Create Pull Request
-      uses: peter-evans/create-pull-request@v3.10.1
+      uses: peter-evans/create-pull-request@v7.0.8
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: "🚀 chore: release v${{ github.event.inputs.version }}"
