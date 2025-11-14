@@ -13,7 +13,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/team-telnyx/telnyx-webrtc-ios.git", exact: "2.2.2")
+        .package(url: "https://github.com/team-telnyx/telnyx-webrtc-ios.git", branch: "feat/WEBRTC-3068")
     ],
     targets: [
         .target(

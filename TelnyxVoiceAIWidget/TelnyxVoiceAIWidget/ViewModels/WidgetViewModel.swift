@@ -9,6 +9,7 @@ import AVFoundation
 import Combine
 import Foundation
 import TelnyxRTC
+import UIKit
 
 /// ViewModel for managing the AI Assistant Widget state and interactions
 @MainActor
@@ -177,6 +178,39 @@ public class WidgetViewModel: ObservableObject {
         }
     }
 
+    /// Send user message with images
+    public func sendMessageWithImages(_ images: [UIImage]) {
+        let messageText = userInput.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Use default message if only image is provided (matching demo app behavior)
+        let finalMessage = messageText.isEmpty ? "What do you see in this image?" : messageText
+
+        // Convert images to base64 (without data URI prefix - SDK handles that)
+        let base64Images = images.compactMap { image -> String? in
+            guard let imageData = image.jpegData(compressionQuality: 0.8) else { return nil }
+            return imageData.base64EncodedString()
+        }
+
+        guard !base64Images.isEmpty else { return }
+
+        // Set agent status to processing image
+        updateAgentStatus(.processingImage)
+
+        Task {
+            // Send all images using the multi-image API
+            // Note: SDK will automatically include imageUrls in the TranscriptionItem response
+            let success = telnyxClient?.sendAIAssistantMessage(finalMessage, base64Images: base64Images, imageFormat: "jpeg")
+
+            if success == false {
+                print("WidgetViewModel:: Failed to send AI Assistant message with \(base64Images.count) image(s)")
+            } else {
+                print("WidgetViewModel:: Successfully sent AI Assistant message with \(base64Images.count) image(s)")
+            }
+
+            userInput = ""
+        }
+    }
+
     // MARK: - Private Methods
 
     private func endCallCleanup(settings: WidgetSettings) {
@@ -199,15 +233,33 @@ public class WidgetViewModel: ObservableObject {
         // Subscribe to transcript updates using the publisher
         _ = aiAssistantManager.subscribeToTranscriptUpdates { [weak self] updatedTranscriptions in
             Task { @MainActor in
+                guard let self = self else { return }
+
+                print("WidgetViewModel:: Received \(updatedTranscriptions.count) transcriptions")
+
                 // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
-                self?.transcriptItems = updatedTranscriptions.map { item in
-                    TranscriptItem(
+                // Simple conversion: SDK already provides imageUrls, no need for complex merge logic
+                self.transcriptItems = updatedTranscriptions.map { item in
+                    // Convert imageUrls from SDK to our ImageAttachment model
+                    let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
+                        ImageAttachment(base64Data: imageUrl)
+                    }
+
+                    if !attachments.isEmpty {
+                        print("WidgetViewModel:: ✅ Transcription ID=\(item.id) has \(attachments.count) image(s)")
+                    }
+
+                    return TranscriptItem(
                         id: item.id,
                         text: item.content,
                         isUser: item.role.lowercased() == "user",
-                        timestamp: item.timestamp
+                        timestamp: item.timestamp,
+                        attachments: attachments
                     )
                 }
+                .sorted { $0.timestamp < $1.timestamp }
+
+                print("WidgetViewModel:: Final transcript count: \(self.transcriptItems.count)")
             }
         }
         // Note: TranscriptCancellable auto-cancels on deinit
@@ -414,12 +466,19 @@ extension WidgetViewModel: AIAssistantManagerDelegate {
     nonisolated public func onTranscriptionUpdated(_ transcriptions: [TelnyxRTC.TranscriptionItem]) {
         Task { @MainActor in
             // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
+            // Note: SDK already provides imageUrls, no need for local preservation
             self.transcriptItems = transcriptions.map { item in
-                TranscriptItem(
+                // Convert imageUrls from SDK to our ImageAttachment model
+                let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
+                    ImageAttachment(base64Data: imageUrl)
+                }
+
+                return TranscriptItem(
                     id: item.id,
                     text: item.content,
                     isUser: item.role.lowercased() == "user",
-                    timestamp: item.timestamp
+                    timestamp: item.timestamp,
+                    attachments: attachments
                 )
             }
         }

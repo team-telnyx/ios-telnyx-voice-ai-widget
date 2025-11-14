@@ -20,12 +20,18 @@ struct TranscriptView: View {
     let audioLevels: [Float]
     let onUserInputChange: (String) -> Void
     let onSendMessage: () -> Void
+    let onSendMessageWithImages: ([UIImage]) -> Void
     let onToggleMute: () -> Void
     let onEndCall: () -> Void
     let onCollapse: () -> Void
     let iconOnly: Bool
 
     @State private var keyboardHeight: CGFloat = 0
+    @State private var attachedImages: [UIImage] = []
+    @State private var showImagePicker = false
+    @State private var showCamera = false
+    @State private var showImageSourceMenu = false
+    @State private var capturedImage: UIImage?
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
@@ -102,33 +108,93 @@ struct TranscriptView: View {
                 Divider()
 
                 // Message input area
-                HStack(spacing: 12) {
-                    TextField(
-                        "Type a message...",
-                        text: Binding(
-                            get: { userInput },
-                            set: { onUserInputChange($0) }
-                        ),
-                        onCommit: {
-                            if !userInput.isEmpty && isConnected {
-                                onSendMessage()
-                            }
-                        }
-                    )
-                    .foregroundColor(colorResolver.primaryText())
-                    .padding(12)
-                    .background(colorResolver.inputBackground())
-                    .cornerRadius(24)
-                    .disabled(!isConnected)
+                VStack(spacing: 8) {
+                    // Image previews
+                    if !attachedImages.isEmpty {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                ForEach(Array(attachedImages.enumerated()), id: \.offset) { index, image in
+                                    ZStack(alignment: .topTrailing) {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: 64, height: 64)
+                                            .clipped()
+                                            .cornerRadius(8)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                                            )
 
-                    Button(action: onSendMessage) {
-                        Image(systemName: "arrow.up.circle.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(userInput.isEmpty || !isConnected ? Color.slate300 : Color.primaryIndigo)
+                                        Button(action: {
+                                            attachedImages.remove(at: index)
+                                        }) {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(.red)
+                                                .background(Color.white.clipShape(Circle()))
+                                                .font(.system(size: 20))
+                                        }
+                                        .offset(x: 4, y: -4)
+                                    }
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                        .frame(height: 72)
                     }
-                    .disabled(userInput.isEmpty || !isConnected)
+
+                    HStack(spacing: 12) {
+                        // Attachment menu button
+                        Button(action: {
+                            showImageSourceMenu.toggle()
+                        }) {
+                            Image(systemName: "paperclip")
+                                .font(.system(size: 20))
+                                .foregroundColor(colorResolver.primaryText())
+                                .frame(width: 32, height: 32)
+                        }
+                        .disabled(!isConnected)
+                        .actionSheet(isPresented: $showImageSourceMenu) {
+                            ActionSheet(
+                                title: Text("Choose Image Source"),
+                                buttons: [
+                                    .default(Text("Photo Library")) {
+                                        showImagePicker = true
+                                    },
+                                    .default(Text("Take Photo")) {
+                                        showCamera = true
+                                    },
+                                    .cancel()
+                                ]
+                            )
+                        }
+
+                        TextField(
+                            "Type a message...",
+                            text: Binding(
+                                get: { userInput },
+                                set: { onUserInputChange($0) }
+                            ),
+                            onCommit: {
+                                handleSendMessage()
+                            }
+                        )
+                        .foregroundColor(colorResolver.primaryText())
+                        .padding(12)
+                        .background(colorResolver.inputBackground())
+                        .cornerRadius(24)
+                        .disabled(!isConnected)
+
+                        Button(action: handleSendMessage) {
+                            Image(systemName: "arrow.up.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(canSendMessage ? Color.primaryIndigo : Color.slate300)
+                        }
+                        .disabled(!canSendMessage)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 16)
                 }
-                .padding(16)
                 .background(colorResolver.widgetSurface())
             }
             .frame(width: geometry.size.width, height: geometry.size.height - keyboardHeight)
@@ -136,8 +202,31 @@ struct TranscriptView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .animation(.easeOut(duration: 0.3), value: keyboardHeight)
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerView(selectedImages: $attachedImages)
+        }
+        .sheet(isPresented: $showCamera) {
+            CameraCaptureView(capturedImage: $capturedImage) { image in
+                attachedImages.append(image)
+            }
+        }
         .onAppear {
             setupKeyboardObservers()
+        }
+    }
+
+    private var canSendMessage: Bool {
+        (!userInput.isEmpty || !attachedImages.isEmpty) && isConnected
+    }
+
+    private func handleSendMessage() {
+        guard canSendMessage else { return }
+
+        if !attachedImages.isEmpty {
+            onSendMessageWithImages(attachedImages)
+            attachedImages = []
+        } else {
+            onSendMessage()
         }
     }
 
@@ -149,6 +238,8 @@ struct TranscriptView: View {
             return settings.agentThinkingText ?? "Thinking..."
         case .waiting:
             return settings.speakToInterruptText ?? "Speak to interrupt"
+        case .processingImage:
+            return "Processing image..."
         }
     }
 
@@ -259,16 +350,24 @@ struct TranscriptMessageBubble: View {
                 Spacer(minLength: 60)
             }
 
-            VStack(alignment: item.isUser ? .trailing : .leading, spacing: 4) {
-                Text(item.text)
-                    .font(.system(size: 14))
-                    .padding(12)
-                    .background(bubbleBackground)
-                    .foregroundColor(bubbleTextColor)
-                    .cornerRadius(16, corners: item.isUser ?
-                        [.topLeft, .topRight, .bottomLeft] :
-                        [.topLeft, .topRight, .bottomRight])
-                    .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: item.isUser ? .trailing : .leading, spacing: 8) {
+                // Image attachments - iOS 13 compatible grid using HStack/VStack
+                if !item.attachments.isEmpty {
+                    ImageAttachmentsGrid(attachments: item.attachments)
+                }
+
+                // Text message
+                if !item.text.isEmpty {
+                    Text(item.text)
+                        .font(.system(size: 14))
+                        .padding(12)
+                        .background(bubbleBackground)
+                        .foregroundColor(bubbleTextColor)
+                        .cornerRadius(16, corners: item.isUser ?
+                            [.topLeft, .topRight, .bottomLeft] :
+                            [.topLeft, .topRight, .bottomRight])
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 Text(timeString)
                     .font(.system(size: 11))
@@ -279,6 +378,116 @@ struct TranscriptMessageBubble: View {
                 Spacer(minLength: 60)
             }
         }
+    }
+}
+
+// iOS 13 compatible image grid
+struct ImageAttachmentsGrid: View {
+    let attachments: [ImageAttachment]
+
+    private let columns = 2
+    private let imageSize: CGFloat = 100
+    private let spacing: CGFloat = 8
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: spacing) {
+            ForEach(0..<rowCount, id: \.self) { rowIndex in
+                HStack(spacing: spacing) {
+                    ForEach(0..<columns, id: \.self) { columnIndex in
+                        let index = rowIndex * columns + columnIndex
+                        if index < attachments.count {
+                            imageView(for: attachments[index])
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var rowCount: Int {
+        (attachments.count + columns - 1) / columns
+    }
+
+    private func imageView(for attachment: ImageAttachment) -> some View {
+        DataURLImageView(dataURL: attachment.base64Data)
+            .frame(width: imageSize, height: imageSize)
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+            )
+    }
+}
+
+// MARK: - Data URL Image View
+
+struct DataURLImageView: View {
+    let dataURL: String
+    @State private var image: UIImage?
+    @State private var isLoading: Bool = true
+    @State private var hasError: Bool = false
+
+    var body: some View {
+        Group {
+            if let image = image {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
+            } else if isLoading {
+                ZStack {
+                    Color.gray.opacity(0.2)
+                    ActivityIndicator(color: .gray)
+                }
+            } else if hasError {
+                ZStack {
+                    Color.gray.opacity(0.2)
+                    Image(systemName: "photo.fill.on.rectangle.fill")
+                        .font(.system(size: 30))
+                        .foregroundColor(.gray)
+                }
+            }
+        }
+        .onAppear {
+            decodeDataURL()
+        }
+    }
+
+    private func decodeDataURL() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            guard let url = URL(string: dataURL),
+                  let data = url.dataRepresentation,
+                  let decodedImage = UIImage(data: data) else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.hasError = true
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                self.image = decodedImage
+                self.isLoading = false
+            }
+        }
+    }
+}
+
+// MARK: - URL Extension for Data URL
+
+extension URL {
+    var dataRepresentation: Data? {
+        // Parse data URL format: data:image/jpeg;base64,<base64-string>
+        guard scheme == "data" else { return nil }
+
+        let urlString = absoluteString
+
+        // Split by comma to get the base64 part
+        guard let commaIndex = urlString.firstIndex(of: ",") else { return nil }
+        let base64String = String(urlString[urlString.index(after: commaIndex)...])
+
+        // Decode base64
+        return Data(base64Encoded: base64String, options: .ignoreUnknownCharacters)
     }
 }
 
@@ -319,6 +528,7 @@ struct RoundedCorner: Shape {
         audioLevels: [0.3, 0.5, 0.7, 0.5, 0.3],
         onUserInputChange: { _ in },
         onSendMessage: {},
+        onSendMessageWithImages: { _ in },
         onToggleMute: {},
         onEndCall: {},
         onCollapse: {},
