@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "TelnyxVoiceAIWidget"
-  spec.version      = "1.0.0"
+  spec.version      = "1.1.0"
   spec.summary      = "Telnyx Voice AI Widget SDK for iOS"
   spec.description  = <<-DESC
                       A comprehensive iOS SDK for integrating Telnyx Voice AI capabilities 
