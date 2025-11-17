@@ -1,2 +1,3 @@
+- PR #18: 📦 Release v1.1.0
 - PR #17: WEBRTC-3067 [Feat]  Chat images support
 - PR #16: WEBRTC-3069: [iOS] Call Params when initialising
