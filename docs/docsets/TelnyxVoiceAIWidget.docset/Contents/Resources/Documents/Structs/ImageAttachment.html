@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AgentStatus Enumeration Reference</title>
+    <title>ImageAttachment Structure Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/AgentStatus" class="dashAnchor"></a>
-    <a title="AgentStatus Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Struct/ImageAttachment" class="dashAnchor"></a>
+    <a title="ImageAttachment Structure Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
@@ -29,9 +29,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">TelnyxVoiceAIWidget</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Enums.html">Enumerations</a>
+        <a href="../Structs.html">Structures</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        AgentStatus Enumeration Reference
+        ImageAttachment Structure Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -90,15 +90,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>AgentStatus</h1>
+            <h1>ImageAttachment</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AgentStatus</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageAttachment</span> <span class="p">:</span> <span class="kt">Identifiable</span><span class="p">,</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
               </div>
-            <p>Represents the agent&rsquo;s current status</p>
+            <p>Represents an image attachment in a transcript item</p>
 
           </section>
           <section class="section task-group-section">
@@ -107,9 +107,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11AgentStatusO4idleyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/idle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11AgentStatusO4idleyA2CmF">idle</a>
+                    <a name="/s:s12IdentifiableP2id2IDQzvp"></a>
+                    <a name="//apple_ref/swift/Property/id" class="dashAnchor"></a>
+                    <a class="token" href="#/s:s12IdentifiableP2id2IDQzvp">id</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -117,14 +117,13 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Agent is idle (no active conversation)</p>
-
+                        
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">idle</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -134,9 +133,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11AgentStatusO8thinkingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/thinking" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11AgentStatusO8thinkingyA2CmF">thinking</a>
+                    <a name="/s:19TelnyxVoiceAIWidget15ImageAttachmentV10base64DataSSvp"></a>
+                    <a name="//apple_ref/swift/Property/base64Data" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15ImageAttachmentV10base64DataSSvp">base64Data</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -144,14 +143,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Agent is thinking/processing user input</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">thinking</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">base64Data</span><span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -161,9 +160,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11AgentStatusO7waitingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/waiting" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11AgentStatusO7waitingyA2CmF">waiting</a>
+                    <a name="/s:19TelnyxVoiceAIWidget15ImageAttachmentV07previewD010Foundation4DataVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/previewImage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15ImageAttachmentV07previewD010Foundation4DataVSgvp">previewImage</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -171,14 +170,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Agent is waiting and can be interrupted</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">waiting</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">previewImage</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -188,9 +187,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11AgentStatusO15processingImageyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/processingImage" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11AgentStatusO15processingImageyA2CmF">processingImage</a>
+                    <a name="/s:19TelnyxVoiceAIWidget15ImageAttachmentV2id10base64Data07previewD0ACSS_SS10Foundation0H0VSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(id:base64Data:previewImage:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15ImageAttachmentV2id10base64Data07previewD0ACSS_SS10Foundation0H0VSgtcfc">init(id:<wbr>base64Data:<wbr>previewImage:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -198,14 +197,18 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Agent is processing an image</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">processingImage</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kt">UUID</span><span class="p">()</span><span class="o">.</span><span class="n">uuidString</span><span class="p">,</span>
+    <span class="nv">base64Data</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">previewImage</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>

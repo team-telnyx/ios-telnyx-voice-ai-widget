@@ -17,7 +17,7 @@
     <a title="AIAssistantWidget Structure Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -67,6 +67,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CallParams.html">CallParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImageAttachment.html">ImageAttachment</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TranscriptItem.html">TranscriptItem</a>
@@ -142,6 +148,20 @@ connection, call management, and UI state transitions.</p>
                             <p>When true, displays the widget as a floating action button with only the icon.
       In this mode, tapping starts the call and opens directly into the full screen
       text view. When false, displays the regular widget button with text.</p>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <code>
+                          <em>callParams</em>
+                          </code>
+                        </td>
+                        <td>
+                          <div>
+                            <p>Optional parameters for customizing call initialization. When provided,
+        these values override the default caller name, caller number, destination number,
+        and client state used when creating a call.</p>
                           </div>
                         </td>
                       </tr>
@@ -224,9 +244,9 @@ connection, call management, and UI state transitions.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly13customization20widgetButtonModifier08expandedeO0010buttonTextO00q5ImageO0ACSS_S2bAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Rtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(assistantId:shouldInitialize:iconOnly:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly13customization20widgetButtonModifier08expandedeO0010buttonTextO00q5ImageO0ACSS_S2bAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Rtcfc">init(assistantId:<wbr>shouldInitialize:<wbr>iconOnly:<wbr>customization:<wbr>widgetButtonModifier:<wbr>expandedWidgetModifier:<wbr>buttonTextModifier:<wbr>buttonImageModifier:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly10callParams13customization20widgetButtonModifier08expandedeQ0010buttonTextQ00s5ImageQ0ACSS_S2bAA04CallM0VSgAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Vtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(assistantId:shouldInitialize:iconOnly:callParams:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget17AIAssistantWidgetV11assistantId16shouldInitialize8iconOnly10callParams13customization20widgetButtonModifier08expandedeQ0010buttonTextQ00s5ImageQ0ACSS_S2bAA04CallM0VSgAA0E13CustomizationVSg7SwiftUI7AnyViewVSgA3Vtcfc">init(assistantId:<wbr>shouldInitialize:<wbr>iconOnly:<wbr>callParams:<wbr>customization:<wbr>widgetButtonModifier:<wbr>expandedWidgetModifier:<wbr>buttonTextModifier:<wbr>buttonImageModifier:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -246,6 +266,7 @@ connection, call management, and UI state transitions.</p>
     <span class="nv">assistantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
     <span class="nv">iconOnly</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">callParams</span><span class="p">:</span> <span class="kt"><a href="../Structs/CallParams.html">CallParams</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">customization</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetCustomization.html">WidgetCustomization</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">widgetButtonModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">expandedWidgetModifier</span><span class="p">:</span> <span class="kt">AnyView</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
@@ -303,7 +324,7 @@ connection, call management, and UI state transitions.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-11-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

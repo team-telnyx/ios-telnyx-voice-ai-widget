@@ -47,6 +47,14 @@ public var customization: WidgetCustomization?
 
 Custom color configuration that takes priority over socket-received theme
 
+### `callParams`
+
+```swift
+public var callParams: CallParams?
+```
+
+Call parameters for customizing call initialization
+
 ## Methods
 ### `init()`
 
@@ -60,16 +68,17 @@ public init()
 deinit
 ```
 
-### `initialize(assistantId:iconOnly:customization:)`
+### `initialize(assistantId:iconOnly:callParams:customization:)`
 
 ```swift
-public func initialize(assistantId: String, iconOnly: Bool = false, customization: WidgetCustomization? = nil)
+public func initialize(assistantId: String, iconOnly: Bool = false, callParams: CallParams? = nil, customization: WidgetCustomization? = nil)
 ```
 
 Initialize the widget with assistant ID
 - Parameters:
   - assistantId: The Assistant ID from your Telnyx AI configuration
   - iconOnly: When true, displays as a floating action button
+  - callParams: Optional parameters for customizing call initialization
   - customization: Optional custom colors that override theme-based colors
 
 #### Parameters
@@ -78,6 +87,7 @@ Initialize the widget with assistant ID
 | ---- | ----------- |
 | assistantId | The Assistant ID from your Telnyx AI configuration |
 | iconOnly | When true, displays as a floating action button |
+| callParams | Optional parameters for customizing call initialization |
 | customization | Optional custom colors that override theme-based colors |
 
 ### `startCall()`
@@ -135,3 +145,11 @@ public func sendMessage()
 ```
 
 Send user message
+
+### `sendMessageWithImages(_:)`
+
+```swift
+public func sendMessageWithImages(_ images: [UIImage])
+```
+
+Send user message with images

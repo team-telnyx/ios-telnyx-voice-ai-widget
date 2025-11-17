@@ -1,6 +1,13 @@
 {
   "warnings": [
     {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/Models/CallParams.swift",
+      "line": 31,
+      "symbol": "CallParams.init(callerName:callerNumber:destinationNumber:clientState:customHeaders:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/Models/WidgetCustomization.swift",
       "line": 53,
       "symbol": "WidgetCustomization.init(audioVisualizerColor:transcriptBackgroundColor:userBubbleBackgroundColor:agentBubbleBackgroundColor:userBubbleTextColor:agentBubbleTextColor:muteButtonBackgroundColor:muteButtonActiveBackgroundColor:muteButtonIconColor:widgetSurfaceColor:primaryTextColor:secondaryTextColor:inputBackgroundColor:)",
@@ -9,218 +16,246 @@
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 75,
-      "symbol": "TranscriptItem.text",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 76,
-      "symbol": "TranscriptItem.isUser",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 77,
-      "symbol": "TranscriptItem.timestamp",
+      "line": 78,
+      "symbol": "ImageAttachment.base64Data",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
       "line": 79,
-      "symbol": "TranscriptItem.init(id:text:isUser:timestamp:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 89,
-      "symbol": "ErrorType.initialization",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 90,
-      "symbol": "ErrorType.connection",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 91,
-      "symbol": "ErrorType.other",
-      "symbol_kind": "source.lang.swift.decl.enumelement",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 98,
-      "symbol": "WidgetSettings.agentThinkingText",
+      "symbol": "ImageAttachment.previewImage",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 99,
-      "symbol": "WidgetSettings.audioVisualizerConfig",
+      "line": 81,
+      "symbol": "ImageAttachment.init(id:base64Data:previewImage:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 95,
+      "symbol": "TranscriptItem.text",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 96,
+      "symbol": "TranscriptItem.isUser",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 97,
+      "symbol": "TranscriptItem.timestamp",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 98,
+      "symbol": "TranscriptItem.attachments",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
       "line": 100,
+      "symbol": "TranscriptItem.init(id:text:isUser:timestamp:attachments:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 117,
+      "symbol": "ErrorType.initialization",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 118,
+      "symbol": "ErrorType.connection",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 119,
+      "symbol": "ErrorType.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 126,
+      "symbol": "WidgetSettings.agentThinkingText",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 127,
+      "symbol": "WidgetSettings.audioVisualizerConfig",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
+      "line": 128,
       "symbol": "WidgetSettings.defaultState",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 101,
+      "line": 129,
       "symbol": "WidgetSettings.giveFeedbackUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 102,
+      "line": 130,
       "symbol": "WidgetSettings.logoIconUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 103,
+      "line": 131,
       "symbol": "WidgetSettings.position",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 104,
+      "line": 132,
       "symbol": "WidgetSettings.reportIssueUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 105,
+      "line": 133,
       "symbol": "WidgetSettings.speakToInterruptText",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 106,
+      "line": 134,
       "symbol": "WidgetSettings.startCallText",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 107,
+      "line": 135,
       "symbol": "WidgetSettings.theme",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 108,
+      "line": 136,
       "symbol": "WidgetSettings.viewHistoryUrl",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 124,
+      "line": 152,
       "symbol": "WidgetSettings.init(agentThinkingText:audioVisualizerConfig:defaultState:giveFeedbackUrl:logoIconUrl:position:reportIssueUrl:speakToInterruptText:startCallText:theme:viewHistoryUrl:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 153,
+      "line": 181,
       "symbol": "AudioVisualizerConfig.enabled",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 154,
+      "line": 182,
       "symbol": "AudioVisualizerConfig.type",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 155,
+      "line": 183,
       "symbol": "AudioVisualizerConfig.color",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 156,
+      "line": 184,
       "symbol": "AudioVisualizerConfig.preset",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/State/WidgetState.swift",
-      "line": 165,
+      "line": 193,
       "symbol": "AudioVisualizerConfig.init(enabled:type:color:preset:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 21,
+      "line": 22,
       "symbol": "WidgetViewModel.widgetState",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 22,
+      "line": 23,
       "symbol": "WidgetViewModel.widgetSettings",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 23,
+      "line": 24,
       "symbol": "WidgetViewModel.transcriptItems",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 24,
+      "line": 25,
       "symbol": "WidgetViewModel.userInput",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 25,
+      "line": 26,
       "symbol": "WidgetViewModel.audioLevels",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/ViewModels/WidgetViewModel.swift",
-      "line": 42,
+      "line": 46,
       "symbol": "WidgetViewModel.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/runner/work/ios-telnyx-voice-ai-widget/ios-telnyx-voice-ai-widget/TelnyxVoiceAIWidget/TelnyxVoiceAIWidget/Views/AIAssistantWidget.swift",
-      "line": 52,
-      "symbol": "AIAssistantWidget.init(assistantId:shouldInitialize:iconOnly:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)",
+      "line": 56,
+      "symbol": "AIAssistantWidget.init(assistantId:shouldInitialize:iconOnly:callParams:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     }

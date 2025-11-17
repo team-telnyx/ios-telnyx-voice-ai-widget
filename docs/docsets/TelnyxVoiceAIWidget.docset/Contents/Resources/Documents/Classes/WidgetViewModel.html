@@ -17,7 +17,7 @@
     <a title="WidgetViewModel Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -67,6 +67,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CallParams.html">CallParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ImageAttachment.html">ImageAttachment</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/TranscriptItem.html">TranscriptItem</a>
@@ -296,6 +302,34 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:19TelnyxVoiceAIWidget15WidgetViewModelC10callParamsAA04CallH0VSgvp"></a>
+                    <a name="//apple_ref/swift/Property/callParams" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15WidgetViewModelC10callParamsAA04CallH0VSgvp">callParams</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Call parameters for customizing call initialization</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="k">var</span> <span class="nv">callParams</span><span class="p">:</span> <span class="kt"><a href="../Structs/CallParams.html">CallParams</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
             <div class="task-group">
@@ -353,9 +387,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget15WidgetViewModelC10initialize11assistantId8iconOnly13customizationySS_SbAA0D13CustomizationVSgtF"></a>
-                    <a name="//apple_ref/swift/Method/initialize(assistantId:iconOnly:customization:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15WidgetViewModelC10initialize11assistantId8iconOnly13customizationySS_SbAA0D13CustomizationVSgtF">initialize(assistantId:<wbr>iconOnly:<wbr>customization:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget15WidgetViewModelC10initialize11assistantId8iconOnly10callParams13customizationySS_SbAA04CallM0VSgAA0D13CustomizationVSgtF"></a>
+                    <a name="//apple_ref/swift/Method/initialize(assistantId:iconOnly:callParams:customization:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15WidgetViewModelC10initialize11assistantId8iconOnly10callParams13customizationySS_SbAA04CallM0VSgAA0D13CustomizationVSgtF">initialize(assistantId:<wbr>iconOnly:<wbr>callParams:<wbr>customization:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -371,7 +405,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
-<span class="kd">public</span> <span class="kd">func</span> <span class="nf">initialize</span><span class="p">(</span><span class="nv">assistantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">iconOnly</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">customization</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetCustomization.html">WidgetCustomization</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">initialize</span><span class="p">(</span><span class="nv">assistantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">iconOnly</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">callParams</span><span class="p">:</span> <span class="kt"><a href="../Structs/CallParams.html">CallParams</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">customization</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetCustomization.html">WidgetCustomization</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -400,6 +434,18 @@
                               <td>
                                 <div>
                                   <p>When true, displays as a floating action button</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>callParams</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional parameters for customizing call initialization</p>
                                 </div>
                               </td>
                             </tr>
@@ -611,6 +657,34 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">@MainActor</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">sendMessage</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:19TelnyxVoiceAIWidget15WidgetViewModelC21sendMessageWithImagesyySaySo7UIImageCGF"></a>
+                    <a name="//apple_ref/swift/Method/sendMessageWithImages(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15WidgetViewModelC21sendMessageWithImagesyySaySo7UIImageCGF">sendMessageWithImages(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Send user message with images</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@MainActor</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">sendMessageWithImages</span><span class="p">(</span><span class="n">_</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIImage</span><span class="p">])</span></code></pre>
 
                         </div>
                       </div>
@@ -1038,7 +1112,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-11-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
