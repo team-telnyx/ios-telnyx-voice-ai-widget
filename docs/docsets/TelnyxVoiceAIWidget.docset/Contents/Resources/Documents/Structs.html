@@ -17,7 +17,7 @@
     <a title="Structures  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <p><a href="index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -67,6 +67,12 @@
                 <a href="Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
               </li>
               <li class="nav-group-task">
+                <a href="Structs/CallParams.html">CallParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/ImageAttachment.html">ImageAttachment</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Structs/TranscriptItem.html">TranscriptItem</a>
               </li>
               <li class="nav-group-task">
@@ -92,6 +98,35 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV"></a>
+                    <a name="//apple_ref/swift/Struct/CallParams" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV">CallParams</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Parameters for customizing call initialization
+All parameters are optional and will override default values when provided</p>
+
+                        <a href="Structs/CallParams.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CallParams</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:19TelnyxVoiceAIWidget19WidgetCustomizationV"></a>
                     <a name="//apple_ref/swift/Struct/WidgetCustomization" class="dashAnchor"></a>
                     <a class="token" href="#/s:19TelnyxVoiceAIWidget19WidgetCustomizationV">WidgetCustomization</a>
@@ -112,6 +147,34 @@ These colors take priority over socket-received theme colors</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">WidgetCustomization</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:19TelnyxVoiceAIWidget15ImageAttachmentV"></a>
+                    <a name="//apple_ref/swift/Struct/ImageAttachment" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget15ImageAttachmentV">ImageAttachment</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Represents an image attachment in a transcript item</p>
+
+                        <a href="Structs/ImageAttachment.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ImageAttachment</span> <span class="p">:</span> <span class="kt">Identifiable</span><span class="p">,</span> <span class="kt">Equatable</span></code></pre>
 
                         </div>
                       </div>
@@ -283,6 +346,20 @@ connection, call management, and UI state transitions.</p>
                             <tr>
                               <td>
                                 <code>
+                                <em>callParams</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional parameters for customizing call initialization. When provided,
+        these values override the default caller name, caller number, destination number,
+        and client state used when creating a call.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>widgetButtonModifier</em>
                                 </code>
                               </td>
@@ -351,7 +428,7 @@ connection, call management, and UI state transitions.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-11-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

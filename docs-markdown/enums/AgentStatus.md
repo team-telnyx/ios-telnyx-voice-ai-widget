@@ -32,3 +32,11 @@ case waiting
 ```
 
 Agent is waiting and can be interrupted
+
+### `processingImage`
+
+```swift
+case processingImage
+```
+
+Agent is processing an image

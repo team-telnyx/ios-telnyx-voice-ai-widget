@@ -22,6 +22,9 @@ connection, call management, and UI state transitions.
   - iconOnly: When true, displays the widget as a floating action button with only the icon.
               In this mode, tapping starts the call and opens directly into the full screen
               text view. When false, displays the regular widget button with text.
+  - callParams: Optional parameters for customizing call initialization. When provided,
+                these values override the default caller name, caller number, destination number,
+                and client state used when creating a call.
   - widgetButtonModifier: ViewModifier applied to the widget button in collapsed state
   - expandedWidgetModifier: ViewModifier applied to the expanded widget
   - buttonTextModifier: ViewModifier applied to the text visible on the widget button
@@ -36,13 +39,14 @@ public var body: some View
 ```
 
 ## Methods
-### `init(assistantId:shouldInitialize:iconOnly:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)`
+### `init(assistantId:shouldInitialize:iconOnly:callParams:customization:widgetButtonModifier:expandedWidgetModifier:buttonTextModifier:buttonImageModifier:)`
 
 ```swift
 public init(
     assistantId: String,
     shouldInitialize: Bool = true,
     iconOnly: Bool = false,
+    callParams: CallParams? = nil,
     customization: WidgetCustomization? = nil,
     widgetButtonModifier: AnyView? = nil,
     expandedWidgetModifier: AnyView? = nil,

@@ -16,7 +16,7 @@
     <a title="TelnyxVoiceAIWidget  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (65% documented)</p>
+        <p><a href="index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -62,6 +62,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/AudioVisualizerConfig.html">AudioVisualizerConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/CallParams.html">CallParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/ImageAttachment.html">ImageAttachment</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/TranscriptItem.html">TranscriptItem</a>
@@ -197,7 +203,126 @@
 <td>Minimal, space-efficient integration</td>
 </tr>
 </tbody></table>
-<h3 id='4-understanding-code-shouldinitialize-code-parameter' class='heading'>4. Understanding <code>shouldInitialize</code> Parameter</h3>
+<h3 id='4-call-parameters-customization' class='heading'>4. Call Parameters Customization</h3>
+
+<p>The widget supports customizing call parameters through the <code><a href="Structs/CallParams.html">CallParams</a></code> struct. This allows you to override default values for caller information and pass dynamic data to your AI assistant through custom headers:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">TelnyxVoiceAIWidget</span>
+
+<span class="c1">// Create custom call parameters</span>
+<span class="k">let</span> <span class="nv">callParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="s">"John Doe"</span><span class="p">,</span>
+    <span class="nv">callerNumber</span><span class="p">:</span> <span class="s">"+1234567890"</span><span class="p">,</span>
+    <span class="nv">destinationNumber</span><span class="p">:</span> <span class="s">"custom-destination"</span><span class="p">,</span>
+    <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">"X-User-ID"</span><span class="p">:</span> <span class="s">"12345"</span><span class="p">,</span>
+        <span class="s">"X-Session-ID"</span><span class="p">:</span> <span class="s">"abc-123"</span><span class="p">,</span>
+        <span class="s">"X-Account-Number"</span><span class="p">:</span> <span class="s">"ACC-98765"</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1">// Use with the widget</span>
+<span class="kt">AIAssistantWidget</span><span class="p">(</span>
+    <span class="nv">assistantId</span><span class="p">:</span> <span class="s">"your-assistant-id"</span><span class="p">,</span>
+    <span class="nv">shouldInitialize</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nv">callParams</span><span class="p">:</span> <span class="n">callParams</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='callparams-properties' class='heading'>CallParams Properties:</h4>
+
+<p>All properties are optional and will use default values when not provided:</p>
+
+<ul>
+<li><strong><code>callerName</code></strong>: The name displayed as the caller (default: &ldquo;Anonymous User&rdquo;)</li>
+<li><strong><code>callerNumber</code></strong>: The phone number used as caller ID (default: &ldquo;anonymous&rdquo;)</li>
+<li><strong><code>destinationNumber</code></strong>: The destination for the call (default: &ldquo;xxx&rdquo;)</li>
+<li><strong><code>clientState</code></strong>: Custom client state data to pass additional context (default: nil)</li>
+<li><strong><code>customHeaders</code></strong>: Dictionary of custom headers to send with the call (default: empty)</li>
+</ul>
+<h4 id='custom-headers' class='heading'>Custom Headers</h4>
+
+<p>Custom headers allow you to pass dynamic data from your application to your AI assistant. These headers must follow specific conventions:</p>
+
+<p><strong>Header Naming Convention:</strong></p>
+
+<ul>
+<li>Headers <strong>must</strong> start with the <code>X-</code> prefix (e.g., <code>X-User-ID</code>, <code>X-Account-Number</code>)</li>
+<li>Header names are converted to variable names in your AI assistant:
+
+<ul>
+<li><code>X-User-ID</code> becomes <code>{{user_id}}</code></li>
+<li><code>X-Account-Number</code> becomes <code>{{account_number}}</code></li>
+<li><code>X-Session-ID</code> becomes <code>{{session_id}}</code></li>
+</ul></li>
+<li>Hyphens in header names are automatically converted to underscores in variable names</li>
+</ul>
+
+<p><strong>Common Use Cases:</strong></p>
+
+<ul>
+<li><strong>User Identification</strong>: Pass user IDs or session tokens</li>
+<li><strong>Account Context</strong>: Send account numbers or customer details</li>
+<li><strong>Session Management</strong>: Track conversation sessions</li>
+<li><strong>Metadata</strong>: Include any custom data your AI assistant needs</li>
+</ul>
+
+<p><strong>Example:</strong></p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">callParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="s">"Customer Support"</span><span class="p">,</span>
+    <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">"X-User-ID"</span><span class="p">:</span> <span class="s">"user_12345"</span><span class="p">,</span>
+        <span class="s">"X-Department"</span><span class="p">:</span> <span class="s">"sales"</span><span class="p">,</span>
+        <span class="s">"X-Priority-Level"</span><span class="p">:</span> <span class="s">"high"</span><span class="p">,</span>
+        <span class="s">"X-Customer-Tier"</span><span class="p">:</span> <span class="s">"premium"</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+</code></pre>
+
+<p>In your AI assistant configuration, you can then reference these values:</p>
+
+<ul>
+<li><code>{{user_id}}</code> → &ldquo;user_12345&rdquo;</li>
+<li><code>{{department}}</code> → &ldquo;sales&rdquo;</li>
+<li><code>{{priority_level}}</code> → &ldquo;high&rdquo;</li>
+<li><code>{{customer_tier}}</code> → &ldquo;premium&rdquo;</li>
+</ul>
+<h4 id='usage-examples' class='heading'>Usage Examples:</h4>
+<pre class="highlight swift"><code><span class="c1">// Minimal customization - only caller name</span>
+<span class="k">let</span> <span class="nv">basicParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span><span class="nv">callerName</span><span class="p">:</span> <span class="s">"Customer Support"</span><span class="p">)</span>
+
+<span class="c1">// With client state for additional context</span>
+<span class="k">let</span> <span class="nv">stateParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="s">"Jane Smith"</span><span class="p">,</span>
+    <span class="nv">clientState</span><span class="p">:</span> <span class="s">"custom-state-data"</span>
+<span class="p">)</span>
+
+<span class="c1">// With custom headers for user context</span>
+<span class="k">let</span> <span class="nv">contextParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="s">"Jane Smith"</span><span class="p">,</span>
+    <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">"X-User-ID"</span><span class="p">:</span> <span class="s">"usr_123"</span><span class="p">,</span>
+        <span class="s">"X-Account-Type"</span><span class="p">:</span> <span class="s">"premium"</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1">// Full customization with client state and headers</span>
+<span class="k">let</span> <span class="nv">fullParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="s">"Jane Smith"</span><span class="p">,</span>
+    <span class="nv">callerNumber</span><span class="p">:</span> <span class="s">"+1555123456"</span><span class="p">,</span>
+    <span class="nv">destinationNumber</span><span class="p">:</span> <span class="s">"support-ai"</span><span class="p">,</span>
+    <span class="nv">clientState</span><span class="p">:</span> <span class="s">"custom-state-data"</span><span class="p">,</span>
+    <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s">"X-User-ID"</span><span class="p">:</span> <span class="s">"usr_456"</span><span class="p">,</span>
+        <span class="s">"X-Session-ID"</span><span class="p">:</span> <span class="s">"session_789"</span><span class="p">,</span>
+        <span class="s">"X-Department"</span><span class="p">:</span> <span class="s">"sales"</span><span class="p">,</span>
+        <span class="s">"X-Priority"</span><span class="p">:</span> <span class="s">"high"</span><span class="p">,</span>
+        <span class="s">"X-Language"</span><span class="p">:</span> <span class="s">"en-US"</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1">// Use empty values to explicitly use defaults</span>
+<span class="k">let</span> <span class="nv">defaultParams</span> <span class="o">=</span> <span class="kt">CallParams</span><span class="p">()</span> <span class="c1">// All parameters will use defaults</span>
+</code></pre>
+<h3 id='5-understanding-code-shouldinitialize-code-parameter' class='heading'>5. Understanding <code>shouldInitialize</code> Parameter</h3>
 
 <p>The <code>shouldInitialize</code> parameter controls when the widget establishes its network connection to Telnyx servers. This is crucial for controlling:</p>
 
@@ -837,7 +962,7 @@ open SampleApp.xcodeproj
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-10-30)</p>
+          <p>&copy; 2025 <a class="link" href="https://www.telnyx.com/" target="_blank" rel="external noopener">Telnyx LLC</a>. All rights reserved. (Last updated: 2025-11-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

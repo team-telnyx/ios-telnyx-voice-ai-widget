@@ -33,9 +33,21 @@ public let isUser: Bool
 public let timestamp: Date
 ```
 
-## Methods
-### `init(id:text:isUser:timestamp:)`
+### `attachments`
 
 ```swift
-public init(id: String, text: String, isUser: Bool, timestamp: Date = Date())
+public let attachments: [ImageAttachment]
+```
+
+## Methods
+### `init(id:text:isUser:timestamp:attachments:)`
+
+```swift
+public init(
+    id: String,
+    text: String,
+    isUser: Bool,
+    timestamp: Date = Date(),
+    attachments: [ImageAttachment] = []
+)
 ```

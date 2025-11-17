@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>WidgetState Enumeration Reference</title>
+    <title>CallParams Structure Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/WidgetState" class="dashAnchor"></a>
-    <a title="WidgetState Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Struct/CallParams" class="dashAnchor"></a>
+    <a title="CallParams Structure Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">TelnyxVoiceAIWidget 1.0.0 Docs</a> (66% documented)</p>
@@ -29,9 +29,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">TelnyxVoiceAIWidget</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Enums.html">Enumerations</a>
+        <a href="../Structs.html">Structures</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        WidgetState Enumeration Reference
+        CallParams Structure Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -90,15 +90,16 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>WidgetState</h1>
+            <h1>CallParams</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">WidgetState</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">CallParams</span></code></pre>
 
                 </div>
               </div>
-            <p>Represents the different states of the AI Assistant Widget</p>
+            <p>Parameters for customizing call initialization
+All parameters are optional and will override default values when provided</p>
 
           </section>
           <section class="section task-group-section">
@@ -107,9 +108,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO4idleyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/idle" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO4idleyA2CmF">idle</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV10callerNameSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/callerName" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV10callerNameSSSgvp">callerName</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -117,14 +118,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initial state before initialization</p>
+                        <p>The name to display as the caller</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">idle</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">callerName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -134,9 +135,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO7loadingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/loading" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO7loadingyA2CmF">loading</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV12callerNumberSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/callerNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV12callerNumberSSSgvp">callerNumber</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -144,14 +145,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Loading state while initiating the call</p>
+                        <p>The phone number to use as the caller number</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">loading</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">callerNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -161,9 +162,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO9collapsedyAcA0D8SettingsV_tcACmF"></a>
-                    <a name="//apple_ref/swift/Element/collapsed(settings:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO9collapsedyAcA0D8SettingsV_tcACmF">collapsed(settings:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV17destinationNumberSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/destinationNumber" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV17destinationNumberSSSgvp">destinationNumber</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -171,14 +172,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Collapsed state showing the widget button</p>
+                        <p>The destination number for the call</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">collapsed</span><span class="p">(</span><span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetSettings.html">WidgetSettings</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">destinationNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -188,9 +189,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO10connectingyAcA0D8SettingsV_tcACmF"></a>
-                    <a name="//apple_ref/swift/Element/connecting(settings:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO10connectingyAcA0D8SettingsV_tcACmF">connecting(settings:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV11clientStateSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/clientState" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV11clientStateSSSgvp">clientState</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -198,14 +199,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Loading state when initiating a call</p>
+                        <p>Custom client state data to include with the call</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">connecting</span><span class="p">(</span><span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetSettings.html">WidgetSettings</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">clientState</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -215,9 +216,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO8expandedyAcA0D8SettingsV_S2bAA11AgentStatusOtcACmF"></a>
-                    <a name="//apple_ref/swift/Element/expanded(settings:isConnected:isMuted:agentStatus:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO8expandedyAcA0D8SettingsV_S2bAA11AgentStatusOtcACmF">expanded(settings:<wbr>isConnected:<wbr>isMuted:<wbr>agentStatus:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV13customHeadersSDyS2SGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/customHeaders" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV13customHeadersSDyS2SGSgvp">customHeaders</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -225,14 +226,17 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Expanded state during an active call</p>
+                        <p>Custom headers to include with the call</p>
+
+<p>These headers need to start with the X- prefix and will be mapped to dynamic variables in the AI assistant (e.g., X-Account-Number becomes {{account_number}}).
+Hyphens in header names are converted to underscores in variable names.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">expanded</span><span class="p">(</span><span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetSettings.html">WidgetSettings</a></span><span class="p">,</span> <span class="nv">isConnected</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">isMuted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">agentStatus</span><span class="p">:</span> <span class="kt"><a href="../Enums/AgentStatus.html">AgentStatus</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">String</span><span class="p">]?</span></code></pre>
 
                         </div>
                       </div>
@@ -242,9 +246,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO14transcriptViewyAcA0D8SettingsV_S2bAA11AgentStatusOtcACmF"></a>
-                    <a name="//apple_ref/swift/Element/transcriptView(settings:isConnected:isMuted:agentStatus:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO14transcriptViewyAcA0D8SettingsV_S2bAA11AgentStatusOtcACmF">transcriptView(settings:<wbr>isConnected:<wbr>isMuted:<wbr>agentStatus:<wbr>)</a>
+                    <a name="/s:19TelnyxVoiceAIWidget10CallParamsV10callerName0F6Number011destinationH011clientState13customHeadersACSSSg_A3ISDyS2SGSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(callerName:callerNumber:destinationNumber:clientState:customHeaders:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:19TelnyxVoiceAIWidget10CallParamsV10callerName0F6Number011destinationH011clientState13customHeadersACSSSg_A3ISDyS2SGSgtcfc">init(callerName:<wbr>callerNumber:<wbr>destinationNumber:<wbr>clientState:<wbr>customHeaders:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -252,67 +256,20 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Full transcript view state</p>
+                        <p>Undocumented</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">transcriptView</span><span class="p">(</span><span class="nv">settings</span><span class="p">:</span> <span class="kt"><a href="../Structs/WidgetSettings.html">WidgetSettings</a></span><span class="p">,</span> <span class="nv">isConnected</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">isMuted</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">agentStatus</span><span class="p">:</span> <span class="kt"><a href="../Enums/AgentStatus.html">AgentStatus</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:19TelnyxVoiceAIWidget11WidgetStateO5erroryACSS_AA9ErrorTypeOtcACmF"></a>
-                    <a name="//apple_ref/swift/Element/error(message:type:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:19TelnyxVoiceAIWidget11WidgetStateO5erroryACSS_AA9ErrorTypeOtcACmF">error(message:<wbr>type:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Error state</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">error</span><span class="p">(</span><span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt"><a href="../Enums/ErrorType.html">ErrorType</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:SQ2eeoiySbx_xtFZ"></a>
-                    <a name="//apple_ref/swift/Method/==(_:_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SQ2eeoiySbx_xtFZ">==(_:<wbr>_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span> <span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">WidgetState</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">WidgetState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span>
+    <span class="nv">callerName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">callerNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">destinationNumber</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">clientState</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">customHeaders</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">String</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="p">)</span></code></pre>
 
                         </div>
                       </div>
