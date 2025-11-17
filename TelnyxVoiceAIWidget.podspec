@@ -23,5 +23,5 @@ Pod::Spec.new do |spec|
   spec.frameworks = "Foundation", "UIKit", "AVFoundation"
   spec.requires_arc = true
 
-  spec.dependency "TelnyxRTC", "~> 2.2"
+  spec.dependency "TelnyxRTC", "2.4.0"
 end

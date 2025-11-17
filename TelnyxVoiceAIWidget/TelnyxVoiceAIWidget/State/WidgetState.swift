@@ -67,6 +67,26 @@ public enum AgentStatus: Equatable {
 
     /// Agent is waiting and can be interrupted
     case waiting
+
+    /// Agent is processing an image
+    case processingImage
+}
+
+/// Represents an image attachment in a transcript item
+public struct ImageAttachment: Identifiable, Equatable {
+    public let id: String
+    public let base64Data: String
+    public let previewImage: Data?
+
+    public init(
+        id: String = UUID().uuidString,
+        base64Data: String,
+        previewImage: Data? = nil
+    ) {
+        self.id = id
+        self.base64Data = base64Data
+        self.previewImage = previewImage
+    }
 }
 
 /// Represents a transcript item in the conversation
@@ -75,12 +95,20 @@ public struct TranscriptItem: Identifiable, Equatable {
     public let text: String
     public let isUser: Bool
     public let timestamp: Date
+    public let attachments: [ImageAttachment]
 
-    public init(id: String, text: String, isUser: Bool, timestamp: Date = Date()) {
+    public init(
+        id: String,
+        text: String,
+        isUser: Bool,
+        timestamp: Date = Date(),
+        attachments: [ImageAttachment] = []
+    ) {
         self.id = id
         self.text = text
         self.isUser = isUser
         self.timestamp = timestamp
+        self.attachments = attachments
     }
 }
 

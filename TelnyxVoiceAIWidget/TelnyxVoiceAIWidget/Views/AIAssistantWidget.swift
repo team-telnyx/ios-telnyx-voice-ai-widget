@@ -226,6 +226,7 @@ public struct AIAssistantWidget: View {
                 audioLevels: viewModel.audioLevels,
                 onUserInputChange: { viewModel.updateUserInput($0) },
                 onSendMessage: { viewModel.sendMessage() },
+                onSendMessageWithImages: { viewModel.sendMessageWithImages($0) },
                 onToggleMute: { viewModel.toggleMute() },
                 onEndCall: { viewModel.endCall() },
                 onCollapse: { viewModel.collapseFromTranscriptView() },
