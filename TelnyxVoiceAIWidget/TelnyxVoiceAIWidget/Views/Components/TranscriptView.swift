@@ -7,6 +7,47 @@
 
 import Combine
 import SwiftUI
+import UIKit
+
+/// Overflow menu actions
+enum OverflowAction {
+    case giveFeedback
+    case viewHistory
+    case reportIssue
+    
+    var title: String {
+        switch self {
+        case .giveFeedback:
+            return "Give Feedback"
+        case .viewHistory:
+            return "View History"
+        case .reportIssue:
+            return "Report Issue"
+        }
+    }
+    
+    var iconName: String {
+        switch self {
+        case .giveFeedback:
+            return "hand.thumbsup"
+        case .viewHistory:
+            return "clock"
+        case .reportIssue:
+            return "exclamationmark.triangle"
+        }
+    }
+    
+    var confirmationTitle: String {
+        switch self {
+        case .giveFeedback:
+            return "End call and give feedback"
+        case .viewHistory:
+            return "End call and view history"
+        case .reportIssue:
+            return "End call and report issue"
+        }
+    }
+}
 
 /// Full-screen transcript view component matching Android implementation
 struct TranscriptView: View {
@@ -32,9 +73,34 @@ struct TranscriptView: View {
     @State private var showCamera = false
     @State private var showImageSourceMenu = false
     @State private var capturedImage: UIImage?
+    @State private var showOverflowMenu = false
+    @State private var showConfirmationDialog = false
+    @State private var pendingAction: OverflowAction?
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
+    }
+    
+    /// Available overflow actions based on widget settings
+    private var availableOverflowActions: [OverflowAction] {
+        var actions: [OverflowAction] = []
+        
+        if settings.giveFeedbackUrl != nil {
+            actions.append(.giveFeedback)
+        }
+        if settings.viewHistoryUrl != nil {
+            actions.append(.viewHistory)
+        }
+        if settings.reportIssueUrl != nil {
+            actions.append(.reportIssue)
+        }
+        
+        return actions
+    }
+    
+    /// Whether to show the overflow menu button
+    private var shouldShowOverflowMenu: Bool {
+        !availableOverflowActions.isEmpty
     }
 
     var body: some View {
@@ -63,6 +129,18 @@ struct TranscriptView: View {
                                 .frame(width: 40, height: 40)
                                 .background(colorResolver.muteButtonBackground(isMuted: isMuted))
                                 .clipShape(Circle())
+                        }
+
+                        // Overflow menu button
+                        if shouldShowOverflowMenu {
+                            Button(action: {
+                                showOverflowMenu = true
+                            }) {
+                                Image(systemName: "ellipsis")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(colorResolver.primaryText())
+                                    .frame(width: 40, height: 40)
+                            }
                         }
 
                         // End call button
@@ -210,6 +288,23 @@ struct TranscriptView: View {
                 attachedImages.append(image)
             }
         }
+        .actionSheet(isPresented: $showOverflowMenu) {
+            ActionSheet(
+                title: Text("Menu"),
+                message: nil,
+                buttons: overflowMenuButtons()
+            )
+        }
+        .alert(isPresented: $showConfirmationDialog) {
+            Alert(
+                title: Text(pendingAction?.confirmationTitle ?? ""),
+                message: Text("This will end your current call. Do you want to continue?"),
+                primaryButton: .default(Text("OK")) {
+                    handleConfirmedAction()
+                },
+                secondaryButton: .cancel()
+            )
+        }
         .onAppear {
             setupKeyboardObservers()
         }
@@ -261,6 +356,55 @@ struct TranscriptView: View {
             queue: .main
         ) { _ in
             keyboardHeight = 0
+        }
+    }
+    
+    /// Creates overflow menu buttons based on available actions
+    private func overflowMenuButtons() -> [ActionSheet.Button] {
+        var buttons: [ActionSheet.Button] = []
+        
+        for action in availableOverflowActions {
+            buttons.append(.default(Text(action.title)) {
+                pendingAction = action
+                showConfirmationDialog = true
+            })
+        }
+        
+        buttons.append(.cancel())
+        return buttons
+    }
+    
+    /// Handles the confirmed action after user confirmation
+    private func handleConfirmedAction() {
+        guard let action = pendingAction else { return }
+        
+        // End the call first
+        onEndCall()
+        
+        // Wait briefly for the call to end, then open the URL
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            openURLForAction(action)
+        }
+        
+        pendingAction = nil
+    }
+    
+    /// Opens the appropriate URL for the given action
+    private func openURLForAction(_ action: OverflowAction) {
+        guard let url = urlForAction(action) else { return }
+        
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    /// Returns the URL for the given action
+    private func urlForAction(_ action: OverflowAction) -> URL? {
+        switch action {
+        case .giveFeedback:
+            return settings.giveFeedbackUrl.flatMap(URL.init)
+        case .viewHistory:
+            return settings.viewHistoryUrl.flatMap(URL.init)
+        case .reportIssue:
+            return settings.reportIssueUrl.flatMap(URL.init)
         }
     }
 }
