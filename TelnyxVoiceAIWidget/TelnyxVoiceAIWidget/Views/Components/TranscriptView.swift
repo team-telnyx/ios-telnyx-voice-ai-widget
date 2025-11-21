@@ -7,6 +7,47 @@
 
 import Combine
 import SwiftUI
+import UIKit
+
+/// Overflow menu actions
+enum OverflowAction {
+    case giveFeedback
+    case viewHistory
+    case reportIssue
+
+    var title: String {
+        switch self {
+        case .giveFeedback:
+            return "Give Feedback"
+        case .viewHistory:
+            return "View History"
+        case .reportIssue:
+            return "Report Issue"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .giveFeedback:
+            return "hand.thumbsup"
+        case .viewHistory:
+            return "clock"
+        case .reportIssue:
+            return "exclamationmark.triangle"
+        }
+    }
+
+    var confirmationTitle: String {
+        switch self {
+        case .giveFeedback:
+            return "End call and give feedback"
+        case .viewHistory:
+            return "End call and view history"
+        case .reportIssue:
+            return "End call and report issue"
+        }
+    }
+}
 
 /// Full-screen transcript view component matching Android implementation
 struct TranscriptView: View {
@@ -32,9 +73,39 @@ struct TranscriptView: View {
     @State private var showCamera = false
     @State private var showImageSourceMenu = false
     @State private var capturedImage: UIImage?
+    @State private var showOverflowMenu = false
+    @State private var showConfirmationDialog = false
+    @State private var pendingAction: OverflowAction?
+    @State private var waitingForCallEnd = false
+    @State private var previousConnectionState = false
+    @State private var showURLError = false
+    @State private var urlErrorMessage = ""
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
+    }
+
+    /// Available overflow actions based on widget settings
+    private var availableOverflowActions: [OverflowAction] {
+        var actions: [OverflowAction] = []
+
+        // Only add actions if their URLs are valid
+        if let urlString = settings.giveFeedbackUrl, URL(string: urlString) != nil {
+            actions.append(.giveFeedback)
+        }
+        if let urlString = settings.viewHistoryUrl, URL(string: urlString) != nil {
+            actions.append(.viewHistory)
+        }
+        if let urlString = settings.reportIssueUrl, URL(string: urlString) != nil {
+            actions.append(.reportIssue)
+        }
+
+        return actions
+    }
+
+    /// Whether to show the overflow menu button
+    private var shouldShowOverflowMenu: Bool {
+        !availableOverflowActions.isEmpty
     }
 
     var body: some View {
@@ -43,11 +114,13 @@ struct TranscriptView: View {
                 // Header with controls
                 VStack(spacing: 12) {
                     HStack(spacing: 12) {
-                        // Collapse button (only in regular mode)
-                        if !iconOnly {
-                            Button(action: onCollapse) {
-                                Image(systemName: "chevron.down")
-                                    .font(.system(size: 20, weight: .medium))
+                        // Overflow menu button (on the left)
+                        if shouldShowOverflowMenu {
+                            Button(action: {
+                                showOverflowMenu = true
+                            }) {
+                                Image(systemName: "ellipsis")
+                                    .font(.system(size: 18, weight: .medium))
                                     .foregroundColor(colorResolver.primaryText())
                                     .frame(width: 40, height: 40)
                             }
@@ -73,6 +146,16 @@ struct TranscriptView: View {
                                 .frame(width: 40, height: 40)
                                 .background(Color.red)
                                 .clipShape(Circle())
+                        }
+
+                        // Close button (only in regular mode)
+                        if !iconOnly {
+                            Button(action: onCollapse) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(colorResolver.primaryText())
+                                    .frame(width: 40, height: 40)
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -202,6 +285,24 @@ struct TranscriptView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .animation(.easeOut(duration: 0.3), value: keyboardHeight)
+        .overlay(
+            Group {
+                if showOverflowMenu {
+                    OverflowMenuPopup(
+                        actions: availableOverflowActions,
+                        colorResolver: colorResolver,
+                        onActionSelected: { action in
+                            showOverflowMenu = false
+                            pendingAction = action
+                            showConfirmationDialog = true
+                        },
+                        onDismiss: {
+                            showOverflowMenu = false
+                        }
+                    )
+                }
+            }
+        )
         .sheet(isPresented: $showImagePicker) {
             ImagePickerView(selectedImages: $attachedImages)
         }
@@ -210,8 +311,45 @@ struct TranscriptView: View {
                 attachedImages.append(image)
             }
         }
+        .overlay(
+            Group {
+                if showConfirmationDialog {
+                    ConfirmationDialog(
+                        title: pendingAction?.confirmationTitle ?? "",
+                        message: "This will end your current call. Do you want to continue?",
+                        colorResolver: colorResolver,
+                        onConfirm: {
+                            showConfirmationDialog = false
+                            handleConfirmedAction()
+                        },
+                        onCancel: {
+                            showConfirmationDialog = false
+                            pendingAction = nil
+                        }
+                    )
+                } else if waitingForCallEnd {
+                    // Show loading indicator while waiting for call to end and URL to open
+                    ProcessingOverlay(colorResolver: colorResolver)
+                }
+            }
+        )
         .onAppear {
             setupKeyboardObservers()
+            previousConnectionState = isConnected
+        }
+        .onReceive(Just(isConnected)) { newValue in
+            // Detect when call ends (was connected, now disconnected)
+            if previousConnectionState && !newValue && waitingForCallEnd {
+                handleCallEnded()
+            }
+            previousConnectionState = newValue
+        }
+        .alert(isPresented: $showURLError) {
+            Alert(
+                title: Text("Error"),
+                message: Text(urlErrorMessage),
+                dismissButton: .default(Text("OK"))
+            )
         }
     }
 
@@ -261,6 +399,72 @@ struct TranscriptView: View {
             queue: .main
         ) { _ in
             keyboardHeight = 0
+        }
+    }
+
+    /// Handles the confirmed action after user confirmation
+    private func handleConfirmedAction() {
+        guard pendingAction != nil else { return }
+
+        // Set flag to indicate we're waiting for the call to end
+        waitingForCallEnd = true
+
+        // End the call - onChange observer will handle URL opening
+        onEndCall()
+
+        // Fallback: if call doesn't disconnect within 2 seconds, proceed anyway
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            if waitingForCallEnd {
+                handleCallEnded()
+            }
+        }
+    }
+
+    /// Called when the call has ended and we can safely open the URL
+    private func handleCallEnded() {
+        guard let action = pendingAction else { return }
+
+        waitingForCallEnd = false
+        openURLForAction(action)
+    }
+
+    /// Opens the appropriate URL for the given action
+    private func openURLForAction(_ action: OverflowAction) {
+        guard let url = urlForAction(action) else {
+            // If URL is invalid, show error and clean up
+            DispatchQueue.main.async {
+                self.waitingForCallEnd = false
+                self.urlErrorMessage = "The URL for this action is not configured correctly."
+                self.showURLError = true
+                self.pendingAction = nil
+            }
+            return
+        }
+
+        UIApplication.shared.open(url, options: [:]) { success in
+            DispatchQueue.main.async {
+                // Always clean up loading state
+                self.waitingForCallEnd = false
+                self.pendingAction = nil
+
+                if !success {
+                    // Failed to open URL, show error to user
+                    self.urlErrorMessage = "Unable to open \(action.title.lowercased()). Please try again or check your device settings."
+                    self.showURLError = true
+                }
+            }
+        }
+    }
+
+    /// Returns the URL for the given action
+    private func urlForAction(_ action: OverflowAction) -> URL? {
+        switch action {
+        case .giveFeedback:
+            return settings.giveFeedbackUrl.flatMap(URL.init)
+        case .viewHistory:
+            return settings.viewHistoryUrl.flatMap(URL.init)
+        case .reportIssue:
+            return settings.reportIssueUrl.flatMap(URL.init)
         }
     }
 }
@@ -509,6 +713,162 @@ struct RoundedCorner: Shape {
             cornerRadii: CGSize(width: radius, height: radius)
         )
         return Path(path.cgPath)
+    }
+}
+
+// MARK: - Confirmation Dialog
+
+/// Custom confirmation dialog matching Flutter widget design
+struct ConfirmationDialog: View {
+    let title: String
+    let message: String
+    let colorResolver: ColorResolver
+    let onConfirm: () -> Void
+    let onCancel: () -> Void
+
+    var body: some View {
+        ZStack {
+            // Semi-transparent background overlay
+            Color.black.opacity(0.4)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    onCancel()
+                }
+
+            // Dialog card
+            VStack(alignment: .leading, spacing: 20) {
+                // Title
+                Text(title)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(colorResolver.primaryText())
+                    .fixedSize(horizontal: false, vertical: true)
+
+                // Message
+                Text(message)
+                    .font(.system(size: 16))
+                    .foregroundColor(colorResolver.secondaryText())
+                    .fixedSize(horizontal: false, vertical: true)
+
+                // Buttons
+                HStack(spacing: 12) {
+                    Spacer()
+
+                    // Close button
+                    Button(action: onCancel) {
+                        Text("Close")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(colorResolver.secondaryText())
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                    }
+
+                    // OK button
+                    Button(action: onConfirm) {
+                        Text("OK")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundColor(colorResolver.primaryText())
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 12)
+                            .background(Color.gray.opacity(0.15))
+                            .cornerRadius(8)
+                    }
+                }
+            }
+            .padding(24)
+            .background(colorResolver.widgetSurface())
+            .cornerRadius(16)
+            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
+            .frame(maxWidth: 340)
+            .padding(.horizontal, 32)
+        }
+    }
+}
+
+// MARK: - Processing Overlay
+
+/// Overlay shown while waiting for call to end and URL to open
+struct ProcessingOverlay: View {
+    let colorResolver: ColorResolver
+
+    var body: some View {
+        ZStack {
+            // Semi-transparent background
+            Color.black.opacity(0.4)
+                .edgesIgnoringSafeArea(.all)
+
+            // Loading indicator
+            VStack(spacing: 16) {
+                ActivityIndicator(color: .white)
+                    .frame(width: 40, height: 40)
+
+                Text("Ending call...")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.white)
+            }
+            .padding(32)
+            .background(Color.black.opacity(0.7))
+            .cornerRadius(12)
+        }
+    }
+}
+
+// MARK: - Overflow Menu Popup
+
+/// Custom overflow menu popup matching Flutter widget design
+struct OverflowMenuPopup: View {
+    let actions: [OverflowAction]
+    let colorResolver: ColorResolver
+    let onActionSelected: (OverflowAction) -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            // Semi-transparent background to detect taps outside and provide overlay
+            Color.black.opacity(0.001)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    onDismiss()
+                }
+
+            // Menu popup
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(actions.enumerated()), id: \.offset) { index, action in
+                    Button(action: {
+                        onActionSelected(action)
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: action.iconName)
+                                .font(.system(size: 18))
+                                .foregroundColor(colorResolver.primaryText())
+                                .frame(width: 24, height: 24)
+
+                            Text(action.title)
+                                .font(.system(size: 16))
+                                .foregroundColor(colorResolver.primaryText())
+
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 14)
+                        .background(colorResolver.widgetSurface())
+                    }
+
+                    if index < actions.count - 1 {
+                        Divider()
+                            .background(Color.gray.opacity(0.2))
+                            .padding(.horizontal, 16)
+                    }
+                }
+            }
+            .background(colorResolver.widgetSurface())
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 4)
+            .frame(width: 240)
+            .padding(.top, 60)
+            .padding(.leading, 16)
+        }
     }
 }
 
