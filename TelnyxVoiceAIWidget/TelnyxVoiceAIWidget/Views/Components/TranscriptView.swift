@@ -237,10 +237,16 @@ struct TranscriptView: View {
                         Button(action: {
                             showImageSourceMenu.toggle()
                         }) {
-                            Image(systemName: "paperclip")
-                                .font(.system(size: 20))
-                                .foregroundColor(colorResolver.primaryText())
-                                .frame(width: 32, height: 32)
+                            ZStack {
+                                Circle()
+                                    .fill(isConnected ? colorResolver.userBubbleBackground() : Color.slate300)
+                                    .frame(width: 40, height: 40)
+                                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
+
+                                Image(systemName: "paperclip")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(colorResolver.primaryText())
+                            }
                         }
                         .disabled(!isConnected)
                         .actionSheet(isPresented: $showImageSourceMenu) {
@@ -280,6 +286,7 @@ struct TranscriptView: View {
                                 Circle()
                                     .fill(canSendMessage ? colorResolver.userBubbleBackground() : Color.slate300)
                                     .frame(width: 40, height: 40)
+                                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
 
                                 Image(systemName: "paperplane.fill")
                                     .font(.system(size: 16, weight: .regular))
