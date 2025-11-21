@@ -229,7 +229,7 @@ struct TranscriptView: View {
                         .frame(height: 72)
                     }
 
-                    HStack(spacing: 12) {
+                    HStack(alignment: .center, spacing: 12) {
                         // Attachment menu button
                         Button(action: {
                             showImageSourceMenu.toggle()
@@ -266,20 +266,27 @@ struct TranscriptView: View {
                             }
                         )
                         .foregroundColor(colorResolver.primaryText())
-                        .padding(12)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                         .background(colorResolver.inputBackground())
                         .cornerRadius(24)
                         .disabled(!isConnected)
 
                         Button(action: handleSendMessage) {
-                            Image(systemName: "arrow.up.circle.fill")
-                                .font(.system(size: 32))
-                                .foregroundColor(canSendMessage ? Color.primaryIndigo : Color.slate300)
+                            ZStack {
+                                Circle()
+                                    .fill(canSendMessage ? Color.primaryIndigo : Color.slate300)
+                                    .frame(width: 40, height: 40)
+
+                                Image(systemName: "arrow.right")
+                                    .font(.system(size: 16, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
                         }
                         .disabled(!canSendMessage)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 16)
+                    .padding(.vertical, 12)
                 }
                 .background(colorResolver.widgetSurface())
             }
