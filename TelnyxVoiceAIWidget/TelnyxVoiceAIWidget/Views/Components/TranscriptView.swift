@@ -275,12 +275,12 @@ struct TranscriptView: View {
                         Button(action: handleSendMessage) {
                             ZStack {
                                 Circle()
-                                    .fill(canSendMessage ? Color.primaryIndigo : Color.slate300)
+                                    .fill(canSendMessage ? colorResolver.userBubbleBackground() : Color.slate300)
                                     .frame(width: 40, height: 40)
 
-                                Image(systemName: "arrow.right")
-                                    .font(.system(size: 16, weight: .bold))
-                                    .foregroundColor(.white)
+                                Image(systemName: "paperplane.fill")
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundColor(colorResolver.primaryText())
                             }
                         }
                         .disabled(!canSendMessage)
