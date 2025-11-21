@@ -78,6 +78,8 @@ struct TranscriptView: View {
     @State private var pendingAction: OverflowAction?
     @State private var waitingForCallEnd = false
     @State private var previousConnectionState = false
+    @State private var showURLError = false
+    @State private var urlErrorMessage = ""
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
@@ -87,13 +89,14 @@ struct TranscriptView: View {
     private var availableOverflowActions: [OverflowAction] {
         var actions: [OverflowAction] = []
 
-        if settings.giveFeedbackUrl != nil {
+        // Only add actions if their URLs are valid
+        if let urlString = settings.giveFeedbackUrl, URL(string: urlString) != nil {
             actions.append(.giveFeedback)
         }
-        if settings.viewHistoryUrl != nil {
+        if let urlString = settings.viewHistoryUrl, URL(string: urlString) != nil {
             actions.append(.viewHistory)
         }
-        if settings.reportIssueUrl != nil {
+        if let urlString = settings.reportIssueUrl, URL(string: urlString) != nil {
             actions.append(.reportIssue)
         }
 
@@ -341,6 +344,13 @@ struct TranscriptView: View {
             }
             previousConnectionState = newValue
         }
+        .alert(isPresented: $showURLError) {
+            Alert(
+                title: Text("Error"),
+                message: Text(urlErrorMessage),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 
     private var canSendMessage: Bool {
@@ -421,15 +431,28 @@ struct TranscriptView: View {
     /// Opens the appropriate URL for the given action
     private func openURLForAction(_ action: OverflowAction) {
         guard let url = urlForAction(action) else {
-            // If URL is invalid, clean up and allow user to continue
-            pendingAction = nil
+            // If URL is invalid, show error and clean up
+            DispatchQueue.main.async {
+                self.waitingForCallEnd = false
+                self.urlErrorMessage = "The URL for this action is not configured correctly."
+                self.showURLError = true
+                self.pendingAction = nil
+            }
             return
         }
 
-        UIApplication.shared.open(url, options: [:]) { _ in
-            // Only clear pending action after URL opens (or fails)
+        UIApplication.shared.open(url, options: [:]) { success in
             DispatchQueue.main.async {
-                self.pendingAction = nil
+                if success {
+                    // URL opened successfully, clean up
+                    self.pendingAction = nil
+                } else {
+                    // Failed to open URL, show error to user
+                    self.waitingForCallEnd = false
+                    self.urlErrorMessage = "Unable to open \(action.title.lowercased()). Please try again or check your device settings."
+                    self.showURLError = true
+                    self.pendingAction = nil
+                }
             }
         }
     }
