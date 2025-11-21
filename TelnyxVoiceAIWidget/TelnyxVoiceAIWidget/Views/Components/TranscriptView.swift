@@ -443,15 +443,14 @@ struct TranscriptView: View {
 
         UIApplication.shared.open(url, options: [:]) { success in
             DispatchQueue.main.async {
-                if success {
-                    // URL opened successfully, clean up
-                    self.pendingAction = nil
-                } else {
+                // Always clean up loading state
+                self.waitingForCallEnd = false
+                self.pendingAction = nil
+
+                if !success {
                     // Failed to open URL, show error to user
-                    self.waitingForCallEnd = false
                     self.urlErrorMessage = "Unable to open \(action.title.lowercased()). Please try again or check your device settings."
                     self.showURLError = true
-                    self.pendingAction = nil
                 }
             }
         }
@@ -826,9 +825,9 @@ struct OverflowMenuPopup: View {
 
     var body: some View {
         ZStack(alignment: .topLeading) {
-            // Transparent background to detect taps outside
-            Color.clear
-                .contentShape(Rectangle())
+            // Semi-transparent background to detect taps outside and provide overlay
+            Color.black.opacity(0.001)
+                .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     onDismiss()
                 }
@@ -870,7 +869,6 @@ struct OverflowMenuPopup: View {
             .padding(.top, 60)
             .padding(.leading, 16)
         }
-        .edgesIgnoringSafeArea(.all)
     }
 }
 
