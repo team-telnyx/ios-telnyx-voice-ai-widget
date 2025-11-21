@@ -118,6 +118,12 @@ extension Color {
     /// User message bubble background (dark mode)
     static let userBubbleDark = Color(hex: "222227")
 
+    /// Text input field background (light mode)
+    static let textInputLight = Color(hex: "FFFDF4")
+
+    /// Text input field background (dark mode)
+    static let textInputDark = Color(hex: "222127")
+
     /// Mute button background (light mode)
     static let muteButtonLight = Color(hex: "E6E3D3")
 
@@ -245,7 +251,7 @@ struct ColorResolver {
         if let custom = customization?.inputBackgroundColor {
             return custom
         }
-        return isDarkTheme ? .slate800 : .slate100
+        return isDarkTheme ? .textInputDark : .textInputLight
     }
 
     // MARK: - Buttons
