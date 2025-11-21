@@ -76,6 +76,8 @@ struct TranscriptView: View {
     @State private var showOverflowMenu = false
     @State private var showConfirmationDialog = false
     @State private var pendingAction: OverflowAction?
+    @State private var waitingForCallEnd = false
+    @State private var previousConnectionState = false
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
@@ -322,11 +324,22 @@ struct TranscriptView: View {
                             pendingAction = nil
                         }
                     )
+                } else if waitingForCallEnd {
+                    // Show loading indicator while waiting for call to end and URL to open
+                    ProcessingOverlay(colorResolver: colorResolver)
                 }
             }
         )
         .onAppear {
             setupKeyboardObservers()
+            previousConnectionState = isConnected
+        }
+        .onReceive(Just(isConnected)) { newValue in
+            // Detect when call ends (was connected, now disconnected)
+            if previousConnectionState && !newValue && waitingForCallEnd {
+                handleCallEnded()
+            }
+            previousConnectionState = newValue
         }
     }
 
@@ -381,24 +394,44 @@ struct TranscriptView: View {
 
     /// Handles the confirmed action after user confirmation
     private func handleConfirmedAction() {
-        guard let action = pendingAction else { return }
+        guard pendingAction != nil else { return }
 
-        // End the call first
+        // Set flag to indicate we're waiting for the call to end
+        waitingForCallEnd = true
+
+        // End the call - onChange observer will handle URL opening
         onEndCall()
 
-        // Wait briefly for the call to end, then open the URL
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            openURLForAction(action)
+        // Fallback: if call doesn't disconnect within 2 seconds, proceed anyway
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            if waitingForCallEnd {
+                handleCallEnded()
+            }
         }
+    }
 
-        pendingAction = nil
+    /// Called when the call has ended and we can safely open the URL
+    private func handleCallEnded() {
+        guard let action = pendingAction else { return }
+
+        waitingForCallEnd = false
+        openURLForAction(action)
     }
 
     /// Opens the appropriate URL for the given action
     private func openURLForAction(_ action: OverflowAction) {
-        guard let url = urlForAction(action) else { return }
+        guard let url = urlForAction(action) else {
+            // If URL is invalid, clean up and allow user to continue
+            pendingAction = nil
+            return
+        }
 
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [:]) { _ in
+            // Only clear pending action after URL opens (or fails)
+            DispatchQueue.main.async {
+                self.pendingAction = nil
+            }
+        }
     }
 
     /// Returns the URL for the given action
@@ -727,6 +760,34 @@ struct ConfirmationDialog: View {
             .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
             .frame(maxWidth: 340)
             .padding(.horizontal, 32)
+        }
+    }
+}
+
+// MARK: - Processing Overlay
+
+/// Overlay shown while waiting for call to end and URL to open
+struct ProcessingOverlay: View {
+    let colorResolver: ColorResolver
+
+    var body: some View {
+        ZStack {
+            // Semi-transparent background
+            Color.black.opacity(0.4)
+                .edgesIgnoringSafeArea(.all)
+
+            // Loading indicator
+            VStack(spacing: 16) {
+                ActivityIndicator(color: .white)
+                    .frame(width: 40, height: 40)
+
+                Text("Ending call...")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.white)
+            }
+            .padding(32)
+            .background(Color.black.opacity(0.7))
+            .cornerRadius(12)
         }
     }
 }
