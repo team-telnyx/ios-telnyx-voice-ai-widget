@@ -14,7 +14,7 @@ enum OverflowAction {
     case giveFeedback
     case viewHistory
     case reportIssue
-    
+
     var title: String {
         switch self {
         case .giveFeedback:
@@ -25,7 +25,7 @@ enum OverflowAction {
             return "Report Issue"
         }
     }
-    
+
     var iconName: String {
         switch self {
         case .giveFeedback:
@@ -36,7 +36,7 @@ enum OverflowAction {
             return "exclamationmark.triangle"
         }
     }
-    
+
     var confirmationTitle: String {
         switch self {
         case .giveFeedback:
@@ -80,11 +80,11 @@ struct TranscriptView: View {
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
     }
-    
+
     /// Available overflow actions based on widget settings
     private var availableOverflowActions: [OverflowAction] {
         var actions: [OverflowAction] = []
-        
+
         if settings.giveFeedbackUrl != nil {
             actions.append(.giveFeedback)
         }
@@ -94,10 +94,10 @@ struct TranscriptView: View {
         if settings.reportIssueUrl != nil {
             actions.append(.reportIssue)
         }
-        
+
         return actions
     }
-    
+
     /// Whether to show the overflow menu button
     private var shouldShowOverflowMenu: Bool {
         !availableOverflowActions.isEmpty
@@ -109,11 +109,13 @@ struct TranscriptView: View {
                 // Header with controls
                 VStack(spacing: 12) {
                     HStack(spacing: 12) {
-                        // Collapse button (only in regular mode)
-                        if !iconOnly {
-                            Button(action: onCollapse) {
-                                Image(systemName: "chevron.down")
-                                    .font(.system(size: 20, weight: .medium))
+                        // Overflow menu button (on the left)
+                        if shouldShowOverflowMenu {
+                            Button(action: {
+                                showOverflowMenu = true
+                            }) {
+                                Image(systemName: "ellipsis")
+                                    .font(.system(size: 18, weight: .medium))
                                     .foregroundColor(colorResolver.primaryText())
                                     .frame(width: 40, height: 40)
                             }
@@ -131,18 +133,6 @@ struct TranscriptView: View {
                                 .clipShape(Circle())
                         }
 
-                        // Overflow menu button
-                        if shouldShowOverflowMenu {
-                            Button(action: {
-                                showOverflowMenu = true
-                            }) {
-                                Image(systemName: "ellipsis")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .foregroundColor(colorResolver.primaryText())
-                                    .frame(width: 40, height: 40)
-                            }
-                        }
-
                         // End call button
                         Button(action: onEndCall) {
                             Image(systemName: "phone.down.fill")
@@ -151,6 +141,16 @@ struct TranscriptView: View {
                                 .frame(width: 40, height: 40)
                                 .background(Color.red)
                                 .clipShape(Circle())
+                        }
+
+                        // Close button (only in regular mode)
+                        if !iconOnly {
+                            Button(action: onCollapse) {
+                                Image(systemName: "xmark")
+                                    .font(.system(size: 18, weight: .medium))
+                                    .foregroundColor(colorResolver.primaryText())
+                                    .frame(width: 40, height: 40)
+                            }
                         }
                     }
                     .padding(.horizontal, 16)
@@ -280,6 +280,24 @@ struct TranscriptView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .animation(.easeOut(duration: 0.3), value: keyboardHeight)
+        .overlay(
+            Group {
+                if showOverflowMenu {
+                    OverflowMenuPopup(
+                        actions: availableOverflowActions,
+                        colorResolver: colorResolver,
+                        onActionSelected: { action in
+                            showOverflowMenu = false
+                            pendingAction = action
+                            showConfirmationDialog = true
+                        },
+                        onDismiss: {
+                            showOverflowMenu = false
+                        }
+                    )
+                }
+            }
+        )
         .sheet(isPresented: $showImagePicker) {
             ImagePickerView(selectedImages: $attachedImages)
         }
@@ -287,13 +305,6 @@ struct TranscriptView: View {
             CameraCaptureView(capturedImage: $capturedImage) { image in
                 attachedImages.append(image)
             }
-        }
-        .actionSheet(isPresented: $showOverflowMenu) {
-            ActionSheet(
-                title: Text("Menu"),
-                message: nil,
-                buttons: overflowMenuButtons()
-            )
         }
         .alert(isPresented: $showConfirmationDialog) {
             Alert(
@@ -358,44 +369,29 @@ struct TranscriptView: View {
             keyboardHeight = 0
         }
     }
-    
-    /// Creates overflow menu buttons based on available actions
-    private func overflowMenuButtons() -> [ActionSheet.Button] {
-        var buttons: [ActionSheet.Button] = []
-        
-        for action in availableOverflowActions {
-            buttons.append(.default(Text(action.title)) {
-                pendingAction = action
-                showConfirmationDialog = true
-            })
-        }
-        
-        buttons.append(.cancel())
-        return buttons
-    }
-    
+
     /// Handles the confirmed action after user confirmation
     private func handleConfirmedAction() {
         guard let action = pendingAction else { return }
-        
+
         // End the call first
         onEndCall()
-        
+
         // Wait briefly for the call to end, then open the URL
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             openURLForAction(action)
         }
-        
+
         pendingAction = nil
     }
-    
+
     /// Opens the appropriate URL for the given action
     private func openURLForAction(_ action: OverflowAction) {
         guard let url = urlForAction(action) else { return }
-        
+
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
-    
+
     /// Returns the URL for the given action
     private func urlForAction(_ action: OverflowAction) -> URL? {
         switch action {
@@ -653,6 +649,65 @@ struct RoundedCorner: Shape {
             cornerRadii: CGSize(width: radius, height: radius)
         )
         return Path(path.cgPath)
+    }
+}
+
+// MARK: - Overflow Menu Popup
+
+/// Custom overflow menu popup matching Flutter widget design
+struct OverflowMenuPopup: View {
+    let actions: [OverflowAction]
+    let colorResolver: ColorResolver
+    let onActionSelected: (OverflowAction) -> Void
+    let onDismiss: () -> Void
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            // Transparent background to detect taps outside
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    onDismiss()
+                }
+
+            // Menu popup
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(actions.enumerated()), id: \.offset) { index, action in
+                    Button(action: {
+                        onActionSelected(action)
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: action.iconName)
+                                .font(.system(size: 18))
+                                .foregroundColor(colorResolver.primaryText())
+                                .frame(width: 24, height: 24)
+
+                            Text(action.title)
+                                .font(.system(size: 16))
+                                .foregroundColor(colorResolver.primaryText())
+
+                            Spacer()
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 14)
+                        .background(colorResolver.widgetSurface())
+                    }
+
+                    if index < actions.count - 1 {
+                        Divider()
+                            .background(Color.gray.opacity(0.2))
+                            .padding(.horizontal, 16)
+                    }
+                }
+            }
+            .background(colorResolver.widgetSurface())
+            .cornerRadius(12)
+            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 4)
+            .frame(width: 240)
+            .padding(.top, 60)
+            .padding(.leading, 16)
+        }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
