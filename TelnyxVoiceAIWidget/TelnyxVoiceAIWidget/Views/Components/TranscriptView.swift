@@ -113,6 +113,7 @@ struct TranscriptView: View {
             VStack(spacing: 0) {
                 // Header with controls
                 VStack(spacing: 12) {
+                    // Top bar with overflow menu and close button
                     HStack(spacing: 12) {
                         // Overflow menu button (on the left)
                         if shouldShowOverflowMenu {
@@ -128,26 +129,6 @@ struct TranscriptView: View {
 
                         Spacer()
 
-                        // Mute button
-                        Button(action: onToggleMute) {
-                            Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(colorResolver.muteButtonIcon(isMuted: isMuted))
-                                .frame(width: 40, height: 40)
-                                .background(colorResolver.muteButtonBackground(isMuted: isMuted))
-                                .clipShape(Circle())
-                        }
-
-                        // End call button
-                        Button(action: onEndCall) {
-                            Image(systemName: "phone.down.fill")
-                                .font(.system(size: 18))
-                                .foregroundColor(.white)
-                                .frame(width: 40, height: 40)
-                                .background(Color.red)
-                                .clipShape(Circle())
-                        }
-
                         // Close button (only in regular mode)
                         if !iconOnly {
                             Button(action: onCollapse) {
@@ -162,7 +143,7 @@ struct TranscriptView: View {
                     .padding(.top, 16)
 
                     // Audio visualizer and status
-                    VStack(spacing: 8) {
+                    VStack(spacing: 12) {
                         AudioVisualizer(
                             audioLevels: audioLevels,
                             colorScheme: colorResolver.audioVisualizerColor()
@@ -172,9 +153,32 @@ struct TranscriptView: View {
                         Text(agentStatusText)
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(colorResolver.secondaryText())
+
+                        // Control buttons below status text
+                        HStack(spacing: 16) {
+                            // Mute button
+                            Button(action: onToggleMute) {
+                                Image(systemName: isMuted ? "mic.slash.fill" : "mic.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(colorResolver.muteButtonIcon(isMuted: isMuted))
+                                    .frame(width: 48, height: 48)
+                                    .background(colorResolver.muteButtonBackground(isMuted: isMuted))
+                                    .clipShape(Circle())
+                            }
+
+                            // End call button
+                            Button(action: onEndCall) {
+                                Image(systemName: "phone.down.fill")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                    .frame(width: 48, height: 48)
+                                    .background(Color.red)
+                                    .clipShape(Circle())
+                            }
+                        }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 16)
                 }
                 .background(colorResolver.widgetSurface())
                 .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 2)
@@ -187,8 +191,7 @@ struct TranscriptView: View {
                 )
                 .frame(maxHeight: .infinity)
                 .background(colorResolver.transcriptBackground())
-
-                Divider()
+                .cornerRadius(16, corners: [.topLeft, .topRight])
 
                 // Message input area
                 VStack(spacing: 8) {
