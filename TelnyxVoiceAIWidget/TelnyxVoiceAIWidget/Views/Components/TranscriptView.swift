@@ -192,6 +192,9 @@ struct TranscriptView: View {
                 .frame(maxHeight: .infinity)
                 .background(colorResolver.transcriptBackground())
                 .cornerRadius(16, corners: [.topLeft, .topRight])
+                .onTapGesture {
+                    hideKeyboard()
+                }
 
                 // Message input area
                 VStack(spacing: 8) {
@@ -389,6 +392,10 @@ struct TranscriptView: View {
         case .processingImage:
             return "Processing image..."
         }
+    }
+
+    private func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
     private func setupKeyboardObservers() {
