@@ -212,20 +212,6 @@ struct TranscriptView: View {
                             }
                         }
                         .disabled(!isConnected)
-                        .actionSheet(isPresented: $showImageSourceMenu) {
-                            ActionSheet(
-                                title: Text("Choose Image Source"),
-                                buttons: [
-                                    .default(Text("Photo Library")) {
-                                        showImagePicker = true
-                                    },
-                                    .default(Text("Take Photo")) {
-                                        showCamera = true
-                                    },
-                                    .cancel()
-                                ]
-                            )
-                        }
 
                         TextField(
                             "Type a message...",
@@ -269,6 +255,45 @@ struct TranscriptView: View {
         }
         .edgesIgnoringSafeArea(.all)
         .animation(.easeOut(duration: 0.3), value: keyboardHeight)
+        .onAppear {
+            setupKeyboardObservers()
+            previousConnectionState = isConnected
+        }
+        .onReceive(Just(isConnected)) { newValue in
+            // Detect when call ends (was connected, now disconnected)
+            if previousConnectionState && !newValue && waitingForCallEnd {
+                handleCallEnded()
+            }
+            previousConnectionState = newValue
+        }
+        .actionSheet(isPresented: $showImageSourceMenu) {
+            ActionSheet(
+                title: Text("Choose Image Source"),
+                buttons: [
+                    .default(Text("Photo Library")) {
+                        // Add delay to allow ActionSheet to dismiss before presenting sheet
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showImagePicker = true
+                        }
+                    },
+                    .default(Text("Take Photo")) {
+                        // Add delay to allow ActionSheet to dismiss before presenting sheet
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showCamera = true
+                        }
+                    },
+                    .cancel()
+                ]
+            )
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePickerView(selectedImages: $attachedImages)
+        }
+        .sheet(isPresented: $showCamera) {
+            CameraCaptureView(capturedImage: $capturedImage) { image in
+                attachedImages.append(image)
+            }
+        }
         .overlay(
             Group {
                 if showOverflowMenu {
@@ -287,14 +312,6 @@ struct TranscriptView: View {
                 }
             }
         )
-        .sheet(isPresented: $showImagePicker) {
-            ImagePickerView(selectedImages: $attachedImages)
-        }
-        .sheet(isPresented: $showCamera) {
-            CameraCaptureView(capturedImage: $capturedImage) { image in
-                attachedImages.append(image)
-            }
-        }
         .overlay(
             Group {
                 if showConfirmationDialog {
@@ -317,17 +334,6 @@ struct TranscriptView: View {
                 }
             }
         )
-        .onAppear {
-            setupKeyboardObservers()
-            previousConnectionState = isConnected
-        }
-        .onReceive(Just(isConnected)) { newValue in
-            // Detect when call ends (was connected, now disconnected)
-            if previousConnectionState && !newValue && waitingForCallEnd {
-                handleCallEnded()
-            }
-            previousConnectionState = newValue
-        }
         .alert(isPresented: $showURLError) {
             Alert(
                 title: Text("Error"),
