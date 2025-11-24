@@ -40,6 +40,8 @@ struct TranscriptView: View {
     @State private var previousConnectionState = false
     @State private var showURLError = false
     @State private var urlErrorMessage = ""
+    @State private var shouldScrollToBottom = false
+    @State private var previousKeyboardHeight: CGFloat = 0
 
     private var colorResolver: ColorResolver {
         ColorResolver(customization: customization, settings: settings)
@@ -147,7 +149,8 @@ struct TranscriptView: View {
                 TranscriptScrollView(
                     transcriptItems: transcriptItems,
                     settings: settings,
-                    customization: customization
+                    customization: customization,
+                    shouldScrollToBottom: shouldScrollToBottom
                 )
                 .frame(maxHeight: .infinity)
                 .background(colorResolver.transcriptBackground())
@@ -347,6 +350,12 @@ struct TranscriptView: View {
         } else {
             onSendMessage()
         }
+
+        // Scroll to bottom after sending message
+        shouldScrollToBottom = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            shouldScrollToBottom = false
+        }
     }
 
     private var agentStatusText: String {
@@ -375,7 +384,18 @@ struct TranscriptView: View {
             guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else {
                 return
             }
-            keyboardHeight = keyboardFrame.height
+            let newHeight = keyboardFrame.height
+
+            // Scroll to bottom when keyboard appears
+            if previousKeyboardHeight == 0 && newHeight > 0 {
+                shouldScrollToBottom = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    shouldScrollToBottom = false
+                }
+            }
+
+            previousKeyboardHeight = newHeight
+            keyboardHeight = newHeight
         }
 
         NotificationCenter.default.addObserver(
@@ -383,6 +403,7 @@ struct TranscriptView: View {
             object: nil,
             queue: .main
         ) { _ in
+            previousKeyboardHeight = 0
             keyboardHeight = 0
         }
     }

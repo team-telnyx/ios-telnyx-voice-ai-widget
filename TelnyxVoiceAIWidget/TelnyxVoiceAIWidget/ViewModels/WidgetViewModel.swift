@@ -239,7 +239,7 @@ public class WidgetViewModel: ObservableObject {
 
                 // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
                 // Simple conversion: SDK already provides imageUrls, no need for complex merge logic
-                self.transcriptItems = updatedTranscriptions.map { item in
+                self.transcriptItems = updatedTranscriptions.compactMap { item in
                     // Convert imageUrls from SDK to our ImageAttachment model
                     let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
                         ImageAttachment(base64Data: imageUrl)
@@ -247,6 +247,13 @@ public class WidgetViewModel: ObservableObject {
 
                     if !attachments.isEmpty {
                         print("WidgetViewModel:: ✅ Transcription ID=\(item.id) has \(attachments.count) image(s)")
+                    }
+
+                    // Filter out empty transcriptions (no text and no attachments)
+                    let trimmedContent = item.content.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if trimmedContent.isEmpty && attachments.isEmpty {
+                        print("WidgetViewModel:: ⚠️ Skipping empty transcription ID=\(item.id)")
+                        return nil
                     }
 
                     return TranscriptItem(
@@ -467,10 +474,17 @@ extension WidgetViewModel: AIAssistantManagerDelegate {
         Task { @MainActor in
             // Convert TelnyxRTC.TranscriptionItem to our TranscriptItem
             // Note: SDK already provides imageUrls, no need for local preservation
-            self.transcriptItems = transcriptions.map { item in
+            self.transcriptItems = transcriptions.compactMap { item in
                 // Convert imageUrls from SDK to our ImageAttachment model
                 let attachments: [ImageAttachment] = (item.imageUrls ?? []).map { imageUrl in
                     ImageAttachment(base64Data: imageUrl)
+                }
+
+                // Filter out empty transcriptions (no text and no attachments)
+                let trimmedContent = item.content.trimmingCharacters(in: .whitespacesAndNewlines)
+                if trimmedContent.isEmpty && attachments.isEmpty {
+                    print("WidgetViewModel:: ⚠️ Skipping empty transcription ID=\(item.id)")
+                    return nil
                 }
 
                 return TranscriptItem(

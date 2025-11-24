@@ -2,6 +2,34 @@
 
 This document provides guidelines for AI assistants (like Claude) when working on this codebase.
 
+## Platform Requirements
+
+### Minimum iOS Version
+
+This project supports **iOS 13.0+**. All code must be compatible with iOS 13 and later versions.
+
+#### iOS Version Compatibility
+
+When writing SwiftUI code that uses features only available in iOS 14+:
+- Use `@available(iOS 14.0, *)` availability checks
+- Provide fallback implementations for iOS 13
+- Common iOS 14+ features requiring compatibility:
+  - `ScrollViewReader` and `ScrollViewProxy` (iOS 14+)
+  - `@StateObject` (iOS 14+, use `@ObservedObject` for iOS 13)
+  - `.onChange(of:)` modifier (iOS 14+)
+  - `LazyVStack` and `LazyHStack` (iOS 14+)
+
+**Example of iOS 13 compatibility:**
+```swift
+var body: some View {
+    if #available(iOS 14.0, *) {
+        modernImplementation
+    } else {
+        ios13CompatibleImplementation
+    }
+}
+```
+
 ## Code Quality Standards
 
 ### SwiftLint Configuration
