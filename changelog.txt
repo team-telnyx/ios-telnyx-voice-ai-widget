@@ -1,3 +1,5 @@
-- PR #18: 📦 Release v1.1.0
-- PR #17: WEBRTC-3067 [Feat]  Chat images support
-- PR #16: WEBRTC-3069: [iOS] Call Params when initialising
+- PR #25: [WEBRTC-3101] iOS Voice AI Widget UI Improvements
+- PR #24: chore(deps): bump actions/checkout from 2 to 6
+- PR #23: chore(deps): bump peter-evans/create-pull-request from 3.10.1 to 7.0.9
+- PR #22: WEBRTC-3065: [iOS] AI Agent Widget URL Overflow Menu
+- PR #15: chore(deps): bump zendesk/action-create-release from 1 to 3
